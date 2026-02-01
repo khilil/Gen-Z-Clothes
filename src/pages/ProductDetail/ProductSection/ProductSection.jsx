@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+
 import "./ProductSection.css";
 
 export default function ProductSection({ products = [] }) {
@@ -10,6 +13,7 @@ export default function ProductSection({ products = [] }) {
   const start = (page - 1) * ITEMS_PER_PAGE;
   const visibleProducts = products.slice(start, start + ITEMS_PER_PAGE);
 
+  const navigate = useNavigate();
   return (
     <div className="product-section">
 
@@ -28,7 +32,7 @@ export default function ProductSection({ products = [] }) {
             {visibleProducts.map(product => (
               <div key={product.id}
                 className="product-card"
-                onClick={() => navigate(`/product/${product.slug}`)}
+                onClick={() => {console.log(product.slug); navigate(`/product/${product.slug}`)} }
               >
 
                 <div className="product-image-wrap">

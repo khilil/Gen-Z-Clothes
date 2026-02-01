@@ -6,17 +6,18 @@
   color: white;
 }
 
+/* GALLERY */
 .gallery {
   width: 60%;
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 24px;
 }
 
 .image-wrap {
   aspect-ratio: 4 / 5;
-  overflow: hidden;
   background: #121212;
+  overflow: hidden;
 }
 
 .image-wrap img {
@@ -27,22 +28,23 @@
 }
 
 .image-wrap:hover img {
-  transform: scale(1.08);
+  transform: scale(1.1);
 }
 
+/* INFO */
 .info-panel {
   width: 40%;
   position: sticky;
   top: 120px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 28px;
 }
 
 .breadcrumb {
-  font-size: 10px;
-  letter-spacing: 0.2em;
+  font-size: 9px;
   text-transform: uppercase;
+  letter-spacing: 0.2em;
   color: #777;
 }
 
@@ -50,12 +52,35 @@
   font-family: "Oswald", sans-serif;
   font-size: 64px;
   line-height: 1;
+  text-transform: uppercase;
+}
+
+.reviews {
+  font-size: 12px;
+  color: #d4c4b1;
+}
+
+.reviews span {
+  color: #777;
+  margin-left: 8px;
+}
+
+.price-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
 }
 
 .price {
-  font-family: "Oswald", sans-serif;
   font-size: 32px;
+  font-family: "Oswald";
   color: #d4c4b1;
+}
+
+.old-price {
+  font-size: 18px;
+  color: #555;
+  text-decoration: line-through;
 }
 
 .description {
@@ -64,41 +89,344 @@
   color: #aaa;
 }
 
-.sizes {
+/* PALETTE */
+.palette h4 {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+}
+
+.palette span {
+  color: #777;
+}
+
+.colors {
+  display: flex;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.color {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #333;
+  cursor: pointer;
+}
+
+.color.white { background: #fff; }
+.color.black { background: #111; }
+.color.beige { background: #d4c4b1; }
+.color.green { background: #2d3a3a; }
+
+.color.active {
+  outline: 2px solid white;
+  outline-offset: 4px;
+}
+
+/* SIZE */
+.sizes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.size-guide {
+  background: none;
+  border: none;
+  color: #d4c4b1;
+  font-size: 9px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.size-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 12px;
 }
 
-.sizes button {
+.size-grid button {
   height: 48px;
-  background: transparent;
   border: 1px solid #333;
+  background: transparent;
   color: white;
   font-weight: bold;
-  font-size: 11px;
+  font-size: 10px;
   cursor: pointer;
 }
 
-.sizes button:hover {
+.size-grid button.active {
+  background: white;
+  color: black;
+}
+
+/* SLEEVE */
+.sleeve-options {
+  display: flex;
+  gap: 12px;
+}
+
+.sleeve-options button {
+  padding: 10px 24px;
+  border: 1px solid #333;
+  background: transparent;
+  color: white;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.sleeve-options button.active {
+  background: rgba(255,255,255,0.05);
   border-color: white;
 }
 
-.add-btn {
+/* ACTIONS */
+.actions button {
   height: 64px;
-  background: white;
-  color: black;
   font-weight: 900;
   letter-spacing: 0.3em;
   text-transform: uppercase;
+  cursor: pointer;
+}
+
+.add-btn {
+  background: white;
+  color: black;
 }
 
 .buy-btn {
-  height: 64px;
   background: linear-gradient(145deg,#1a1a1a,#0a0a0a);
   border: 1px solid #333;
   color: white;
+}
+
+/* DELIVERY */
+.delivery h4 {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+}
+
+.pincode {
+  display: flex;
+  border-bottom: 1px solid #333;
+}
+
+.pincode input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  padding: 12px 0;
+}
+
+.pincode button {
+  background: none;
+  border: none;
+  color: #d4c4b1;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+/* ACCORDION */
+.acc-item {
+  border-top: 1px solid #222;
+}
+
+.acc-item button {
+  width: 100%;
+  background: none;
+  border: none;
+  color: white;
+  padding: 20px 0;
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+}
+
+.acc-item p {
+  font-size: 10px;
+  color: #aaa;
+  padding-bottom: 20px;
+  line-height: 1.7;
+}
+
+/* ACTION BUTTONS */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 8px;
+}
+
+/* ADD TO BAG */
+.add-to-bag {
+  height: 64px;
+  width: 100%;
+  background: #ffffff;
+  color: #000;
+  font-size: 11px;
   font-weight: 900;
   letter-spacing: 0.3em;
   text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  transition: background 0.3s ease, transform 0.15s ease;
+}
+
+.add-to-bag:hover {
+  background: #d4c4b1;
+  transform: translateY(-1px);
+}
+
+/* BUY IT NOW */
+.buy-now {
+  height: 64px;
+  width: 100%;
+  background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+  border: 1px solid rgba(255,255,255,0.15);
+
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  cursor: pointer;
+
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+
+  transition: border-color 0.3s ease, transform 0.15s ease;
+}
+
+.buy-now:hover {
+  border-color: rgba(255,255,255,0.4);
+  transform: translateY(-1px);
+}
+
+/* =======================
+   RESPONSIVE – TABLET
+======================= */
+@media (max-width: 1024px) {
+  .product-page {
+    flex-direction: column;
+    gap: 64px;
+    padding: 100px 48px;
+  }
+
+  .gallery,
+  .info-panel {
+    width: 100%;
+  }
+
+  .info-panel {
+    position: relative;
+    top: auto;
+  }
+
+  .title {
+    font-size: 52px;
+  }
+}
+
+/* =======================
+   RESPONSIVE – MOBILE
+======================= */
+@media (max-width: 640px) {
+  .product-page {
+    padding: 88px 20px 40px;
+    gap: 48px;
+  }
+
+  /* GALLERY */
+  .gallery {
+    gap: 16px;
+  }
+
+  .image-wrap {
+    aspect-ratio: 3 / 4;
+  }
+
+  /* INFO */
+  .title {
+    font-size: 40px;
+  }
+
+  .price {
+    font-size: 26px;
+  }
+
+  .old-price {
+    font-size: 14px;
+  }
+
+  .description {
+    font-size: 11px;
+  }
+
+  /* PALETTE */
+  .colors {
+    gap: 12px;
+  }
+
+  .color {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* SIZE GRID */
+  .size-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .size-grid button {
+    height: 44px;
+    font-size: 9px;
+  }
+
+  /* SLEEVE */
+  .sleeve-options {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .sleeve-options button {
+    width: 100%;
+  }
+
+  /* ACTION BUTTONS */
+  .actions {
+    gap: 12px;
+  }
+
+  .add-to-bag,
+  .buy-now {
+    height: 56px;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+  }
+
+  /* DELIVERY */
+  .pincode input {
+    font-size: 10px;
+  }
+
+  /* ACCORDION */
+  .acc-item button {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+  }
+
+  .acc-item p {
+    font-size: 9px;
+  }
 }
