@@ -61,6 +61,36 @@ export default function ProductSection({ products = [] }) {
           </div>
 
           {/* Pagination stays SAME */}
+          {/* PAGINATION (COPY UI) */}
+          {totalPages > 1 && (
+            <div className="pagination">
+              <button
+                className={`page-arrow ${page === 1 ? "muted" : ""}`}
+                onClick={() => page > 1 && setPage(page - 1)}
+              >
+                <span className="material-symbols-outlined">west</span>
+              </button>
+
+              <div className="page-numbers">
+                {Array.from({ length: totalPages }).map((_, i) => (
+                  <span
+                    key={i}
+                    className={page === i + 1 ? "active" : ""}
+                    onClick={() => setPage(i + 1)}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                ))}
+              </div>
+
+              <button
+                className={`page-arrow ${page === totalPages ? "muted" : ""}`}
+                onClick={() => page < totalPages && setPage(page + 1)}
+              >
+                <span className="material-symbols-outlined">east</span>
+              </button>
+            </div>
+          )}
         </>
       )}
     </div>

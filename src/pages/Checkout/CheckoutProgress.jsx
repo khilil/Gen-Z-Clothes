@@ -23,4 +23,4 @@ export default function CheckoutProgress({ step = 1  }) {
 
     </div>
   );
-}
+} 

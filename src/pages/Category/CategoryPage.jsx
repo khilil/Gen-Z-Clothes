@@ -7,6 +7,7 @@ import ProductSection from "../../pages/ProductDetail/ProductSection/ProductSect
 import CategoryHero from "./CategoryHero"
 
 import './CategoryPage.css'
+import CollectiveFooter from "../../components/common/CollectiveFooter/CollectiveFooter";
 
 export default function CategoryPage() {
   const { slug } = useParams();
@@ -97,8 +98,8 @@ export default function CategoryPage() {
         <div className="products">
           <ProductSection products={filtered} />
         </div>
-
       </div>
+        <CollectiveFooter/>
     </>
   );
 }
