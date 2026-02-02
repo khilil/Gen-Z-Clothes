@@ -1,11 +1,14 @@
 import Header from "./components/common/Header/Header";
+import { CartProvider } from "./context/CartContext";
 import AppRoutes from "./routes/AppRoutes";
 
 function App() {
   return (
     <>
-      <Header />
-      <AppRoutes />
+      <CartProvider>
+        <Header />
+        <AppRoutes />
+      </CartProvider>
     </>
   );
 }

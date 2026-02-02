@@ -4,6 +4,7 @@ import Category from "../pages/Category/CategoryPage";
 import ProductListing from "../pages/ProductDetail/ProductListing";
 import CategoryPage from "../pages/Category/CategoryPage";
 import ProductDetailPage from "../pages/ProductDetail/ProductDetailPage";
+import Checkout from "../pages/Checkout/Checkout";
 
 export default function AppRoutes() {
     return (
@@ -12,6 +13,7 @@ export default function AppRoutes() {
             <Route path="/category/:slug" element={<CategoryPage />} />
             <Route path="/shop/:category" element={<ProductListing />} />   
             <Route path="/product/:slug" element={<ProductDetailPage />} />
+            <Route path="/checkout" element={<Checkout />} />
         </Routes>
     );
 }

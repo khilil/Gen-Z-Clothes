@@ -12,11 +12,18 @@ import {
 import { Link } from "react-router-dom";
 import { fetchCategories } from "../../../api/categories.api";
 import "./Header.css";
+import { useCart } from "../../../context/CartContext";
+import MiniCart from "../../../pages/Cart/MiniCart";
+
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collectionOpen, setCollectionOpen] = useState(false);
   const [categories, setCategories] = useState([]);
+
+  /* inside Header */
+  const { cart } = useCart();
+  const [cartOpen, setCartOpen] = useState(false);
 
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
@@ -30,8 +37,9 @@ export default function Header() {
       {/* HEADER */}
       <header className="header">
         <div className="header-inner">
-          <div className="logo">MODERN MEN</div>
-
+          <Link to="/" className="logo">
+            <div className="logo" >MODERN MEN</div>
+          </Link>
           {/* DESKTOP NAV */}
           <nav className="nav-desktop">
             <div className="nav-dropdown">
@@ -60,9 +68,15 @@ export default function Header() {
             <button className="icon-btn"><FiSearch /></button>
             <button className="icon-btn desktop-only"><FiUser /></button>
 
-            <button className="icon-btn cart-btn">
+            {  /* button Cart*/}
+            <button
+              className="icon-btn cart-btn"
+              onClick={() => setCartOpen(true)}
+            >
               <FiShoppingBag />
-              <span className="cart-count">0</span>
+              {cart.length > 0 && (
+                <span className="cart-count">{cart.length}</span>
+              )}
             </button>
 
             <button
@@ -73,6 +87,11 @@ export default function Header() {
             </button>
           </div>
         </div>
+        {/* ✅ MINI CART — HEADER NI BAHAR, BUT JSX MA */}
+        <MiniCart
+          open={cartOpen}
+          onClose={() => setCartOpen(false)}
+        />
       </header>
 
       {/* OVERLAY */}

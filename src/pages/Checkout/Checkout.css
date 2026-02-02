@@ -1,0 +1,403 @@
+/* GLOBAL */
+body {
+  /* background: #fff; */
+  /* font-family: "Inter", sans-serif; */
+  /* color: #000; */
+}
+
+h2 {
+  text-transform: uppercase;
+}
+
+/* ===== CHECKOUT PAGE ROOT ===== */
+.checkout-page {
+  background: #ffffff;
+  color: #000000;
+  font-family: "Inter", sans-serif;
+  min-height: 100vh;
+}
+
+/* header, main, footer inherit kare */
+.checkout-page * {
+  box-sizing: border-box;
+}
+
+
+/* HEADER */
+.checkout-header {
+  height: 80px;
+  background: #000;
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, .1);
+}
+
+.checkout-header-inner {
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 32px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  font-family: "Oswald";
+  font-size: 28px;
+  letter-spacing: -0.04em;
+}
+
+.secure {
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  opacity: .8;
+}
+
+/* CONTAINER */
+.checkout-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 64px 32px;
+}
+
+/* PROGRESS */
+.checkout-progress {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 64px;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+.step.muted {
+  opacity: .3;
+}
+
+.progress-line {
+  width: 64px;
+  height: 2px;
+  background: #e5e5e5;
+}
+
+.progress-line.active {
+  background: #000;
+}
+
+/* LINE FILL ANIMATION */
+.progress-line.animate {
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-line.animate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #000;
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: fillLine 0.8s cubic-bezier(.22, 1, .36, 1) forwards;
+}
+
+@keyframes fillLine {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* TEXT MICRO ANIMATION */
+.step span {
+  animation: fadeUp .5s ease forwards;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* GRID */
+.checkout-grid {
+  display: flex;
+  gap: 80px;
+}
+
+/* FORM */
+.checkout-form {
+  flex: 1;
+}
+
+.checkout-form h2 {
+  font-family: "Oswald";
+  font-size: 24px;
+  margin-bottom: 24px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-grid input {
+  padding: 16px;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+}
+
+.form-grid .full {
+  grid-column: span 2;
+}
+
+.mt {
+  margin-top: 64px;
+}
+
+/* PAYMENT */
+.payment-box {
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+
+.payment-box.active {
+  border-color: #000;
+  background: #f7f7f7;
+}
+
+.payment-box p {
+  font-weight: 900;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.payment-box span {
+  font-size: 10px;
+  opacity: .6;
+}
+
+/* SUMMARY */
+.checkout-summary {
+  width: 380px;
+  background: #f7f7f7;
+  border-radius: 24px;
+  padding: 32px;
+  position: sticky;
+  top: 120px;
+}
+
+.checkout-summary h3 {
+  font-family: "Oswald";
+  font-size: 24px;
+  margin-bottom: 32px;
+}
+
+.summary-item {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.summary-item img {
+  width: 80px;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.summary-item p {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+.summary-item span {
+  font-size: 10px;
+  opacity: .6;
+}
+
+.summary-item strong {
+  display: block;
+  margin-top: 6px;
+  font-family: "Oswald";
+}
+
+.summary-totals div {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  letter-spacing: .2em;
+  margin-top: 12px;
+}
+
+.summary-totals .total {
+  margin-top: 24px;
+  font-size: 18px;
+  font-family: "Oswald";
+}
+
+.free {
+  color: green;
+}
+
+.place-order {
+  margin-top: 32px;
+  width: 100%;
+  height: 64px;
+  background: #000;
+  color: #fff;
+  font-size: 12px;
+  letter-spacing: .3em;
+  font-weight: 900;
+  text-transform: uppercase;
+  border-radius: 14px;
+}
+
+/* TRUST */
+.trust-grid {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.trust-grid div {
+  background: #fff;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #e5e5e5;
+  text-align: center;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+/* FOOTER */
+.checkout-footer {
+  margin-top: 80px;
+  padding: 32px;
+  border-top: 1px solid #e5e5e5;
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .checkout-grid {
+    flex-direction: column;
+  }
+
+  .checkout-summary {
+    width: 100%;
+    position: relative;
+    top: auto;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid .full {
+    grid-column: span 1;
+  }
+
+  .checkout-progress {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}
+
+/* ===== PAGE SCOPE ===== */
+.checkout-page {
+  background: #ffffff;
+  color: #000;
+  min-height: 100vh;
+  font-family: "Inter", sans-serif;
+}
+
+/* ===== FORM ===== */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field label {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: #717171;
+}
+
+
+
+
+
+/* .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+} */
+
+/* .form-grid .full {
+  grid-column: span 2;
+}
+
+.form-grid input {
+  padding: 16px;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  font-size: 14px;
+} */
+
+/* ===== MOBILE RESPONSIVE ===== */
+/* @media (max-width: 768px) {
+  .checkout-grid {
+    flex-direction: column;
+  }
+
+  .checkout-summary {
+    width: 100%;
+    position: static;
+    margin-top: 48px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid .full {
+    grid-column: span 1;
+  }
+} */
