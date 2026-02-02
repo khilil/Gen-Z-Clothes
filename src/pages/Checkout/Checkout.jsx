@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { useCart } from "../../context/CartContext";
 import "./Checkout.css";
+import { useCart } from "../../context/CartContext";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Checkout() {
-  const { cart } = useCart();
+  const navigate = useNavigate(); // ✅ ADD THIS
+  const { cart } = useCart(); // ✅ cart from MiniCart
   const [payment, setPayment] = useState("card");
 
   const subtotal = cart.reduce(
@@ -11,167 +13,184 @@ export default function Checkout() {
     0
   );
 
-  const tax = +(subtotal * 0.0825).toFixed(2);
+  const tax = +(subtotal * 0.0825).toFixed(2); // same as earlier
   const total = +(subtotal + tax).toFixed(2);
 
   return (
-    <>
-      <div className="checkout-page">
-
-        {/* HEADER */}
-        <header className="checkout-header">
-          <div className="checkout-header-inner">
-            <h1 className="brand">MODERN MEN</h1>
-            <div className="secure">
-              <span className="material-symbols-outlined">lock</span>
-              100% Secure Checkout
-            </div>
+    <div className="checkout">
+      {/* HEADER */}
+      <header className="header">
+        <div className="header-inner">
+          <Link to="/" className="logo">
+            <div className="brand" >MODERN MEN</div>
+          </Link>
+          {/* <h1 className="brand">MODERN MEN</h1> */}
+          <div className="secure">
+            <span className="material-symbols-outlined">lock</span>
+            100% Secure Checkout
           </div>
-        </header>
+        </div>
+      </header>
 
-        <main className="checkout-container">
-
-          {/* PROGRESS */}
-          <div className="checkout-progress">
-            <div className="step active">
-              <span>Cart</span>
-              <div className="progress-line active"></div>
-            </div>
-
-            <div className="step">
-              <span>Shipping</span>
-              <div className="progress-line"></div>
-            </div>
-
-            <div className="step muted">
-              <span>Payment</span>
-              <div className="progress-line"></div>
-            </div>
-
-            <div className="step muted">
-              <span>Done</span>
-            </div>
-          </div>
-
-          <div className="checkout-grid">
-
-            {/* LEFT */}
-            <section className="checkout-form">
-              <h2>Shipping Address</h2>
-
-              <div className="form-grid">
-
-                <div className="form-field">
-                  <label>First Name</label>
-                  <input placeholder="James" />
-                </div>
-
-                <div className="form-field">
-                  <label>Last Name</label>
-                  <input placeholder="Stirling" />
-                </div>
-
-                <div className="form-field full">
-                  <label>Street Address</label>
-                  <input placeholder="245 Fifth Avenue" />
-                </div>
-
-                <div className="form-field">
-                  <label>City</label>
-                  <input placeholder="New York" />
-                </div>
-
-                <div className="form-field">
-                  <label>Zip Code</label>
-                  <input placeholder="10016" />
-                </div>
-
-              </div>
-
-              <h2 className="mt">Payment Method</h2>
-
-              <label className="payment-box active">
-                <input type="radio" name="payment" defaultChecked />
-                <div>
-                  <p>Credit / Debit Card</p>
-                  <span>Visa, Mastercard, Amex</span>
-                </div>
-              </label>
-
-              <label className="payment-box">
-                <input type="radio" name="payment" />
-                <div>
-                  <p>UPI / Net Banking</p>
-                  <span>Instant digital payment</span>
-                </div>
-              </label>
-
-              <label className="payment-box">
-                <input type="radio" name="payment" />
-                <div>
-                  <p>Cash on Delivery</p>
-                  <span>Pay when you receive</span>
-                </div>
-              </label>
-            </section>
-
-            {/* RIGHT */}
-            <aside className="checkout-summary">
-              <h3>ORDER SUMMARY</h3>
-
-              <div className="summary-items">
-                {cart.map(item => (
-                  <div key={item.id} className="summary-item">
-                    <img src={item.image} alt={item.title} />
-                    <div>
-                      <p>{item.title}</p>
-                      <span>Size: {item.size}</span>
-                      <strong>
-                        ${item.price} × {item.qty}
-                      </strong>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="summary-totals">
-                <div><span>Subtotal</span><span>${subtotal.toFixed(2)}</span></div>
-                <div><span>Shipping</span><span className="free">Free</span></div>
-                <div><span>Tax</span><span>${tax}</span></div>
-                <div className="total">
-                  <span>Total</span>
-                  <strong>${total}</strong>
-                </div>
-              </div>
-
-              <button className="place-order">
-                Place Order
-              </button>
-
-              <div className="trust-grid">
-                <div>
-                  <span className="material-symbols-outlined">verified_user</span>
-                  <span>Secure SSL</span>
-                </div>
-                <div>
-                  <span className="material-symbols-outlined">package_2</span>
-                  <span>Global Shipping</span>
-                </div>
-              </div>
-            </aside>
-
-          </div>
-        </main>
-
-        <footer className="checkout-footer">
-          <p>© 2024 MODERN MEN. All Rights Reserved.</p>
-          <div>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms</a>
-            <a href="#">Returns</a>
-          </div>
-        </footer>
+      {/* PROGRESS */}
+      <div className="progress">
+        <Step label="Cart" active />
+        <Step label="Shipping" active />
+        <Step label="Payment" muted />
+        <Step label="Done" muted />
       </div>
-    </>
+
+      {/* MAIN */}
+      <main className="main">
+        {/* LEFT */}
+        <section className="left">
+          <h2 className="section-title">Shipping Address</h2>
+
+          <div className="form-grid">
+            <Field label="First Name" placeholder="James" />
+            <Field label="Last Name" placeholder="Stirling" />
+            <Field label="Street Address" placeholder="245 Fifth Avenue" full />
+            <Field label="City" placeholder="New York" />
+            <Field label="Zip Code" placeholder="10016" />
+          </div>
+
+          <h2 className="section-title mt">Payment Method</h2>
+
+          <Payment
+            active={payment === "card"}
+            onClick={() => setPayment("card")}
+            title="Credit / Debit Card"
+            desc="Visa, Mastercard, Amex"
+            icon="credit_card"
+          />
+          <Payment
+            active={payment === "upi"}
+            onClick={() => setPayment("upi")}
+            title="UPI / Net Banking"
+            desc="Instant digital payment"
+            icon="account_balance_wallet"
+          />
+          <Payment
+            active={payment === "cod"}
+            onClick={() => setPayment("cod")}
+            title="Cash on Delivery"
+            desc="Pay when you receive"
+            icon="payments"
+          />
+        </section>
+
+        {/* RIGHT */}
+        <aside className="summary">
+          <h3>ORDER SUMMARY</h3>
+
+          <div className="summary-items">
+            {cart.map(item => (
+              <SummaryItem
+                key={item.id}
+                image={item.image}
+                title={item.title}
+                size={item.size}
+                price={`$${(item.price * item.qty).toFixed(2)}`}
+                qty={item.qty}
+              />
+            ))}
+          </div>
+
+          <div className="totals">
+            <Row label="Subtotal" value={`$${subtotal.toFixed(2)}`} />
+            <Row label="Shipping" value="Free" green />
+            <Row label="Tax" value={`$${tax}`} />
+            <Total label="Total" value={`$${total}`} />
+          </div>
+
+          <button
+            className="cta"
+            onClick={() =>
+              navigate("/checkout/details", {
+                state: {
+                  cart,
+                  subtotal,
+                  tax,
+                  total,
+                  payment
+                }
+              })
+            }
+          >
+            Place Order
+          </button>
+
+          <div className="trust">
+            <Trust icon="verified_user" label="Secure SSL" />
+            <Trust icon="package_2" label="Global Shipping" />
+          </div>
+        </aside>
+
+      </main>
+
+      {/* FOOTER */}
+      <footer className="footer">
+        © 2024 MODERN MEN. All Rights Reserved.
+      </footer>
+    </div>
   );
 }
+
+/* COMPONENTS */
+
+const Step = ({ label, active, muted }) => (
+  <div className={`step ${muted ? "muted" : ""}`}>
+    <span>{label}</span>
+    {!muted && <div className={`line ${active ? "active" : ""}`} />}
+  </div>
+);
+
+const Field = ({ label, placeholder, full }) => (
+  <div className={`field ${full ? "full" : ""}`}>
+    <label>{label}</label>
+    <input placeholder={placeholder} />
+  </div>
+);
+
+const Payment = ({ title, desc, icon, active, onClick }) => (
+  <label className={`payment ${active ? "active" : ""}`} onClick={onClick}>
+    <div>
+      <p>{title}</p>
+      <span>{desc}</span>
+    </div>
+    <span className="material-symbols-outlined">{icon}</span>
+  </label>
+);
+
+const SummaryItem = ({ image, title, size, price, qty }) => (
+  <div className="summary-item">
+    <img src={image} alt={title} />
+    <div>
+      <p>{title}</p>
+      <span>Size: {size} | Qty: {qty}</span>
+      <strong>{price}</strong>
+    </div>
+  </div>
+);
+
+
+const Row = ({ label, value, green }) => (
+  <div className="row">
+    <span>{label}</span>
+    <span className={green ? "green" : ""}>{value}</span>
+  </div>
+);
+
+const Total = ({ label, value }) => (
+  <div className="total">
+    <span>{label}</span>
+    <strong>{value}</strong>
+  </div>
+);
+
+const Trust = ({ icon, label }) => (
+  <div className="trust-item">
+    <span className="material-symbols-outlined">{icon}</span>
+    <span>{label}</span>
+  </div>
+);

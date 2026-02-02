@@ -6,7 +6,7 @@ function App() {
   return (
     <>
       <CartProvider>
-        <Header />
+        {/* <Header /> */}
         <AppRoutes />
       </CartProvider>
     </>

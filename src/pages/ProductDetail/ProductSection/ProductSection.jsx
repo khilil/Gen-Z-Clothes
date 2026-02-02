@@ -60,7 +60,6 @@ export default function ProductSection({ products = [] }) {
             ))}
           </div>
 
-          {/* Pagination stays SAME */}
           {/* PAGINATION (COPY UI) */}
           {totalPages > 1 && (
             <div className="pagination">
