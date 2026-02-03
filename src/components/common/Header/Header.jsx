@@ -14,6 +14,7 @@ import { fetchCategories } from "../../../api/categories.api";
 import "./Header.css";
 import { useCart } from "../../../context/CartContext";
 import MiniCart from "../../../pages/Cart/MiniCart";
+import SaveYourBagModal from "../../SaveYourBagModal/SaveYourBagModal";
 
 
 export default function Header() {
@@ -27,6 +28,7 @@ export default function Header() {
 
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
+  const [open, setOpen] = useState(true);
 
   useEffect(() => {
     fetchCategories().then(setCategories);
@@ -34,10 +36,11 @@ export default function Header() {
 
   return (
     <>
+    
       {/* HEADER */}
       <header className="header">
         <div className="header-inner">
-            <Link  to="/" className="logo" >MODERN MEN</Link>
+          <Link to="/" className="logo" >MODERN MEN</Link>
           {/* DESKTOP NAV */}
           <nav className="nav-desktop">
             <div className="nav-dropdown">
@@ -85,12 +88,12 @@ export default function Header() {
             </button>
           </div>
         </div>
+      </header>
         {/* ✅ MINI CART — HEADER NI BAHAR, BUT JSX MA */}
         <MiniCart
           open={cartOpen}
           onClose={() => setCartOpen(false)}
         />
-      </header>
 
       {/* OVERLAY */}
       {mobileOpen && (
@@ -136,6 +139,12 @@ export default function Header() {
           </div>
         </nav>
       </aside>
+      {/* <SaveYourBagModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        onGuestContinue={() => console.log("Guest")}
+        onSignIn={() => console.log("Sign In")}
+      /> */}
     </>
   );
 }
