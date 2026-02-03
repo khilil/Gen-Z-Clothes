@@ -11,6 +11,7 @@
 
 html, body {
   /* background: #ffffff; */
+  background-color: #000;
   color: var(--text-main);
   margin: 0;
   padding: 0;
@@ -80,7 +81,8 @@ html, body {
   display: flex;
   justify-content: center;
   gap: 24px;
-  margin: 56px auto;
+  margin: 0px auto;
+  padding: 56px;
 }
 
 .step {

@@ -1,24 +1,35 @@
+// MiniCart.jsx
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import "./MiniCart.css";
 
 export default function MiniCart({ open, onClose }) {
-  const { cart, updateQty, removeItem } = useCart();
   const navigate = useNavigate();
+
+  const { cart, updateQty, removeItem } = useCart();
 
   const subtotal = cart.reduce(
     (sum, item) => sum + item.price * item.qty,
     0
   );
 
-  const goToCheckout = () => {
-    onClose();          // mini cart close
-    navigate("/checkout"); // checkout page open
+  /* ✅ LOCAL LOGIC (THIS WAS MISSING) */
+  const increaseQty = (id) => {
+    updateQty(id, 1);
+  };
+
+  const decreaseQty = (id) => {
+    updateQty(id, -1);
+  };
+
+  const handleCheckout = () => {
+    onClose();
+    navigate("/checkout");
   };
 
   return (
     <div
-      className={`mini-cart-overlay ${open ? "show" : ""}`}
+      className={`mini-cart-overlay ${open ? "is-open" : ""}`}
       onClick={onClose}
     >
       <aside
@@ -26,47 +37,75 @@ export default function MiniCart({ open, onClose }) {
         onClick={(e) => e.stopPropagation()}
       >
         {/* HEADER */}
-        <div className="mini-cart-header">
-          <h2 className="mini-cart-title">
+        <div className="mini-cart__header">
+          <h2 className="mini-cart__title">
             MINI BAG ({cart.length})
           </h2>
 
-          <button onClick={onClose} className="close-btn">
-            <span className="material-symbols-outlined">close</span>
+          <button
+            className="mini-cart__close"
+            onClick={onClose}
+          >
+            <span className="material-symbols-outlined">
+              close
+            </span>
           </button>
         </div>
 
-        {/* ITEMS */}
-        <div className="mini-cart-body custom-scrollbar">
-          {cart.map(item => (
-            <div key={item.id} className="mini-item">
-              <div className="mini-thumb">
+        {/* BODY */}
+        <div className="mini-cart__body custom-scrollbar">
+          {cart.length === 0 && (
+            <p className="mini-cart__empty">
+              Your bag is empty
+            </p>
+          )}
+
+          {cart.map((item) => (
+            <div className="mini-item" key={item.id}>
+              <div className="mini-item__thumb">
                 <img src={item.image} alt={item.title} />
               </div>
 
-              <div className="mini-info">
-                <div className="mini-row">
-                  <h4>{item.title}</h4>
-                  <span>${item.price}.00</span>
+              <div className="mini-item__info">
+                <div className="mini-item__row">
+                  <h4 className="mini-item__title">
+                    {item.title}
+                  </h4>
+                  <span className="mini-item__price">
+                    ${item.price.toFixed(2)}
+                  </span>
                 </div>
 
-                <p className="mini-meta">Size: {item.size}</p>
+                <p className="mini-item__meta">
+                  Size: {item.size}
+                </p>
 
-                <div className="mini-actions">
-                  <div className="qty-box">
-                    <button onClick={() => updateQty(item.id, -1)}>
-                      <span className="material-symbols-outlined">remove</span>
+                <div className="mini-item__actions">
+                  <div className="qty-control">
+                    <button
+                      onClick={() => decreaseQty(item.id)}
+                      disabled={item.qty === 1}
+                    >
+                      <span className="material-symbols-outlined">
+                        remove
+                      </span>
                     </button>
 
-                    <span>{item.qty}</span>
+                    <span className="qty-control__value">
+                      {String(item.qty).padStart(2, "0")}
+                    </span>
 
-                    <button onClick={() => updateQty(item.id, 1)}>
-                      <span className="material-symbols-outlined">add</span>
+                    <button
+                      onClick={() => increaseQty(item.id)}
+                    >
+                      <span className="material-symbols-outlined">
+                        add
+                      </span>
                     </button>
                   </div>
 
                   <button
-                    className="remove-btn"
+                    className="mini-item__remove"
                     onClick={() => removeItem(item.id)}
                   >
                     Remove
@@ -78,25 +117,27 @@ export default function MiniCart({ open, onClose }) {
         </div>
 
         {/* FOOTER */}
-        <div className="mini-cart-footer">
-          <div className="subtotal-row">
-            <span>Subtotal</span>
-            <span className="subtotal-price">
-              ${subtotal.toFixed(2)}
-            </span>
+        {cart.length > 0 && (
+          <div className="mini-cart__footer">
+            <div className="mini-cart__subtotal">
+              <span>Subtotal</span>
+              <span className="mini-cart__subtotal-price">
+                ${subtotal.toFixed(2)}
+              </span>
+            </div>
+
+            <button
+              className="mini-cart__checkout"
+              onClick={handleCheckout}
+            >
+              View Bag &amp; Checkout
+            </button>
+
+            <p className="mini-cart__note">
+              Shipping &amp; taxes calculated at checkout
+            </p>
           </div>
-
-          <button
-            className="checkout-btn"
-            onClick={goToCheckout}
-          >
-            View Bag & Checkout
-          </button>
-
-          <p className="tax-note">
-            Shipping & taxes calculated at checkout
-          </p>
-        </div>
+        )}
       </aside>
     </div>
   );

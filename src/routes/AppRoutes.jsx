@@ -10,6 +10,7 @@ import CheckoutDetails from "../pages/Checkout/CheckoutDetails";
 export default function AppRoutes() {
     return (
         <Routes>
+            
             <Route path="/" element={<Home />} />
             <Route path="/category/:slug" element={<CategoryPage />} />
             <Route path="/shop/:category" element={<ProductListing />} />

@@ -37,9 +37,7 @@ export default function Header() {
       {/* HEADER */}
       <header className="header">
         <div className="header-inner">
-          <Link to="/" className="logo">
-            <div className="logo" >MODERN MEN</div>
-          </Link>
+            <Link  to="/" className="logo" >MODERN MEN</Link>
           {/* DESKTOP NAV */}
           <nav className="nav-desktop">
             <div className="nav-dropdown">

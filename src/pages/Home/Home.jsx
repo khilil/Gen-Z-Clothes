@@ -1,14 +1,13 @@
 import Categories from "../../components/Hero/Categories Card's/Categories";
-import Header from "../../components/common/Header/Header";
 import Hero from "../../components/Hero/Hero";
 import Products from "../../components/Hero/Products/Products";
 import './Home.css'
 import CollectiveFooter from "../../components/common/CollectiveFooter/CollectiveFooter";
+import Header from "../../components/common/Header/Header";
 
 function Home() {
   return (
     <>
-      <Header />
       <Hero />
       <Categories />
       <Products />

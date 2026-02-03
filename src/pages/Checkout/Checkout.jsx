@@ -18,20 +18,7 @@ export default function Checkout() {
 
   return (
     <div className="checkout">
-      {/* HEADER */}
-      <header className="header">
-        <div className="header-inner">
-          <Link to="/" className="logo">
-            <div className="brand" >MODERN MEN</div>
-          </Link>
-          {/* <h1 className="brand">MODERN MEN</h1> */}
-          <div className="secure">
-            <span className="material-symbols-outlined">lock</span>
-            100% Secure Checkout
-          </div>
-        </div>
-      </header>
-
+    
       {/* PROGRESS */}
       <div className="progress">
         <Step label="Cart" active />
