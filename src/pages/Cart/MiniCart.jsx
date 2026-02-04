@@ -2,12 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 
-// import SaveYourBagModal from "../SaveYourBagModal/SaveYourBagModal";
-// import AccessCollectiveModal from "../AccessCollectiveModal/AccessCollectiveModal";
+
 
 import "./MiniCart.css";
-import AccessCollectiveModal from "../Account/AccessCollectiveModal/AccessCollectiveModal";
 import SaveYourBagModal from "../../components/SaveYourBagModal/SaveYourBagModal";
+import AccessCollectiveModal from "../Account/AccessCollectiveModal/AccessCollectiveModal";
 
 export default function MiniCart({ open, onClose }) {
   const navigate = useNavigate();

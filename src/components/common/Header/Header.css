@@ -16,6 +16,42 @@ body {
   font-family: Inter, sans-serif;
 }
 
+
+/* HEADER LEFT */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 48px; /* gap-12 */
+}
+
+/* ACCOUNT AVATAR */
+.account-avatar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-left: 24px; /* pl-6 */
+  border-left: 1px solid rgba(255,255,255,0.2);
+}
+
+.account-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black;
+}
+
+.account-avatar span {
+  font-size: 10px;
+  font-weight: 900;
+}
+
+
+
+
 /* HEADER */
 .header {
   position: fixed;
