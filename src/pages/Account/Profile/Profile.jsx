@@ -1,111 +1,215 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Profile.css";
 
 const Profile = () => {
-  const profile = {
+  const initialProfile = {
     fullName: "Vikram Sharma",
     email: "vikram.sharma@domain.com",
     mobile: "+91 98765 43210",
     password: "••••••••••••",
-    dob: "12 October 1992",
+    dob: "1992-10-12",
     gender: "Male",
   };
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [profile, setProfile] = useState(initialProfile);
+  const [draft, setDraft] = useState(initialProfile);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setDraft({ ...draft, [name]: value });
+  };
+
+  const handleSave = (e) => {
+    e.preventDefault();
+    setProfile(draft);
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setDraft(profile);
+    setIsEditing(false);
+  };
+
   return (
-    <section className="profile">
-      {/* PAGE HEADER */}
-      <header className="profile-header">
-        <h1 className="profile-title">Profile Settings</h1>
-        <p className="profile-subtitle">
-          Manage your personal information and account security.
+    <section className="profile-page">
+      {/* HEADER */}
+      <div className="profile-page-header">
+        <h2 className="profile-page-title">Profile Settings</h2>
+        <p className="profile-page-subtitle">
+          {isEditing
+            ? "Edit your personal details below."
+            : "Manage your personal information and account security."}
         </p>
-      </header>
+      </div>
 
-      {/* PERSONAL DETAILS */}
+      {/* CARD */}
       <div className="profile-card">
-        <h2 className="card-title">Personal Details</h2>
+        <h3 className="profile-card-title">Personal Details</h3>
 
-        <div className="profile-grid">
-          <div className="profile-field">
-            <span className="label">Full Name</span>
-            <span className="value">{profile.fullName}</span>
-          </div>
+        {!isEditing ? (
+          /* ================= VIEW MODE ================= */
+          <>
+            <div className="profile-grid">
+              <ViewField label="Full Name" value={profile.fullName} />
+              <ViewField label="Email Address" value={profile.email} />
+              <ViewField label="Mobile Number" value={profile.mobile} />
+              <ViewField label="Account Password" value={profile.password} />
+              <ViewField
+                label="Date of Birth"
+                value={new Date(profile.dob).toLocaleDateString("en-GB", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              />
+              <ViewField label="Gender" value={profile.gender} />
+            </div>
 
-          <div className="profile-field">
-            <span className="label">Email Address</span>
-            <span className="value">{profile.email}</span>
-          </div>
+            <div className="profile-actions profile-actions-view">
+              <button
+                className="profile-action-btn"
+                onClick={() => setIsEditing(true)}
+              >
+                <span className="material-symbols-outlined">edit</span>
+                Edit Profile
+              </button>
 
-          <div className="profile-field">
-            <span className="label">Mobile Number</span>
-            <span className="value">{profile.mobile}</span>
-          </div>
+              <button className="profile-action-btn">
+                <span className="material-symbols-outlined">lock_reset</span>
+                Update Password
+              </button>
 
-          <div className="profile-field">
-            <span className="label">Account Password</span>
-            <span className="value">{profile.password}</span>
-          </div>
+              <button className="profile-action-btn danger ml-auto">
+                <span className="material-symbols-outlined">delete</span>
+                Deactivate Account
+              </button>
+            </div>
 
-          <div className="profile-field">
-            <span className="label">Date of Birth</span>
-            <span className="value">{profile.dob}</span>
-          </div>
+          </>
+        ) : (
+          /* ================= EDIT MODE ================= */
+          <form onSubmit={handleSave}>
+            <div className="profile-grid">
+              <EditField
+                label="Full Name"
+                name="fullName"
+                value={draft.fullName}
+                onChange={handleChange}
+              />
 
-          <div className="profile-field">
-            <span className="label">Gender</span>
-            <span className="value">{profile.gender}</span>
-          </div>
-        </div>
+              <EditField
+                label="Email Address"
+                value={draft.email}
+                disabled
+              />
 
-        {/* ACTIONS */}
-        <div className="profile-actions">
-          <button className="link-btn">
-            <span className="material-symbols-outlined">edit</span>
-            Edit Profile
-          </button>
+              <EditField
+                label="Mobile Number"
+                name="mobile"
+                value={draft.mobile}
+                onChange={handleChange}
+              />
 
-          <button className="link-btn">
-            <span className="material-symbols-outlined">lock_reset</span>
-            Update Password
-          </button>
+              <EditField
+                label="Account Password"
+                value={draft.password}
+                disabled
+                type="password"
+              />
 
-          <button className="link-btn danger">
-            <span className="material-symbols-outlined">delete</span>
-            Deactivate Account
-          </button>
-        </div>
+              <EditField
+                label="Date of Birth"
+                type="date"
+                name="dob"
+                value={draft.dob}
+                onChange={handleChange}
+              />
+
+              <div className="profile-field">
+                <label>Gender</label>
+                <select
+                  name="gender"
+                  value={draft.gender}
+                  onChange={handleChange}
+                >
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                  <option value="Prefer not to say">
+                    Prefer not to say
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div className="profile-actions">
+              <button type="submit" className="profile-save-btn">
+                SAVE CHANGES
+              </button>
+              <button
+                type="button"
+                className="profile-cancel-btn"
+                onClick={handleCancel}
+              >
+                CANCEL
+              </button>
+            </div>
+          </form>
+        )}
       </div>
 
       {/* OPTIONS */}
-      <div className="profile-options">
-        <div className="option-card">
-          <div className="option-head">
-            <div className="option-icon">
-              <span className="material-symbols-outlined">news</span>
+      {!isEditing && (
+        <div className="profile-options">
+          <div className="option-card">
+            <div className="option-head">
+              <div className="option-icon">
+                <span className="material-symbols-outlined">news</span>
+              </div>
+              <h4>Email Preferences</h4>
             </div>
-            <h3>Email Preferences</h3>
+
+            <p>
+              Manage how you receive marketing updates and order notifications.
+            </p>
+            <a href="#">Configure</a>
           </div>
-          <p>
-            Manage how you receive marketing updates and order notifications.
-          </p>
-          <a href="#">Configure</a>
+
+          <div className="option-card">
+            <div className="option-head">
+              <div className="option-icon">
+                <span className="material-symbols-outlined">security</span>
+              </div>
+              <h4>Security Settings</h4>
+            </div>
+
+            <p>
+              Manage two-factor authentication and active login sessions.
+            </p>
+            <a href="#">Manage</a>
+          </div>
         </div>
 
-        <div className="option-card">
-          <div className="option-head">
-            <div className="option-icon">
-              <span className="material-symbols-outlined">security</span>
-            </div>
-            <h3>Security Settings</h3>
-          </div>
-          <p>
-            Manage two-factor authentication and active login sessions.
-          </p>
-          <a href="#">Manage</a>
-        </div>
-      </div>
+      )}
     </section>
   );
 };
+
+/* ================= HELPERS ================= */
+
+const ViewField = ({ label, value }) => (
+  <div className="profile-field view">
+    <span className="field-label">{label}</span>
+    <span className="field-value">{value}</span>
+  </div>
+);
+
+const EditField = ({ label, ...props }) => (
+  <div className="profile-field">
+    <label>{label}</label>
+    <input {...props} />
+  </div>
+);
 
 export default Profile;

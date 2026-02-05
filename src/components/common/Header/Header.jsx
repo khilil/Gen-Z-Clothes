@@ -32,11 +32,12 @@ export default function Header() {
         <div className="header-inner">
 
           {/* LEFT */}
-          <div className="header-left">
             <Link to="/" className="logo">MODERN MEN</Link>
+          <div className="header-left">
 
             {!isAccountPage && (
               <nav className="nav-desktop">
+                <Link className="nav-anchor">New Arrivals</Link>
                 <div className="nav-dropdown">
                   <span className="nav-link nav-link-icon">
                     Shop <FiChevronDown size={14} />
@@ -55,7 +56,7 @@ export default function Header() {
                   </div>
                 </div>
 
-                <a className="nav-anchor" href="#">ABOUT</a>
+                <Link className="nav-anchor" to="/about">ABOUT</Link>
               </nav>
             )}
           </div>
@@ -87,7 +88,7 @@ export default function Header() {
             {isAccountPage && (
               <div
                 className="account-avatar-wrapper"
-                // onClick={() => setSidebarOpen(true)}
+              // onClick={() => setSidebarOpen(true)}
               >
                 <div className="account-avatar">
                   <span>JD</span>

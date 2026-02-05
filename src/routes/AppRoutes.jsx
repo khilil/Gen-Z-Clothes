@@ -12,6 +12,7 @@ import Dashboard from "../pages/Account/Dashboard/Dashboard";
 import Wishlist from "../pages/Account/Wishlist/Wishlist";
 import Addresses from "../pages/Account/Addresses/Addresses";
 import Profile from "../pages/Account/Profile/Profile";
+import About from "../pages/About";
 
 export default function AppRoutes() {
     return (
@@ -23,6 +24,8 @@ export default function AppRoutes() {
             <Route path="/product/:slug" element={<ProductDetailPage />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/checkout/details" element={<CheckoutDetails />} />
+            <Route path="/about" element={<About />} />
+
 
             {/* ✅ ACCOUNT PARENT ROUTE */}
             <Route path="/account" element={<AccountLayout />}>
