@@ -82,7 +82,9 @@ export default function CategoryPage() {
     <>
       <CategoryHero />
       <div className="category-layout">
-        <div className="sidebar">
+
+        {/* STICKY WRAPPER */}
+        <div className="sidebar-wrapper">
           <FiltersSidebar
             filters={filters}
             availableSizes={availableSizes}
@@ -93,13 +95,16 @@ export default function CategoryPage() {
             onPriceChange={handlePriceChange}
             onClear={handleClear}
           />
-
         </div>
+
+        {/* PRODUCTS */}
         <div className="products">
           <ProductSection products={filtered} />
         </div>
+
       </div>
-        <CollectiveFooter/>
+
+      <CollectiveFooter />
     </>
   );
 }

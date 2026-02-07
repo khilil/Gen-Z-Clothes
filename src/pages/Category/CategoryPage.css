@@ -1,26 +1,18 @@
 .category-layout {
   display: flex;
-  gap: 24px;
-  align-items: flex-start;
-  justify-content: center;
-  margin: 100px;
+  gap: 64px;
+  /* max-width: 1400px; */
+  margin: 0 auto;
+  padding: 96px 48px;
 }
 
-.sidebar {
-  width: 250px;
-  flex-shrink: 0;
+/* 🔑 THIS WRAPPER DEFINES STICKY END */
+.sidebar-wrapper {
+  position: relative;
+  flex: 0 0 260px;
 }
 
+/* PRODUCTS COLUMN */
 .products {
   flex: 1;
-}
-
-@media (max-width: 768px) {
-  .category-layout {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-  }
 }
