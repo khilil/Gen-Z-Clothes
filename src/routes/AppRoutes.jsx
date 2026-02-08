@@ -13,11 +13,16 @@ import Addresses from "../pages/Account/Addresses/Addresses";
 import Profile from "../pages/Account/Profile/Profile";
 import About from "../pages/About";
 import ProductDetailPage from "../pages/ProductDetail/ProductDetailPage/ProductDetailPage";
-import CustomizeStore from "../pages/CustomizeStorePage/CustomizeStore";
+import CustomizePage from "../pages/CustomizeShopPage/CustomizePage";
+import TextEditorPage from "../pages/CustomizeShopPage/TextEditorPage";
+import ShapeEditorPage from "../pages/CustomizeShopPage/ShapeEditorPage";
+import GraphicsEditorPage from "../pages/CustomizeShopPage/GraphicsEditorPage";
+import CustomizeEditorLayout from "../pages/CustomizeShopPage/layouts/CustomizeEditorLayout";
 
 export default function AppRoutes() {
     return (
         <Routes>
+
             {/* NORMAL ROUTES */}
             <Route path="/" element={<Home />} />
             <Route path="/category/:slug" element={<CategoryPage />} />
@@ -27,21 +32,30 @@ export default function AppRoutes() {
             <Route path="/checkout/details" element={<CheckoutDetails />} />
             <Route path="/about" element={<About />} />
 
-            <Route path="/customize/:slug" element={<CustomizeStore />} />
+            {/* <Route path="/customize/:slug" element={<CustomizePage />} /> */}
+
+            <Route path="/customize/:slug" element={<CustomizeEditorLayout />}>
+                {/* DEFAULT customize landing */}
+                <Route index element={<CustomizePage />} />
+
+                {/* Editors */}
+                <Route path="text" element={<TextEditorPage />} />
+                <Route path="shapes" element={<ShapeEditorPage />} />
+                <Route path="graphics" element={<GraphicsEditorPage />} />
+            </Route>
 
 
-            {/* ✅ ACCOUNT PARENT ROUTE */}
+
+            {/* ACCOUNT */}
             <Route path="/account" element={<AccountLayout />}>
-                {/* DEFAULT PAGE */}
                 <Route index element={<Navigate to="orders" replace />} />
-                {/* CHILD ROUTES (OUTLET) */}
                 <Route path="dashboard" element={<Dashboard />} />
                 <Route path="orders" element={<Orders />} />
                 <Route path="wishlist" element={<Wishlist />} />
                 <Route path="addresses" element={<Addresses />} />
                 <Route path="profile" element={<Profile />} />
-                
             </Route>
+
         </Routes>
     );
 }

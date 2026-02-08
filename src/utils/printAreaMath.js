@@ -119,3 +119,30 @@ export function snapInsidePrintArea(obj, printArea) {
     clampPosition(obj, printArea);
     clampScale(obj, printArea);
 }
+
+export function clampObjectInsidePrintArea(obj, printArea) {
+    if (!obj || !printArea) return;
+
+    const objBounds = obj.getBoundingRect(true);
+    const areaBounds = printArea.getBoundingRect(true);
+
+    let dx = 0;
+    let dy = 0;
+
+    if (objBounds.left < areaBounds.left) {
+        dx = areaBounds.left - objBounds.left;
+    }
+    if (objBounds.top < areaBounds.top) {
+        dy = areaBounds.top - objBounds.top;
+    }
+    if (objBounds.left + objBounds.width > areaBounds.left + areaBounds.width) {
+        dx = areaBounds.left + areaBounds.width - (objBounds.left + objBounds.width);
+    }
+    if (objBounds.top + objBounds.height > areaBounds.top + areaBounds.height) {
+        dy = areaBounds.top + areaBounds.height - (objBounds.top + objBounds.height);
+    }
+
+    obj.left += dx;
+    obj.top += dy;
+    obj.setCoords();
+}
