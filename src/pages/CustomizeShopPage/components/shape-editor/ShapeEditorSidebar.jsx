@@ -1,10 +1,21 @@
 import { FiArrowLeft } from "react-icons/fi";
 import ElementLibrary from "../ElementLibrary";
 import ShapeGrid from "./ShapeGrid";
+import { useFabric } from "../../../../context/FabricContext";
+import { updateOpacity, updateShape, updateStrokeWidth } from "../../fabric/Shapes/shapeActions";
+import { useState } from "react";
+
+
 
 export default function ShapeEditorSidebar() {
+    const { fabricCanvas, activeShapeRef } = useFabric();
+    const [opacity, setOpacity] = useState(100);
+    const [strokeWidth, setStrokeWidth] = useState(2);
+    
+
+
     return (
-        <div className="w-2/5 custom-studio-overlay border-l border-white/5 flex flex-col h-full overflow-y-auto no-scrollbar">
+        <div className="w-full custom-studio-overlay border-l border-white/5 flex flex-col h-full overflow-y-auto no-scrollbar">
             {/* 🔙 Back Button */}
             <div className="sticky top-0 z-20 bg-[#121212] px-10 pt-8 pb-4 border-b border-white/5">
                 <button
@@ -42,12 +53,23 @@ export default function ShapeEditorSidebar() {
                                 Fill Color
                             </label>
                             <div className="flex gap-2 flex-wrap">
-                                <button className="w-6 h-6 rounded-full bg-black ring-1 ring-white/20 ring-offset-2 ring-offset-charcoal" />
-                                <button className="w-6 h-6 rounded-full bg-white" />
-                                <button className="w-6 h-6 rounded-full bg-red-800" />
-                                <button className="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center">
-                                    <span className="material-symbols-outlined text-[10px]">add</span>
-                                </button>
+                                <button
+                                    onClick={() =>
+                                        updateShape(activeShapeRef, fabricCanvas.current, {
+                                            fill: "#ff0000",
+                                        })
+                                    }
+                                    className="w-6 h-6 rounded-full bg-red-600"
+                                />
+                                <button
+                                    onClick={() =>
+                                        updateShape(activeShapeRef, fabricCanvas.current, {
+                                            fill: "#ffffff",
+                                        })
+                                    }
+                                    className="w-6 h-6 rounded-full bg-red-100"
+                                />
+
                             </div>
                         </div>
 
@@ -57,12 +79,15 @@ export default function ShapeEditorSidebar() {
                                 Stroke Color
                             </label>
                             <div className="flex gap-2 flex-wrap">
-                                <button className="w-6 h-6 rounded-full bg-white ring-1 ring-accent ring-offset-2 ring-offset-charcoal" />
-                                <button className="w-6 h-6 rounded-full bg-black border border-white/10" />
-                                <button className="w-6 h-6 rounded-full bg-accent" />
-                                <button className="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center">
-                                    <span className="material-symbols-outlined text-[10px]">add</span>
-                                </button>
+                                <button
+                                    onClick={() =>
+                                        updateShape(activeShapeRef, fabricCanvas.current, {
+                                            stroke: "#ffffff",
+                                        })
+                                    }
+                                    className="w-6 h-6 rounded-full bg-white"
+                                />
+
                             </div>
                         </div>
 
@@ -70,19 +95,53 @@ export default function ShapeEditorSidebar() {
                         <div className="space-y-3">
                             <div className="flex justify-between text-[9px] font-mono text-white/60">
                                 <span>Opacity</span>
-                                <span>100%</span>
+                                <span>{opacity}%</span>
                             </div>
-                            <input type="range" className="w-full h-px bg-white/10 accent-white" />
+
+                            <input
+                                type="range"
+                                min="0"
+                                max="100"
+                                value={opacity}
+                                onChange={(e) => {
+                                    const value = Number(e.target.value);
+                                    setOpacity(value);
+                                    updateOpacity(
+                                        fabricCanvas.current,
+                                        activeShapeRef.current,
+                                        value
+                                    );
+                                }}
+                                className="w-full h-px bg-white/10 accent-white"
+                            />
                         </div>
+
 
                         {/* Stroke Width */}
                         <div className="space-y-3">
                             <div className="flex justify-between text-[9px] font-mono text-white/60">
                                 <span>Stroke Width</span>
-                                <span>2px</span>
+                                <span>{strokeWidth}px</span>
                             </div>
-                            <input type="range" className="w-full h-px bg-white/10 accent-white" />
+
+                            <input
+                                type="range"
+                                min="0"
+                                max="20"
+                                value={strokeWidth}
+                                onChange={(e) => {
+                                    const value = Number(e.target.value);
+                                    setStrokeWidth(value);
+                                    updateStrokeWidth(
+                                        fabricCanvas.current,
+                                        activeShapeRef.current,
+                                        value
+                                    );
+                                }}
+                                className="w-full h-px bg-white/10 accent-white"
+                            />
                         </div>
+
                     </div>
                 </section>
 

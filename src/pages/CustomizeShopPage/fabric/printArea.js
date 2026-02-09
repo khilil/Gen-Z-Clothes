@@ -3,7 +3,7 @@ import * as fabric from "fabric";
 export function addPrintArea(canvas) {
     const rect = new fabric.Rect({
         left: canvas.getWidth() / 2,
-        top: canvas.getHeight() / 2,
+        top: canvas.getHeight() * 0.42,
         width: 260,
         height: 320,
         originX: "center",

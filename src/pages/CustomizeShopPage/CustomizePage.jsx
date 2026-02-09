@@ -18,8 +18,8 @@ export default function CustomizePage() {
             </header>
 
             {/* MAIN */}
-            <main className="pt-20 h-screen flex overflow-hidden">
-                <CanvasArea />
+            <main className="pt-20  h-screen flex overflow-hidden">
+                {/* <CanvasArea /> */}
                 <StudioSidebar />
             </main>
 

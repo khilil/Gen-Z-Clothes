@@ -19,13 +19,12 @@ export default function GraphicsEditorPage() {
             </header>
 
             {/* MAIN */}
-            <main className="pt-20 h-screen flex overflow-hidden">
+            {/* <main className="pt-20 h-screen flex overflow-hidden"> */}
                 {/* LEFT – CANVAS */}
-                <CanvasArea />
+                {/* <CanvasArea /> */}
 
                 {/* RIGHT – GRAPHIC CONTROLS */}
-                <div className="w-2/5 bg-[#121212] border-l border-white/5 p-10 space-y-12 overflow-y-auto">
-                    {/* 🔙 Back Button */}
+                <div className="w-full bg-[#121212] border-l border-white/5 p-10 space-y-12 overflow-y-auto h-screen overflow-hidden">
                     <div className="sticky top-0 z-20 bg-[#121212] px-10 pt-8 pb-4 border-b border-white/5">
                         <button
                             onClick={() => window.history.back()}
@@ -103,7 +102,7 @@ export default function GraphicsEditorPage() {
                         </div>
                     </section>
                 </div>
-            </main>
+            {/* </main> */}
         </div>
     );
 }

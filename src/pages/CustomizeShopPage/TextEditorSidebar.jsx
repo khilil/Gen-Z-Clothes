@@ -77,7 +77,7 @@ export default function TextEditorSidebar() {
 
 
     return (
-        <div className="lg:w-2/5 custom-studio-overlay border-l border-white/5 flex flex-col h-full overflow-y-auto no-scrollbar">
+        <div className="h-full overflow-y-auto  scrollbar custom-studio-overlay px-4 md:px-10">
 
             <div className="p-10 space-y-12 pb-48">
                 <button
@@ -222,7 +222,7 @@ export default function TextEditorSidebar() {
                                     onClick={() => handleColor("#d4c4b1")}
                                     className="w-8 h-8 rounded-full bg-[#d4c4b1] hover:scale-110 transition-transform"
                                 />
-                                 <button
+                                <button
                                     onClick={() => handleColor("#E93562")}
                                     className="w-8 h-8 rounded-full bg-[#E93562] hover:scale-110 transition-transform"
                                 />

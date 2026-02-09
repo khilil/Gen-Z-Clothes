@@ -1,32 +1,27 @@
+// src/utils/printAreaClamp.js
 export function clampToPrintArea(obj, printArea) {
     if (!obj || !printArea) return;
 
-    obj.setCoords();
+    const bounds = obj.getBoundingRect(true);
 
-    const objRect = obj.getBoundingRect(true);
-    const areaRect = printArea.getBoundingRect();
+    const leftLimit = printArea.left - printArea.width / 2;
+    const rightLimit = printArea.left + printArea.width / 2;
+    const topLimit = printArea.top - printArea.height / 2;
+    const bottomLimit = printArea.top + printArea.height / 2;
 
-    // 🔒 HORIZONTAL CLAMP
-    if (objRect.left < areaRect.left) {
-        obj.left += areaRect.left - objRect.left;
+    if (bounds.left < leftLimit) {
+        obj.left += leftLimit - bounds.left;
     }
 
-    if (objRect.left + objRect.width > areaRect.left + areaRect.width) {
-        obj.left -=
-            (objRect.left + objRect.width) -
-            (areaRect.left + areaRect.width);
+    if (bounds.left + bounds.width > rightLimit) {
+        obj.left -= (bounds.left + bounds.width) - rightLimit;
     }
 
-    // 🔒 VERTICAL CLAMP
-    if (objRect.top < areaRect.top) {
-        obj.top += areaRect.top - objRect.top;
+    if (bounds.top < topLimit) {
+        obj.top += topLimit - bounds.top;
     }
 
-    if (objRect.top + objRect.height > areaRect.top + areaRect.height) {
-        obj.top -=
-            (objRect.top + objRect.height) -
-            (areaRect.top + areaRect.height);
+    if (bounds.top + bounds.height > bottomLimit) {
+        obj.top -= (bounds.top + bounds.height) - bottomLimit;
     }
-
-    obj.setCoords();
 }

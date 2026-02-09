@@ -24,7 +24,6 @@ export default function ShapeEditorPage() {
 
             {/* Main */}
             <main className="pt-20 h-screen flex overflow-hidden">
-                <CanvasArea />
                 <ShapeEditorSidebar />
             </main>
         </div>

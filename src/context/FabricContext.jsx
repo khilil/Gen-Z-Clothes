@@ -8,9 +8,20 @@ export function FabricProvider({ children }) {
 
     const printAreaRef = useRef(null);     // ✅ ADD
     const activeTextRef = useRef(null);    // ✅ ADD
+    const activeShapeRef = useRef(null);
+    const activeObjectRef = useRef(null); // 🔥 IMPORTANT
+    const layersRef = useRef([]);
 
+
+    
     // 🔥 NEW: persist design
     const designStateRef = useRef(null);
+
+    function syncLayers(canvas) {
+        layersRef.current = canvas
+            .getObjects()
+            .filter(obj => !obj.excludeFromExport);
+    }
 
     return (
         <FabricContext.Provider
@@ -19,7 +30,10 @@ export function FabricProvider({ children }) {
                 fabricCanvas,
                 printAreaRef,
                 activeTextRef,
-                designStateRef
+                designStateRef,
+                activeShapeRef,
+                activeObjectRef,
+                layersRef
             }}
         >
             {children}
