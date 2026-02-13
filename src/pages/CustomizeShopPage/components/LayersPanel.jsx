@@ -77,7 +77,7 @@ export default function LayersPanel() {
         if (obj.type === "image") return "Image";
         if (obj.type === "rect" || obj.type === "circle" || obj.type === "triangle")
             return "Shape";
-        return "Layer";
+        return "Graphics";
     }
 
     function renderIcon(obj) {

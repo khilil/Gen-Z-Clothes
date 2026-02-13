@@ -1,9 +1,13 @@
 // fabricCanvas.js
 import { Canvas } from "fabric";
 import { addPrintArea } from "./printArea";
-import { addBaseImage } from "./baseImage";
 
-export function initFabric(canvasEl, printAreaRef, activeTextRef) {
+export function initFabric(
+    canvasEl,
+    printAreaRef,
+    activeTextRef,
+    syncLayers
+) {
     if (!canvasEl) return null;
 
     const canvas = new Canvas(canvasEl, {
@@ -11,13 +15,22 @@ export function initFabric(canvasEl, printAreaRef, activeTextRef) {
         selection: true,
     });
 
+    canvas.backgroundColor = "#ffffff";
+    canvas.renderAll();
+
+    const printArea = addPrintArea(canvas);
+    printAreaRef.current = printArea;
+    canvas.printArea = printArea;
+
     canvas.on("object:scaling", (e) => {
         const obj = e.target;
+        if (!obj) return;
+        if (!printAreaRef.current) return;
         if (obj !== activeTextRef?.current) return;
 
         obj.set({
             width: printAreaRef.current.width - 40,
-            scaleX: 1, // 🔒 disable horizontal scale
+            scaleX: 1,
         });
 
         obj.initDimensions();
@@ -25,20 +38,9 @@ export function initFabric(canvasEl, printAreaRef, activeTextRef) {
         canvas.requestRenderAll();
     });
 
-
-    // ✅ v7 way
-    canvas.backgroundColor = "#ffffff";
-    canvas.renderAll();
-
-    // ✅ CREATE + STORE PRINT AREA
-    const printArea = addPrintArea(canvas);
-    printAreaRef.current = printArea;
-
-    addPrintArea(canvas);
-    addBaseImage(canvas);
-
-    // 🔥 store reference
-    canvas.printArea = addPrintArea(canvas);
+    canvas.on("object:added", () => syncLayers && syncLayers(canvas));
+    canvas.on("object:removed", () => syncLayers && syncLayers(canvas));
+    canvas.on("object:modified", () => syncLayers && syncLayers(canvas));
 
     return canvas;
 }

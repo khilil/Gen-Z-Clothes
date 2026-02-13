@@ -28,7 +28,7 @@ export default function ElementLibrary() {
     return (
         <section className="space-y-6">
             <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-[#d4c4b1]">
-                02. Element Library
+                01. Element Library
             </h4>
 
             <div className="grid grid-cols-3 gap-3">

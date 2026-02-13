@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>MODERN MEN | CLASSIC OXFORD SHIRT</title>
+    <title>MODERN MEN | DESIGN PREVIEW</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400..900;1,400..900&amp;family=Inter:wght@100..900&amp;family=Oswald:wght@700&amp;display=swap"
@@ -33,21 +33,72 @@
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
         }
-        .zoom-container:hover .zoom-image {
-            transform: scale(1.1);
-        }
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
-        .matte-btn {
-            background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        .custom-studio-overlay {
+            background-color: var(--bg-charcoal);
         }
-        .sticky-panel {
-            top: 120px;
+        .print-area-guide {
+            border: 1px dashed rgba(255, 255, 255, 0.15);
         }
-        .fill-star {
-            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+        .canvas-handle {
+            width: 10px;
+            height: 10px;
+            background: white;
+            border: 1px solid black;
+            position: absolute;
+            z-index: 20;
+        }
+        .bounding-box {
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        }
+        .rotate-handle {
+            width: 1px;
+            height: 24px;
+            background: white;
+            position: absolute;
+            top: -24px;
+            left: 50%;
+        }
+        .rotate-knob {
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: -30px;
+            left: calc(50% - 5px);
+            border: 1px solid black;
+        }
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 12px;
+            width: 12px;
+            border-radius: 0;
+            background: white;
+            cursor: pointer;
+            margin-top: -5px;
+        }
+        .graphic-grid-item:hover {
+            border-color: var(--accent);
+            background: rgba(255,255,255,0.05);
+        }
+        #preview-toggle:checked ~ #preview-overlay {
+            display: flex;
+        }
+        .preview-content {
+            background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
         }
     </style>
     <script id="tailwind-config">
@@ -72,421 +123,261 @@
 </head>
 
 <body class="bg-[var(--bg-dark)] text-white selection:bg-accent selection:text-black">
-    <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+    <input class="hidden" id="preview-toggle" type="checkbox" />
+    <div class="fixed inset-0 z-[100] bg-black hidden lg:flex" id="preview-overlay">
+        <div class="flex-[3] relative preview-content flex items-center justify-center p-20 overflow-hidden">
+            <label class="absolute top-10 left-10 cursor-pointer group flex items-center gap-4 z-50"
+                for="preview-toggle">
+                <span
+                    class="material-symbols-outlined text-white text-2xl group-hover:scale-110 transition-transform">arrow_back</span>
+                <span
+                    class="text-[10px] font-black uppercase tracking-[0.4em] text-white/60 group-hover:text-white transition-colors">Back
+                    to Studio</span>
+            </label>
+            <div class="absolute top-12 left-1/2 -translate-x-1/2 text-center pointer-events-none">
+                <h2 class="text-4xl font-impact tracking-tighter mb-1">MODERN MEN</h2>
+                <p class="text-[9px] font-black uppercase tracking-[0.6em] text-accent/60">Bespoke Artisan Series</p>
+            </div>
+            <div class="relative w-full max-w-4xl aspect-[4/5] flex items-center justify-center">
+                <img alt="White T-Shirt Base"
+                    class="w-full h-full object-contain mix-blend-lighten opacity-100 drop-shadow-[0_35px_35px_rgba(0,0,0,0.6)]"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuFUz1mgOhqTqhYH6sm0rNtTbQ0-Li067nl97kdiBcIkYxfRHYUZFOK_snplFfjKR_fyd0iBmTy6pQj3f9njo3co4ZCiGwhH_RTShwML_5xXkgJ-2EY2I2ByZ64kb7Cuxg4jv88QdDElu90YGHyHWTE5d1UPX9YuhyIGc6E4Zu-v_LXqclizbegdhw2I5hpG2dRHD4Dc4oodz4dt8LHRGyB4MeFDeY_J_luf147r9JtQS8UvmZnIm34rNw9uP3AXgT-iWKhiMa_UbF" />
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="w-[50%] h-[60%] mt-[-10%] relative flex items-center justify-center">
+                        <div
+                            class="relative w-48 h-48 transform translate-y-[-10%] translate-x-[5%] rotate-[-5deg] flex items-center justify-center opacity-90">
+                            <span class="material-symbols-outlined text-[120px] text-black">cardiology</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="absolute bottom-10 left-10 flex gap-8">
+                <div class="flex flex-col gap-1">
+                    <span class="text-[8px] font-bold text-white/40 uppercase tracking-widest">Model</span>
+                    <span class="text-[10px] font-black uppercase tracking-widest">6'2" / Size L</span>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <span class="text-[8px] font-bold text-white/40 uppercase tracking-widest">Lighting</span>
+                    <span class="text-[10px] font-black uppercase tracking-widest">Cinematic Studio</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex-1 bg-charcoal border-l border-white/5 flex flex-col justify-between p-12">
+            <div class="space-y-12">
+                <div>
+                    <span class="text-[10px] font-black uppercase tracking-[0.4em] text-accent mb-4 block">Selected
+                        Design</span>
+                    <h1 class="text-5xl font-impact tracking-tighter leading-none mb-4">CUSTOM ARTISAN TEE</h1>
+                    <p class="text-white/40 text-xs leading-relaxed max-w-xs">Hand-crafted luxury jersey. Featuring your
+                        unique anatomical heart placement. Tailored for a relaxed yet structured fit.</p>
+                </div>
+                <div class="space-y-8">
+                    <div class="flex flex-col">
+                        <span class="text-[9px] font-bold uppercase tracking-widest text-white/40 mb-1">Premium
+                            Total</span>
+                        <span class="text-3xl font-impact tracking-tighter text-white">$210.00</span>
+                    </div>
+                    <div class="space-y-4">
+                        <span class="text-[9px] font-bold uppercase tracking-widest text-white/40">Base Fabric
+                            Color</span>
+                        <div class="flex gap-4">
+                            <button
+                                class="w-8 h-8 rounded-full bg-white ring-1 ring-white ring-offset-4 ring-offset-charcoal"></button>
+                            <button
+                                class="w-8 h-8 rounded-full bg-black border border-white/10 hover:scale-105 transition-transform"></button>
+                            <button
+                                class="w-8 h-8 rounded-full bg-neutral-600 border border-white/10 hover:scale-105 transition-transform"></button>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex justify-between">
+                            <span class="text-[9px] font-bold uppercase tracking-widest text-white/40">Select
+                                Size</span>
+                            <button
+                                class="text-[9px] font-bold uppercase tracking-widest text-accent underline underline-offset-4">Size
+                                Guide</button>
+                        </div>
+                        <div class="grid grid-cols-4 gap-2">
+                            <button
+                                class="h-12 border border-white/10 flex items-center justify-center text-[11px] font-bold hover:border-white transition-colors">S</button>
+                            <button
+                                class="h-12 border border-white/10 flex items-center justify-center text-[11px] font-bold hover:border-white transition-colors">M</button>
+                            <button
+                                class="h-12 border border-white flex items-center justify-center text-[11px] font-bold bg-white/5">L</button>
+                            <button
+                                class="h-12 border border-white/10 flex items-center justify-center text-[11px] font-bold hover:border-white transition-colors">XL</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="space-y-3">
+                <button
+                    class="w-full h-16 bg-white text-black text-[11px] font-black uppercase tracking-[0.4em] hover:bg-accent transition-colors flex items-center justify-center gap-3">
+                    ADD TO BAG <span class="material-symbols-outlined text-lg">shopping_bag</span>
+                </button>
+                <button
+                    class="w-full h-16 bg-transparent border-2 border-white text-white text-[11px] font-black uppercase tracking-[0.4em] hover:bg-white/5 transition-colors flex items-center justify-center gap-3">
+                    BUY NOW <span class="material-symbols-outlined text-lg">bolt</span>
+                </button>
+                <p class="text-[8px] text-center text-white/30 uppercase tracking-widest mt-4">Free Express Shipping
+                    &amp; Signature Packaging Included</p>
+            </div>
+        </div>
+    </div>
+    <div class="relative flex min-h-screen w-full flex-col overflow-hidden">
         <header class="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/5 h-20">
             <div class="max-w-[1920px] mx-auto h-full px-8 md:px-12 flex items-center justify-between">
                 <div class="flex-1">
                     <a class="text-3xl font-impact tracking-tighter" href="#">MODERN MEN</a>
                 </div>
-                <nav class="hidden lg:flex items-center justify-center gap-10 flex-1">
-                    <a class="text-[10px] font-black uppercase tracking-[0.3em] hover:text-accent transition-colors"
-                        href="#">Collection</a>
-                    <a class="text-[10px] font-black uppercase tracking-[0.3em] hover:text-accent transition-colors"
-                        href="#">Shirts</a>
-                    <a class="text-[10px] font-black uppercase tracking-[0.3em] hover:text-accent transition-colors"
-                        href="#">Archive</a>
-                    <a class="text-[10px] font-black uppercase tracking-[0.3em] hover:text-accent transition-colors"
-                        href="#">Journal</a>
-                </nav>
+                <div class="hidden lg:flex items-center justify-center gap-4 flex-1">
+                    <span class="text-[10px] font-black uppercase tracking-[0.4em] text-white/40">Canvas Studio /</span>
+                    <span class="text-[10px] font-black uppercase tracking-[0.4em] text-accent">Graphic Library</span>
+                </div>
                 <div class="flex-1 flex justify-end items-center gap-6">
-                    <button class="hover:text-accent transition-colors"><span
-                            class="material-symbols-outlined">search</span></button>
-                    <button class="hover:text-accent transition-colors"><span
-                            class="material-symbols-outlined">person</span></button>
-                    <button class="relative hover:text-accent transition-colors">
-                        <span class="material-symbols-outlined">shopping_cart</span>
-                        <span
-                            class="absolute -top-1 -right-1 bg-white text-black text-[8px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">2</span>
+                    <button
+                        class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest hover:text-accent transition-colors">
+                        <span class="material-symbols-outlined text-lg">close</span> Exit Studio
                     </button>
                 </div>
             </div>
         </header>
-        <main class="pt-20">
-            <div class="max-w-[1920px] mx-auto px-8 md:px-12 py-12">
-                <div class="flex flex-col lg:flex-row gap-16">
-                    <div class="lg:w-3/5 space-y-6">
-                        <div class="relative group">
+        <main class="pt-20 h-screen flex flex-col lg:flex-row overflow-hidden">
+            <div
+                class="lg:w-3/5 relative bg-[#0f0f0f] flex items-center justify-center p-12 overflow-hidden cursor-crosshair">
+                <div class="absolute inset-0 opacity-10 pointer-events-none"
+                    style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;">
+                </div>
+                <div class="relative w-full max-w-2xl aspect-[4/5] flex items-center justify-center">
+                    <img alt="White T-Shirt Base" class="w-full h-full object-contain mix-blend-lighten opacity-90"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuFUz1mgOhqTqhYH6sm0rNtTbQ0-Li067nl97kdiBcIkYxfRHYUZFOK_snplFfjKR_fyd0iBmTy6pQj3f9njo3co4ZCiGwhH_RTShwML_5xXkgJ-2EY2I2ByZ64kb7Cuxg4jv88QdDElu90YGHyHWTE5d1UPX9YuhyIGc6E4Zu-v_LXqclizbegdhw2I5hpG2dRHD4Dc4oodz4dt8LHRGyB4MeFDeY_J_luf147r9JtQS8UvmZnIm34rNw9uP3AXgT-iWKhiMa_UbF" />
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div
+                            class="print-area-guide w-[50%] h-[60%] mt-[-10%] relative flex items-center justify-center">
+                            <span
+                                class="absolute -top-6 left-1/2 -translate-x-1/2 text-[8px] font-bold uppercase tracking-[0.4em] text-white/20">Active
+                                Print Zone</span>
                             <div
-                                class="zoom-container relative aspect-[4/5] overflow-hidden bg-charcoal border border-white/5">
-                                <img alt="Oxford Shirt Front"
-                                    class="zoom-image w-full h-full object-cover transition-transform duration-1000"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwsZp-Pn1cf91xCfR0zKcdmcBt88piN2EqmVP9zCCl3Yx0ESZ63MgKxhyhxaFIQpCOEyIa15Iqm4aMMPB_8her15N4ANWbU2CPwY6ECoCf4-9Rfizxu3FWAeZIISVUbRgKZneU-UZhsbxixrWytLLNqlH7PDRkDdZjtTnkqSUAHbMRkc6Mfb1mfBVAxFYjhUaWAPwRZ0uDBiiVRdLxDrRpJy2pRAAM5QjzAgw1T5zZXk7S8Rc3BUrL9aLhcxVFv3Q9Krw26dUDkay1" />
-                            </div>
-                            <button
-                                class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-black/50 border border-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all">
-                                <span class="material-symbols-outlined">west</span>
-                            </button>
-                            <button
-                                class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-black/50 border border-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all">
-                                <span class="material-symbols-outlined">east</span>
-                            </button>
-                        </div>
-                        <div class="flex gap-4 overflow-x-auto no-scrollbar pb-2">
-                            <div
-                                class="flex-shrink-0 w-24 md:w-32 aspect-[4/5] border-2 border-white cursor-pointer overflow-hidden">
-                                <img alt="Thumbnail 1" class="w-full h-full object-cover"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwsZp-Pn1cf91xCfR0zKcdmcBt88piN2EqmVP9zCCl3Yx0ESZ63MgKxhyhxaFIQpCOEyIa15Iqm4aMMPB_8her15N4ANWbU2CPwY6ECoCf4-9Rfizxu3FWAeZIISVUbRgKZneU-UZhsbxixrWytLLNqlH7PDRkDdZjtTnkqSUAHbMRkc6Mfb1mfBVAxFYjhUaWAPwRZ0uDBiiVRdLxDrRpJy2pRAAM5QjzAgw1T5zZXk7S8Rc3BUrL9aLhcxVFv3Q9Krw26dUDkay1" />
-                            </div>
-                            <div
-                                class="flex-shrink-0 w-24 md:w-32 aspect-[4/5] border border-white/10 hover:border-white/40 cursor-pointer transition-colors overflow-hidden">
-                                <img alt="Thumbnail 2" class="w-full h-full object-cover"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWF4PTb3zmAbIdIirT7eY4DhgJBx4vO67JP5MS7BECxSSi6K4MT8c07xzeZMyXfJqN_JDcEfrl_xAsyMch_WbfelTD_rsmGHePjYvJRa7OBFERkWq2x2y3l-7BIGk4_SiqtQW95PHHE2R6fps9DfuGJxSpWXziPY2tK1IuN0vii6KNC4VFe6f0V9SLJMfcD7jR65SF3uKMR7E51ixXtpOwYmAR09240s-tu3-BY5nTzPE6J2wrXJ49m8C8r_HRyQtqokNsg_guYzQ2" />
-                            </div>
-                            <div
-                                class="flex-shrink-0 w-24 md:w-32 aspect-[4/5] border border-white/10 hover:border-white/40 cursor-pointer transition-colors overflow-hidden">
-                                <img alt="Thumbnail 3" class="w-full h-full object-cover"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwsZp-Pn1cf91xCfR0zKcdmcBt88piN2EqmVP9zCCl3Yx0ESZ63MgKxhyhxaFIQpCOEyIa15Iqm4aMMPB_8her15N4ANWbU2CPwY6ECoCf4-9Rfizxu3FWAeZIISVUbRgKZneU-UZhsbxixrWytLLNqlH7PDRkDdZjtTnkqSUAHbMRkc6Mfb1mfBVAxFYjhUaWAPwRZ0uDBiiVRdLxDrRpJy2pRAAM5QjzAgw1T5zZXk7S8Rc3BUrL9aLhcxVFv3Q9Krw26dUDkay1" />
-                            </div>
-                            <div
-                                class="flex-shrink-0 w-24 md:w-32 aspect-[4/5] border border-white/10 hover:border-white/40 cursor-pointer transition-colors overflow-hidden">
-                                <img alt="Thumbnail 4" class="w-full h-full object-cover"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCodgCBHrDDAKZiy_yLimGjExrGQiJCfXcXJfLWHl4Irh2cLT4n4gReNV689yTVQ9fJoTCJ3FNsbYaLIoXVRCDhgsj1PHVZAKrFjiiDMdCMef22iG7YPZu2Uf3WODJGniW_m4dvs0W1kZ64Dyvz7jgfd9qnUqB5Oj4RR0f0XDXh7rOLdrPBYEA7CXnJtiW-DLsG7Wg5wfxK4vfCsIg_TUKqQ0DYZLbKLOoj7j1Vl3g3UYLHKNW8pfdOvv2kGOkuBURQfEoUJiRSifgs" />
+                                class="bounding-box relative p-0 cursor-move group w-40 h-40 transform translate-y-[-10%] translate-x-[5%] rotate-[-5deg]">
+                                <div class="rotate-handle"></div>
+                                <div class="rotate-knob"></div>
+                                <div class="canvas-handle -top-1 -left-1 cursor-nwse-resize"></div>
+                                <div class="canvas-handle -top-1 -right-1 cursor-nesw-resize"></div>
+                                <div class="canvas-handle -bottom-1 -left-1 cursor-nesw-resize"></div>
+                                <div class="canvas-handle -bottom-1 -right-1 cursor-nwse-resize"></div>
+                                <div class="w-full h-full flex items-center justify-center p-4">
+                                    <span class="material-symbols-outlined text-[100px] text-black">cardiology</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="lg:w-2/5 relative">
-                        <div class="sticky sticky-panel space-y-10">
-                            <div>
-                                <nav
-                                    class="flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 mb-8">
-                                    <a class="hover:text-white transition-colors" href="#">Home</a>
-                                    <span class="material-symbols-outlined text-[10px]">chevron_right</span>
-                                    <a class="hover:text-white transition-colors" href="#">Shirts</a>
-                                    <span class="material-symbols-outlined text-[10px]">chevron_right</span>
-                                    <span class="text-white">Men's Classic Oxford</span>
-                                </nav>
-                                <h1 class="text-5xl md:text-7xl font-impact tracking-tighter leading-none mb-4">MEN'S
-                                    CLASSIC OXFORD SHIRT</h1>
-                                <div class="flex items-center gap-6 mb-6">
-                                    <div class="flex gap-1 text-accent">
-                                        <span class="material-symbols-outlined text-sm fill-star">star</span>
-                                        <span class="material-symbols-outlined text-sm fill-star">star</span>
-                                        <span class="material-symbols-outlined text-sm fill-star">star</span>
-                                        <span class="material-symbols-outlined text-sm fill-star">star</span>
-                                        <span class="material-symbols-outlined text-sm">star_half</span>
-                                    </div>
-                                    <span class="text-[10px] font-bold tracking-widest text-white/40">(48
-                                        REVIEWS)</span>
-                                </div>
-                                <div class="flex items-baseline gap-4">
-                                    <span class="text-3xl font-impact tracking-tight text-accent">$145.00</span>
+                </div>
+                <div class="absolute bottom-10 left-10 flex gap-4">
+                    <button
+                        class="w-12 h-12 bg-black border border-white/10 flex items-center justify-center hover:border-white transition-colors"
+                        title="Snap to Grid">
+                        <span class="material-symbols-outlined text-sm">grid_4x4</span>
+                    </button>
+                    <button
+                        class="w-12 h-12 bg-black border border-white/10 flex items-center justify-center hover:border-white transition-colors"
+                        title="Zoom">
+                        <span class="material-symbols-outlined text-sm">zoom_in</span>
+                    </button>
+                </div>
+            </div>
+            <div
+                class="lg:w-2/5 custom-studio-overlay border-l border-white/5 flex flex-col h-full overflow-y-auto no-scrollbar">
+                <div class="p-10 space-y-12 pb-96">
+                    <section class="space-y-6">
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-[11px] font-black uppercase tracking-[0.4em] text-accent">01. Graphic
+                                Library</h4>
+                            <span class="material-symbols-outlined text-accent text-sm">palette</span>
+                        </div>
+                        <div class="grid grid-cols-4 gap-4">
+                            <button
+                                class="graphic-grid-item bg-black/40 aspect-square border border-accent/60 bg-white/5 flex items-center justify-center p-4 transition-all"
+                                title="Anatomical Heart">
+                                <span class="material-symbols-outlined text-2xl">cardiology</span>
+                            </button>
+                            <button
+                                class="graphic-grid-item bg-black/40 aspect-square border border-white/5 flex items-center justify-center p-4 transition-all"
+                                title="Lightning Bolt">
+                                <span class="material-symbols-outlined text-2xl">bolt</span>
+                            </button>
+                            <button
+                                class="graphic-grid-item bg-black/40 aspect-square border border-white/5 flex items-center justify-center p-4 transition-all"
+                                title="Urban Symbol">
+                                <span class="material-symbols-outlined text-2xl">stat_3</span>
+                            </button>
+                            <button
+                                class="graphic-grid-item bg-black/40 aspect-square border border-white/5 flex items-center justify-center p-4 transition-all"
+                                title="Abstract Lines">
+                                <span class="material-symbols-outlined text-2xl">gesture</span>
+                            </button>
+                        </div>
+                    </section>
+                    <section class="space-y-6">
+                        <h4 class="text-[11px] font-black uppercase tracking-[0.4em] text-accent">02. Fabric Color</h4>
+                        <div class="flex gap-6">
+                            <div class="flex flex-col items-center gap-2">
+                                <button
+                                    class="w-10 h-10 rounded-full bg-white ring-2 ring-white ring-offset-4 ring-offset-charcoal"></button>
+                                <span class="text-[8px] font-black uppercase tracking-widest text-white">Optic
+                                    White</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-2">
+                                <button
+                                    class="w-10 h-10 rounded-full bg-black border border-white/20 hover:scale-110 transition-transform"></button>
+                                <span class="text-[8px] font-black uppercase tracking-widest text-white/40">Noir</span>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="space-y-6">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-[11px] font-black uppercase tracking-[0.4em] text-accent">03. Layers</h4>
+                            <span class="material-symbols-outlined text-white/40 text-sm">layers</span>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-4 bg-white/5 border border-white/40 p-4 group">
+                                <span class="material-symbols-outlined text-sm text-white/40">drag_indicator</span>
+                                <span class="material-symbols-outlined text-sm text-accent">cardiology</span>
+                                <span class="text-[10px] font-bold uppercase tracking-widest flex-1">Heart
+                                    (Graphic)</span>
+                                <div class="flex gap-2">
+                                    <span class="material-symbols-outlined text-sm cursor-pointer">visibility</span>
                                     <span
-                                        class="text-lg font-impact tracking-tight text-white/20 line-through">$185.00</span>
-                                </div>
-                            </div>
-                            <div class="space-y-4">
-                                <h4 class="text-[11px] font-black uppercase tracking-[0.3em]">Palette: <span
-                                        class="text-white/40 ml-2">Optic White</span></h4>
-                                <div class="flex gap-4">
-                                    <button
-                                        class="w-8 h-8 bg-white ring-2 ring-white ring-offset-4 ring-offset-black transition-all"></button>
-                                    <button
-                                        class="w-8 h-8 bg-[#121212] border border-white/20 hover:scale-110 transition-transform"></button>
-                                    <button
-                                        class="w-8 h-8 bg-[#d4c4b1] border border-white/20 hover:scale-110 transition-transform"></button>
-                                    <button
-                                        class="w-8 h-8 bg-[#2d3a3a] border border-white/20 hover:scale-110 transition-transform"></button>
-                                </div>
-                            </div>
-                            <div class="space-y-4">
-                                <div class="flex justify-between items-center">
-                                    <h4 class="text-[11px] font-black uppercase tracking-[0.3em]">Select Size</h4>
-                                    <button
-                                        class="text-[9px] font-bold uppercase tracking-widest text-accent border-b border-accent/30">Size
-                                        Guide</button>
-                                </div>
-                                <div class="grid grid-cols-5 gap-3">
-                                    <button
-                                        class="h-12 border border-white/10 text-[10px] font-bold uppercase tracking-widest hover:border-white transition-colors">XS</button>
-                                    <button
-                                        class="h-12 border border-white/10 text-[10px] font-bold uppercase tracking-widest hover:border-white transition-colors">S</button>
-                                    <button
-                                        class="h-12 border border-white text-[10px] font-bold uppercase tracking-widest bg-white text-black">M</button>
-                                    <button
-                                        class="h-12 border border-white/10 text-[10px] font-bold uppercase tracking-widest hover:border-white transition-colors">L</button>
-                                    <button
-                                        class="h-12 border border-white/10 text-[10px] font-bold uppercase tracking-widest hover:border-white transition-colors">XL</button>
-                                </div>
-                            </div>
-                            <div class="space-y-4 pt-4">
-                                <button
-                                    class="w-full h-16 bg-white text-black text-[11px] font-black uppercase tracking-[0.3em] hover:bg-accent transition-colors flex items-center justify-center gap-3">
-                                    Add to Bag <span class="material-symbols-outlined">shopping_bag</span>
-                                </button>
-                                <button
-                                    class="w-full h-16 matte-btn text-white text-[11px] font-black uppercase tracking-[0.3em] border border-white/10 hover:border-white/40 transition-colors">
-                                    Buy it Now
-                                </button>
-                                <div class="pt-6">
-                                    <button
-                                        class="w-full h-16 border border-white/40 text-white text-[11px] font-black uppercase tracking-[0.3em] hover:bg-white hover:text-black transition-all flex items-center justify-center gap-3">
-                                        Customize Your Own <span class="material-symbols-outlined text-lg">brush</span>
-                                    </button>
-                                    <p
-                                        class="mt-4 text-[10px] font-bold uppercase tracking-widest text-white/40 text-center">
-                                        Create a unique piece with our template-based design studio.</p>
-                                </div>
-                            </div>
-                            <div class="pt-8 border-t border-white/5">
-                                <h4 class="text-[11px] font-black uppercase tracking-[0.3em] mb-4">Delivery Options</h4>
-                                <div class="flex border-b border-white/20 focus-within:border-white transition-colors">
-                                    <input
-                                        class="bg-transparent border-none text-[11px] font-bold tracking-widest placeholder:text-white/10 focus:ring-0 flex-1 py-3 px-0"
-                                        placeholder="Enter Pincode" type="text" />
-                                    <button
-                                        class="text-[10px] font-black uppercase tracking-widest text-accent">Check</button>
-                                </div>
-                            </div>
-                            <div class="divide-y divide-white/5 border-t border-b border-white/5">
-                                <div class="py-6">
-                                    <button class="w-full flex justify-between items-center group">
-                                        <span class="text-[11px] font-black uppercase tracking-[0.3em]">Fabric &amp;
-                                            Care</span>
-                                        <span
-                                            class="material-symbols-outlined text-white/40 group-hover:text-white">add</span>
-                                    </button>
-                                </div>
-                                <div class="py-6">
-                                    <button class="w-full flex justify-between items-center group">
-                                        <span class="text-[11px] font-black uppercase tracking-[0.3em]">Shipping &amp;
-                                            Returns</span>
-                                        <span
-                                            class="material-symbols-outlined text-white/40 group-hover:text-white">add</span>
-                                    </button>
+                                        class="material-symbols-outlined text-sm cursor-pointer text-red-400">delete</span>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </section>
                 </div>
-            </div>
-            <section class="py-32 bg-black border-t border-white/5">
-                <div class="max-w-[1920px] mx-auto px-12">
-                    <div class="flex justify-between items-end mb-16">
-                        <h2 class="text-5xl font-impact tracking-tighter">COMPLETE THE LOOK</h2>
-                        <div class="flex gap-4">
-                            <button
-                                class="w-12 h-12 border border-white/10 flex items-center justify-center hover:border-white transition-colors">
-                                <span class="material-symbols-outlined">west</span>
-                            </button>
-                            <button
-                                class="w-12 h-12 border border-white/10 flex items-center justify-center hover:border-white transition-colors">
-                                <span class="material-symbols-outlined">east</span>
-                            </button>
+                <div
+                    class="absolute bottom-0 right-0 w-full bg-black/95 backdrop-blur-md border-t border-white/10 p-10 pt-8 flex flex-col gap-6 z-50">
+                    <div class="flex justify-between items-center">
+                        <span class="text-[11px] font-black uppercase tracking-widest text-white/60">Selected
+                            Subtotal</span>
+                        <div class="flex flex-col items-end">
+                            <span class="text-2xl font-impact tracking-tighter text-accent">$210.00</span>
+                            <span class="text-[8px] text-white/40 uppercase tracking-[0.1em]">Bespoke Customization
+                                Incl.</span>
                         </div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                        <div class="group cursor-pointer">
-                            <div class="relative aspect-[3/4] overflow-hidden bg-charcoal border border-white/5 mb-6">
-                                <img class="w-full h-full object-cover transition-all duration-700"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuANt1UV_27JxD0QhRvqnX5zP1F_g8Cxd5nKWvbq_eMzCTBPe74Z05DHTqm4ZAPp-_5tFfFAJw6Lrh8GJO5E549XCShDl3DslSyTEZPoZDPcRGWAlBowfgvRG3YDkO2eok1vMlgXmDSbCqSlJ38JDIYMQF06t_zYBRukNZCLnQ0CGuhVBJxQDxdYHC6aObPjqxX_6_PjzdP5yUBt7R7XrICDG9I-1U6wVe95Dd7WM0qnqTBIqwYCx2yQ8SXrH5F7qpNqS_o9IieXa0N2" />
-                            </div>
-                            <h3 class="text-[11px] font-black uppercase tracking-widest mb-1">Raw Denim Trousers</h3>
-                            <p class="text-lg font-impact tracking-tight">$245</p>
-                        </div>
-                        <div class="group cursor-pointer">
-                            <div class="relative aspect-[3/4] overflow-hidden bg-charcoal border border-white/5 mb-6">
-                                <img class="w-full h-full object-cover transition-all duration-700"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXZhniQdec2wzTN85Y96dKi87Yt4THSO9wcpzep3V3Eyqgcu9XeI7TwABaUW_nsgxJtHPLjxT3LbAbRQgXEPHR9IStKAt0JMY0DOJg024RSzXhpiqnVNU_BnoE1jeN-HFLWT8pf3k_lH02ATKFzZv3icouvyCKMlUq4xrfTOwu3oahebgmq3bGbwxBqBkFesSHp2fM5PALrh2TIAxM-SmqaNm2Xsoy8MCjSC8_GWEP4Dv5p52mbY1xhP9UQrIedL_qF72iHjD-eUYA" />
-                            </div>
-                            <h3 class="text-[11px] font-black uppercase tracking-widest mb-1">Atelier Chelsea Boot</h3>
-                            <p class="text-lg font-impact tracking-tight">$410</p>
-                        </div>
-                        <div class="group cursor-pointer">
-                            <div class="relative aspect-[3/4] overflow-hidden bg-charcoal border border-white/5 mb-6">
-                                <img class="w-full h-full object-cover transition-all duration-700"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwsZp-Pn1cf91xCfR0zKcdmcBt88piN2EqmVP9zCCl3Yx0ESZ63MgKxhyhxaFIQpCOEyIa15Iqm4aMMPB_8her15N4ANWbU2CPwY6ECoCf4-9Rfizxu3FWAeZIISVUbRgKZneU-UZhsbxixrWytLLNqlH7PDRkDdZjtTnkqSUAHbMRkc6Mfb1mfBVAxFYjhUaWAPwRZ0uDBiiVRdLxDrRpJy2pRAAM5QjzAgw1T5zZXk7S8Rc3BUrL9aLhcxVFv3Q9Krw26dUDkay1" />
-                            </div>
-                            <h3 class="text-[11px] font-black uppercase tracking-widest mb-1">Urban Field Coat</h3>
-                            <p class="text-lg font-impact tracking-tight">$580</p>
-                        </div>
-                        <div class="group cursor-pointer">
-                            <div class="relative aspect-[3/4] overflow-hidden bg-charcoal border border-white/5 mb-6">
-                                <img class="w-full h-full object-cover transition-all duration-700"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCodgCBHrDDAKZiy_yLimGjExrGQiJCfXcXJfLWHl4Irh2cLT4n4gReNV689yTVQ9fJoTCJ3FNsbYaLIoXVRCDhgsj1PHVZAKrFjiiDMdCMef22iG7YPZu2Uf3WODJGniW_m4dvs0W1kZ64Dyvz7jgfd9qnUqB5Oj4RR0f0XDXh7rOLdrPBYEA7CXnJtiW-DLsG7Wg5wfxK4vfCsIg_TUKqQ0DYZLbKLOoj7j1Vl3g3UYLHKNW8pfdOvv2kGOkuBURQfEoUJiRSifgs" />
-                            </div>
-                            <h3 class="text-[11px] font-black uppercase tracking-widest mb-1">Canvas Tote Archive</h3>
-                            <p class="text-lg font-impact tracking-tight">$120</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <section class="py-32 bg-[var(--bg-dark)] border-t border-white/5">
-                <div class="max-w-[1920px] mx-auto px-12">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-16">
-                        <div>
-                            <h2 class="text-5xl font-impact tracking-tighter mb-4">CUSTOMER REVIEWS</h2>
-                            <div class="flex items-center gap-4">
-                                <div class="flex gap-1 text-accent">
-                                    <span class="material-symbols-outlined text-2xl fill-star">star</span>
-                                    <span class="material-symbols-outlined text-2xl fill-star">star</span>
-                                    <span class="material-symbols-outlined text-2xl fill-star">star</span>
-                                    <span class="material-symbols-outlined text-2xl fill-star">star</span>
-                                    <span class="material-symbols-outlined text-2xl">star_half</span>
-                                </div>
-                                <span class="text-[11px] font-bold uppercase tracking-widest text-white/40">4.8 Average
-                                    Based on 1,240 Reviews</span>
-                            </div>
-                        </div>
+                    <div class="flex gap-4">
+                        <label
+                            class="flex-1 h-16 border border-white/20 text-white text-[11px] font-black font-impact uppercase tracking-[0.4em] hover:bg-white/10 transition-colors flex items-center justify-center gap-3 cursor-pointer"
+                            for="preview-toggle">
+                            PREVIEW DESIGN <span class="material-symbols-outlined text-sm">visibility</span>
+                        </label>
                         <button
-                            class="px-10 py-4 border border-white/10 text-[11px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all">Write
-                            a Review</button>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div
-                            class="bg-charcoal p-10 border border-white/5 hover:border-white/20 transition-all flex flex-col justify-between">
-                            <div>
-                                <div class="flex justify-between items-start mb-6">
-                                    <div class="flex gap-0.5 text-accent">
-                                        <span class="material-symbols-outlined text-base fill-star">star</span>
-                                        <span class="material-symbols-outlined text-base fill-star">star</span>
-                                        <span class="material-symbols-outlined text-base fill-star">star</span>
-                                        <span class="material-symbols-outlined text-base fill-star">star</span>
-                                        <span class="material-symbols-outlined text-base fill-star">star</span>
-                                    </div>
-                                    <div class="flex items-center gap-1.5 text-accent">
-                                        <span class="material-symbols-outlined text-sm">verified</span>
-                                        <span class="text-[9px] font-black uppercase tracking-widest">Verified
-                                            Buyer</span>
-                                    </div>
-                                </div>
-                                <h4 class="text-[12px] font-black uppercase tracking-widest mb-4">Exceptional Cut &amp;
-                                    Material</h4>
-                                <p class="text-white/60 text-[11px] leading-relaxed tracking-wider uppercase">The
-                                    tailored fit is perfect. The Giza cotton feels substantial yet remains breathable.
-                                    Truly a staple piece for any minimalist wardrobe.</p>
-                            </div>
-                            <div class="mt-8 pt-8 border-t border-white/5 flex items-center justify-between">
-                                <span class="text-[10px] font-black uppercase tracking-widest">Alexander V.</span>
-                                <span class="text-[9px] font-bold uppercase tracking-widest text-white/20">2 weeks
-                                    ago</span>
-                            </div>
-                        </div>
-                        <div
-                            class="bg-charcoal p-10 border border-white/5 hover:border-white/20 transition-all flex flex-col justify-between">
-                            <div>
-                                <div class="flex justify-between items-start mb-6">
-                                    <div class="flex gap-0.5 text-accent">
-                                        <span class="material-symbols-outlined text-base fill-star">star</span>
-                                        <span class="material-symbols-outlined text-base fill-star">star</span>
-                                        <span class="material-symbols-outlined text-base fill-star">star</span>
-                                        <span class="material-symbols-outlined text-base fill-star">star</span>
-                                        <span class="material-symbols-outlined text-base">star</span>
-                                    </div>
-                                    <div class="flex items-center gap-1.5 text-accent">
-                                        <span class="material-symbols-outlined text-sm">verified</span>
-                                        <span class="text-[9px] font-black uppercase tracking-widest">Verified
-                                            Buyer</span>
-                                    </div>
-                                </div>
-                                <h4 class="text-[12px] font-black uppercase tracking-widest mb-4">Timeless Luxury</h4>
-                                <p class="text-white/60 text-[11px] leading-relaxed tracking-wider uppercase">I've tried
-                                    many luxury shirts, but the attention to detail in the stitching here is
-                                    unparalleled. Holds its shape well after multiple washes.</p>
-                            </div>
-                            <div class="mt-8 pt-8 border-t border-white/5 flex items-center justify-between">
-                                <span class="text-[10px] font-black uppercase tracking-widest">Marcus T.</span>
-                                <span class="text-[9px] font-bold uppercase tracking-widest text-white/20">1 month
-                                    ago</span>
-                            </div>
-                        </div>
-                        <div
-                            class="bg-charcoal p-10 border border-white/5 hover:border-white/20 transition-all flex flex-col justify-between">
-                            <div>
-                                <div class="flex justify-between items-start mb-6">
-                                    <div class="flex gap-0.5 text-accent">
-                                        <span class="material-symbols-outlined text-base fill-star">star</span>
-                                        <span class="material-symbols-outlined text-base fill-star">star</span>
-                                        <span class="material-symbols-outlined text-base fill-star">star</span>
-                                        <span class="material-symbols-outlined text-base fill-star">star</span>
-                                        <span class="material-symbols-outlined text-base fill-star">star</span>
-                                    </div>
-                                    <div class="flex items-center gap-1.5 text-accent">
-                                        <span class="material-symbols-outlined text-sm">verified</span>
-                                        <span class="text-[9px] font-black uppercase tracking-widest">Verified
-                                            Buyer</span>
-                                    </div>
-                                </div>
-                                <h4 class="text-[12px] font-black uppercase tracking-widest mb-4">Perfect White Shirt
-                                </h4>
-                                <p class="text-white/60 text-[11px] leading-relaxed tracking-wider uppercase">Found the
-                                    holy grail of white shirts. Crisp, opaque, and the collar height is just right for
-                                    both formal and casual settings.</p>
-                            </div>
-                            <div class="mt-8 pt-8 border-t border-white/5 flex items-center justify-between">
-                                <span class="text-[10px] font-black uppercase tracking-widest">Julian R.</span>
-                                <span class="text-[9px] font-bold uppercase tracking-widest text-white/20">3 months
-                                    ago</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <section class="py-40 bg-[var(--bg-dark)] px-12 border-t border-white/5">
-                <div class="max-w-[1920px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-                    <div>
-                        <h3 class="text-6xl md:text-8xl font-impact tracking-tighter leading-none mb-8">JOIN THE
-                            <br />COLLECTIVE</h3>
-                        <p class="text-white/40 text-[12px] font-bold uppercase tracking-[0.3em]">Priority access to
-                            drops and member-only pricing.</p>
-                    </div>
-                    <form
-                        class="flex flex-col md:flex-row gap-0 border-b-2 border-white/20 focus-within:border-white transition-colors">
-                        <input
-                            class="flex-1 bg-transparent px-0 py-6 border-none focus:ring-0 text-xl font-impact tracking-wider placeholder:text-white/10 uppercase"
-                            placeholder="Enter Email Address" type="email" />
-                        <button
-                            class="py-6 px-10 text-white text-[12px] font-black uppercase tracking-widest hover:text-accent transition-colors flex items-center gap-4">
-                            Subscribe <span class="material-symbols-outlined">east</span>
+                            class="flex-[1.5] h-16 bg-white text-black text-[11px] font-black uppercase tracking-[0.4em] hover:bg-accent transition-colors flex items-center justify-center gap-3">
+                            ADD TO BAG <span class="material-symbols-outlined">shopping_bag</span>
                         </button>
-                    </form>
-                </div>
-            </section>
-        </main>
-        <footer class="bg-black text-white pt-32 pb-16">
-            <div class="max-w-[1920px] mx-auto px-12">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-20 mb-32">
-                    <div class="md:col-span-1">
-                        <h2 class="text-4xl font-impact tracking-tighter mb-10">MODERN MEN</h2>
-                        <p class="text-white/40 text-[10px] leading-loose tracking-[0.2em] mb-10 uppercase">
-                            Uncompromising aesthetics for the urban professional. <br />Based in New York City.
-                        </p>
-                    </div>
-                    <div>
-                        <h4 class="text-[11px] font-black uppercase tracking-[0.4em] text-accent mb-10">Assistance</h4>
-                        <ul class="space-y-5 text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">
-                            <li><a class="hover:text-white transition-colors" href="#">Shipping Matrix</a></li>
-                            <li><a class="hover:text-white transition-colors" href="#">Returns Archive</a></li>
-                            <li><a class="hover:text-white transition-colors" href="#">Atelier Care</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="text-[11px] font-black uppercase tracking-[0.4em] text-accent mb-10">Department</h4>
-                        <ul class="space-y-5 text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">
-                            <li><a class="hover:text-white transition-colors" href="#">New Archives</a></li>
-                            <li><a class="hover:text-white transition-colors" href="#">Denim Series</a></li>
-                            <li><a class="hover:text-white transition-colors" href="#">Formal Tailoring</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="text-[11px] font-black uppercase tracking-[0.4em] text-accent mb-10">Flagship</h4>
-                        <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 leading-[2.5]">
-                            245 Fifth Avenue <br />New York, NY 10016 <br /><br />Mon-Sat: 10:00 - 20:00
-                        </p>
-                    </div>
-                </div>
-                <div class="flex flex-col md:flex-row justify-between items-center pt-16 border-t border-white/5 gap-8">
-                    <p class="text-[9px] text-white/20 uppercase tracking-[0.3em]">© 2024 MODERN MEN LTD. ALL ARCHIVES
-                        PROTECTED.</p>
-                    <div class="flex items-center gap-10">
-                        <div class="flex gap-6 opacity-20">
-                            <span class="material-symbols-outlined text-sm">credit_card</span>
-                            <span class="material-symbols-outlined text-sm">payments</span>
-                            <span class="material-symbols-outlined text-sm">wallet</span>
-                        </div>
                     </div>
                 </div>
             </div>
-        </footer>
+        </main>
     </div>
 
 </body>

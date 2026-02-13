@@ -7,8 +7,8 @@ export default function StudioSidebar() {
     return (
         <aside className="w-full bg-[#121212] border-l border-white/5 overflow-y-auto">
             <div className="p-10 space-y-12 pb-48">
-                <TransformControls />
                 <ElementLibrary />
+                <TransformControls />
                 <LayersPanel />
                 <FabricColorPicker />
             </div>

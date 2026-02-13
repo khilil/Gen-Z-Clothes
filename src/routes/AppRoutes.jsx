@@ -16,8 +16,9 @@ import ProductDetailPage from "../pages/ProductDetail/ProductDetailPage/ProductD
 import CustomizePage from "../pages/CustomizeShopPage/CustomizePage";
 import TextEditorPage from "../pages/CustomizeShopPage/TextEditorPage";
 import ShapeEditorPage from "../pages/CustomizeShopPage/ShapeEditorPage";
-import GraphicsEditorPage from "../pages/CustomizeShopPage/GraphicsEditorPage";
 import CustomizeEditorLayout from "../pages/CustomizeShopPage/layouts/CustomizeEditorLayout";
+import GraphicsEditorPage from "../pages/CustomizeShopPage/GraphicsEditorPage";
+import PreviewPage from "../pages/CustomizeShopPage/components/Preview/PreviewPage";
 
 export default function AppRoutes() {
     return (
@@ -33,18 +34,13 @@ export default function AppRoutes() {
             <Route path="/about" element={<About />} />
 
             {/* <Route path="/customize/:slug" element={<CustomizePage />} /> */}
-
             <Route path="/customize/:slug" element={<CustomizeEditorLayout />}>
-                {/* DEFAULT customize landing */}
                 <Route index element={<CustomizePage />} />
-
-                {/* Editors */}
                 <Route path="text" element={<TextEditorPage />} />
                 <Route path="shapes" element={<ShapeEditorPage />} />
                 <Route path="graphics" element={<GraphicsEditorPage />} />
+                <Route path="preview" element={<PreviewPage />} />
             </Route>
-
-
 
             {/* ACCOUNT */}
             <Route path="/account" element={<AccountLayout />}>

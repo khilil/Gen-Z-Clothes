@@ -1,16 +1,23 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, matchPath } from "react-router-dom";
 import Header from "./Header";
 import CheckoutHeader from "./CheckoutHeader";
+import StudioHeader from "./StudioHeader";
 
 export default function HeaderWrapper() {
   const location = useLocation();
 
-  // 👉 Checkout page detect
-  const isCheckout = location.pathname === "/checkout" || location.pathname === "/checkout/details";
-
-  return (
-    <>
-      {isCheckout ? <CheckoutHeader /> : <Header />}
-    </>
+  const isCheckout = matchPath(
+    { path: "/checkout/*" },
+    location.pathname
   );
+
+  const isStudio = matchPath(
+    { path: "/customize/:slug/*" },
+    location.pathname
+  );
+
+  if (isCheckout) return <CheckoutHeader />;
+  if (isStudio) return <StudioHeader />;
+
+  return <Header />;
 }

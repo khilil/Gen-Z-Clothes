@@ -5,19 +5,22 @@ const FabricContext = createContext(null);
 export function FabricProvider({ children }) {
     const canvasRef = useRef(null);
     const fabricCanvas = useRef(null);
-
-    const printAreaRef = useRef(null);     // ✅ ADD
-    const activeTextRef = useRef(null);    // ✅ ADD
+    const printAreaRef = useRef(null);
+    const activeTextRef = useRef(null);
     const activeShapeRef = useRef(null);
-    const activeObjectRef = useRef(null); // 🔥 IMPORTANT
+    const activeObjectRef = useRef(null);
+
+    // 🔥 Store JSON instead of PNG
+    const frontDesignRef = useRef(null);
+    const backDesignRef = useRef(null);
+
     const layersRef = useRef([]);
-
-
-    
-    // 🔥 NEW: persist design
     const designStateRef = useRef(null);
+    const viewSideRef = useRef("front");
+    const isCanvasReadyRef = useRef(false);
 
     function syncLayers(canvas) {
+        if (!canvas) return;
         layersRef.current = canvas
             .getObjects()
             .filter(obj => !obj.excludeFromExport);
@@ -30,10 +33,15 @@ export function FabricProvider({ children }) {
                 fabricCanvas,
                 printAreaRef,
                 activeTextRef,
-                designStateRef,
                 activeShapeRef,
                 activeObjectRef,
-                layersRef
+                layersRef,
+                designStateRef,
+                isCanvasReadyRef,
+                syncLayers,
+                viewSideRef,
+                frontDesignRef,
+                backDesignRef,
             }}
         >
             {children}

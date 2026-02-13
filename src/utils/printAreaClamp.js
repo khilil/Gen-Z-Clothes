@@ -1,27 +1,44 @@
-// src/utils/printAreaClamp.js
 export function clampToPrintArea(obj, printArea) {
     if (!obj || !printArea) return;
 
-    const bounds = obj.getBoundingRect(true);
+    obj.setCoords();
 
-    const leftLimit = printArea.left - printArea.width / 2;
-    const rightLimit = printArea.left + printArea.width / 2;
-    const topLimit = printArea.top - printArea.height / 2;
-    const bottomLimit = printArea.top + printArea.height / 2;
+    const objBounds = obj.getBoundingRect(true, true);
+    const areaBounds = printArea.getBoundingRect(true, true);
 
-    if (bounds.left < leftLimit) {
-        obj.left += leftLimit - bounds.left;
+    let newLeft = obj.left;
+    let newTop = obj.top;
+
+    // LEFT
+    if (objBounds.left < areaBounds.left) {
+        newLeft += areaBounds.left - objBounds.left;
     }
 
-    if (bounds.left + bounds.width > rightLimit) {
-        obj.left -= (bounds.left + bounds.width) - rightLimit;
+    // RIGHT
+    if (objBounds.left + objBounds.width > areaBounds.left + areaBounds.width) {
+        newLeft -=
+            objBounds.left +
+            objBounds.width -
+            (areaBounds.left + areaBounds.width);
     }
 
-    if (bounds.top < topLimit) {
-        obj.top += topLimit - bounds.top;
+    // TOP
+    if (objBounds.top < areaBounds.top) {
+        newTop += areaBounds.top - objBounds.top;
     }
 
-    if (bounds.top + bounds.height > bottomLimit) {
-        obj.top -= (bounds.top + bounds.height) - bottomLimit;
+    // BOTTOM
+    if (objBounds.top + objBounds.height > areaBounds.top + areaBounds.height) {
+        newTop -=
+            objBounds.top +
+            objBounds.height -
+            (areaBounds.top + areaBounds.height);
     }
+
+    obj.set({
+        left: newLeft,
+        top: newTop,
+    });
+
+    obj.setCoords();
 }

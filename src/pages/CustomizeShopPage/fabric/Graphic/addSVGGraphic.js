@@ -1,0 +1,36 @@
+import * as fabric  from "fabric";
+
+export const addSVGToCanvas = async (
+    canvas,
+    svgPath,
+    printArea
+) => {
+    if (!canvas) return;
+
+    try {
+        const { objects, options } = await fabric.loadSVGFromURL(svgPath);
+
+        const svg = fabric.util.groupSVGElements(objects, options);
+
+        // scale inside print area
+        const maxWidth = printArea.width * 0.6;
+        const scale = maxWidth / svg.width;
+
+        svg.scale(scale);
+
+        // center inside print area
+        svg.set({
+            left: printArea.left + printArea.width / 2,
+            top: printArea.top + printArea.height / 2,
+            originX: "center",
+            originY: "center"
+        });
+
+        canvas.add(svg);
+        canvas.setActiveObject(svg);
+        canvas.requestRenderAll();
+
+    } catch (err) {
+        console.error("SVG Load Error:", err);
+    }
+};

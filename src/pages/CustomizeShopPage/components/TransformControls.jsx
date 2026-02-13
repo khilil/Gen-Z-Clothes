@@ -31,7 +31,7 @@ export default function TransformControls() {
     return (
         <section className="space-y-6">
             <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-[#d4c4b1]">
-                01. Transform Controls
+                02. Transform Controls
             </h4>
 
             {/* ICON ACTIONS */}
