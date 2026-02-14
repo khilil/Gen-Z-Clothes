@@ -1,80 +1,101 @@
-import "./FiltersSidebar.css";
-
 export default function FiltersSidebar({
   filters,
-  availableSizes = [],
-  availableFits = [],
-  maxPrice = 1000,
   onSizeChange,
   onFitChange,
   onPriceChange,
-  onClear
+  onClear,
+  maxPrice = 1000,
+  isMobile = false // આ પ્રોપ ડ્રોઅરમાં સ્પેસિંગ મેનેજ કરવા માટે
 }) {
   return (
-    <aside className="filters-sidebar">
-      <div className="filters-inner">
+    // ડેસ્કટોપમાં p-12 રહેશે, મોબાઈલમાં ડ્રોઅર મુજબ એડજસ્ટ થશે
+    <div className={`${isMobile ? "space-y-10" : "p-5 space-y-10"}`}>
 
-        <h4 className="filters-title">Refine By</h4>
+      {/* HEADER - ફક્ત ડેસ્કટોપમાં દેખાશે કારણ કે મોબાઈલમાં ડ્રોઅરનું પોતાનું હેડર છે */}
+      {!isMobile && (
+        <div className="flex items-center justify-between border-b border-white/10 pb-6">
+          <h4 className="text-[11px] font-black uppercase tracking-[0.3em]">Refine By</h4>
+          <button
+            onClick={onClear}
+            className="text-[9px] font-bold text-white/40 uppercase tracking-widest hover:text-white transition-colors"
+          >
+            Reset
+          </button>
+        </div>
+      )}
 
-        {/* SIZE */}
-        <div className="filter-block">
-          <span className="filter-label">Size Selection</span>
+      {/* SIZE FILTER */}
+      <div className="space-y-6">
+        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/80">Size</span>
+        <div className="grid grid-cols-3 gap-px bg-white/5 border border-white/5">
+          {["XS", "S", "M", "L", "XL", "XXL"].map(size => (
+            <button
+              key={size}
+              onClick={() => onSizeChange(size)}
+              className={`py-4 text-[10px] font-bold transition-all ${filters.size === size ? "bg-white text-black" : "bg-black hover:bg-white/10"
+                }`}
+            >
+              {size}
+            </button>
+          ))}
+        </div>
+      </div>
 
-          <div className="size-grid">
-            {["XS", "S", "M", "L", "XL", "XXL"].map(size => (
-              <button
-                key={size}
-                className={filters.size === size ? "active" : ""}
-                onClick={() => onSizeChange(size)}
+      {/* FIT FILTER */}
+      <div className="space-y-6">
+        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/80">Fit</span>
+        <div className="space-y-4">
+          {["slim", "regular", "oversized"].map(fit => (
+            <label key={fit} className="flex items-center group cursor-pointer">
+              <input
+                type="checkbox"
+                className="hidden"
+                checked={filters.fit.includes(fit)}
+                onChange={() => onFitChange(fit)}
+              />
+              <div
+                className={`w-3 h-3 border border-white/20 mr-4 flex items-center justify-center transition-all ${filters.fit.includes(fit) ? "bg-white border-white" : ""
+                  }`}
               >
-                {size}
-              </button>
-            ))}
-          </div>
+                {filters.fit.includes(fit) && (
+                  <span className="material-symbols-outlined text-[10px] text-black">check</span>
+                )}
+              </div>
+              <span
+                className={`text-[10px] font-bold uppercase tracking-widest transition-colors ${filters.fit.includes(fit) ? "text-white" : "text-white/40 group-hover:text-white"
+                  }`}
+              >
+                {fit} Fit
+              </span>
+            </label>
+          ))}
         </div>
+      </div>
 
-        {/* FIT */}
-        <div className="filter-block">
-          <span className="filter-label">Fit Type</span>
-
-          <ul className="checkbox-list">
-            {["slim", "regular", "oversized", "relaxed"].map(fit => (
-              <li key={fit}>
-                <input
-                  type="checkbox"
-                  checked={filters.fit.includes(fit)}
-                  onChange={() => onFitChange(fit)}
-                />
-                <label>{fit}</label>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* PRICE */}
-        <div className="filter-block">
-          <span className="filter-label">Price Range</span>
-
+      {/* PRICE RANGE */}
+      <div className="space-y-6">
+        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/80">Price Range</span>
+        <div className="mt-8 px-1">
           <input
             type="range"
             min="0"
             max={maxPrice}
             value={filters.price}
             onChange={(e) => onPriceChange(Number(e.target.value))}
+            className="w-full h-px bg-white/10 appearance-none cursor-pointer accent-accent"
           />
-
-          <div className="price-values">
-            <span>$0</span>
-            <span>${filters.price}</span>
+          <div className="flex justify-between mt-6">
+            <div className="flex flex-col">
+              <span className="text-[8px] text-white/30 uppercase font-black">Min</span>
+              <span className="text-[11px] font-impact mt-1">$0</span>
+            </div>
+            <div className="flex flex-col text-right">
+              <span className="text-[8px] text-white/30 uppercase font-black">Max</span>
+              <span className="text-[11px] font-impact mt-1">${filters.price}</span>
+            </div>
           </div>
         </div>
-
-
-        <button className="clear-btn" onClick={onClear}>
-          Clear Filters
-        </button>
-
       </div>
-    </aside>
+    </div>
   );
 }

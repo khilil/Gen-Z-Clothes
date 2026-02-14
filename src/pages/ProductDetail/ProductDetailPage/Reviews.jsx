@@ -33,110 +33,81 @@ const mockReviews = [
     },
 ];
 
+
 export default function Reviews() {
     const [reviews, setReviews] = useState([]);
 
     useEffect(() => {
-        // 🔮 Future: replace with real API
         setReviews(mockReviews);
     }, []);
 
     if (!reviews.length) return null;
 
     return (
-        <section className="py-32 bg-[#0a0a0a] border-t border-white/5">
-            <div className="max-w-[1920px] mx-auto px-8 md:px-12">
+        <section className="py-16 md:py-32 bg-[#0a0a0a] border-t border-white/5">
+            <div className="max-w-[1920px] mx-auto px-4 md:px-12">
 
                 {/* HEADER */}
-                <div className="flex flex-row md:flex-row justify-between items-start md:items-center gap-6 mb-16">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12 md:mb-16">
                     <div>
-                        <h2 className="text-5xl font-impact tracking-tighter mb-4">
+                        <h2 className="text-3xl md:text-5xl font-impact tracking-tighter mb-4">
                             CUSTOMER REVIEWS
                         </h2>
 
-                        <div className="flex items-center gap-4">
-                            <div className="flex gap-1 text-[#d4c4b1]">
+                        <div className="flex flex-wrap items-center gap-3 md:gap-4">
+                            <div className="flex gap-0.5 text-[#d4c4b1]">
                                 {[1, 2, 3, 4].map(i => (
-                                    <span
-                                        key={i}
-                                        className="material-symbols-outlined text-2xl fill-star"
-                                    >
-                                        star
-                                    </span>
+                                    <span key={i} className="material-symbols-outlined text-xl md:text-2xl fill-star">star</span>
                                 ))}
-                                <span className="material-symbols-outlined text-2xl">
-                                    star_half
-                                </span>
+                                <span className="material-symbols-outlined text-xl md:text-2xl">star_half</span>
                             </div>
 
-                            <span className="text-[11px] font-bold uppercase tracking-widest text-white/40">
-                                4.8 Average Based on 1,240 Reviews
+                            <span className="text-[9px] md:text-[11px] font-bold uppercase tracking-widest text-white/40">
+                                4.8 Average (1,240 Reviews)
                             </span>
                         </div>
                     </div>
 
-                    <button className="px-10 py-4 border border-white/10 text-[11px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+                    <button className="w-full md:w-auto px-10 py-4 border border-white/10 text-[11px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all">
                         Write a Review
                     </button>
                 </div>
 
-                {/* GRID */}
-                <div className="grid grid-rows-1 md:grid-cols-3 gap-8">
+                {/* GRID: Mobile ma 1 column, Desktop ma 3 */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
                     {reviews.map(review => (
                         <div
                             key={review.id}
-                            className="bg-[#121212] p-10 border border-white/5 hover:border-white/20 transition-all flex flex-col justify-between"
+                            className="bg-[#121212] p-6 md:p-10 border border-white/5 hover:border-white/20 transition-all flex flex-col justify-between"
                         >
                             <div>
-                                {/* Rating + Verified */}
                                 <div className="flex justify-between items-start mb-6">
                                     <div className="flex gap-0.5 text-[#d4c4b1]">
                                         {Array.from({ length: review.rating }).map((_, i) => (
-                                            <span
-                                                key={i}
-                                                className="material-symbols-outlined text-base fill-star"
-                                            >
-                                                star
-                                            </span>
+                                            <span key={i} className="material-symbols-outlined text-sm fill-star">star</span>
                                         ))}
                                     </div>
-
                                     {review.verified && (
-                                        <div className="flex items-center gap-1.5 text-[#d4c4b1]">
-                                            <span className="material-symbols-outlined text-sm">
-                                                verified
-                                            </span>
-                                            <span className="text-[9px] font-black uppercase tracking-widest">
-                                                Verified Buyer
-                                            </span>
+                                        <div className="flex items-center gap-1 text-[#d4c4b1]">
+                                            <span className="material-symbols-outlined text-xs">verified</span>
+                                            <span className="text-[8px] font-black uppercase tracking-widest">Verified</span>
                                         </div>
                                     )}
                                 </div>
-
-                                {/* Title */}
-                                <h4 className="text-[12px] font-black uppercase tracking-widest mb-4">
+                                <h4 className="text-[11px] md:text-[12px] font-black uppercase tracking-widest mb-3">
                                     {review.title}
                                 </h4>
-
-                                {/* Review */}
-                                <p className="text-white/60 text-[11px] leading-relaxed tracking-wider uppercase">
+                                <p className="text-white/60 text-[10px] md:text-[11px] leading-relaxed tracking-wider uppercase">
                                     {review.review}
                                 </p>
                             </div>
-
-                            {/* Footer */}
-                            <div className="mt-8 pt-8 border-t border-white/5 flex items-center justify-between">
-                                <span className="text-[10px] font-black uppercase tracking-widest">
-                                    {review.name}
-                                </span>
-                                <span className="text-[9px] font-bold uppercase tracking-widest text-white/20">
-                                    {review.time}
-                                </span>
+                            <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between">
+                                <span className="text-[9px] font-black uppercase tracking-widest">{review.name}</span>
+                                <span className="text-[8px] font-bold uppercase text-white/20">{review.time}</span>
                             </div>
                         </div>
                     ))}
                 </div>
-
             </div>
         </section>
     );

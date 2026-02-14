@@ -18,6 +18,7 @@ export default function ProductListing() {
         <section className="listing-hero">
           <span>Collection 04</span>
           <h1>{category}</h1>
+          
           <p>Uncompromising Utility & Form</p>
         </section>
 

@@ -150,6 +150,7 @@ export default function MiniCart({ open, onClose }) {
           setShowAuth(true);
         }}
       />
+      
       {/* ACCESS COLLECTIVE MODAL */}
       <AccessCollectiveModal
         isOpen={showAuth}

@@ -2,13 +2,24 @@ import { useState } from "react";
 import "./Checkout.css";
 import { useCart } from "../../context/CartContext";
 import { Link, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
+
+
 
 export default function Checkout() {
   const navigate = useNavigate(); // ✅ ADD THIS
   const { cart } = useCart(); // ✅ cart from MiniCart
   const [payment, setPayment] = useState("card");
 
-  const subtotal = cart.reduce(
+  const location = useLocation();
+
+  const quickBuyProduct = location.state?.product;
+  const isQuickBuy = location.state?.isQuickBuy;
+
+  const products = isQuickBuy ? [quickBuyProduct] : cart;
+
+  const subtotal = products.reduce(
     (sum, item) => sum + item.price * item.qty,
     0
   );
@@ -18,7 +29,7 @@ export default function Checkout() {
 
   return (
     <div className="checkout">
-    
+
       {/* PROGRESS */}
       <div className="progress">
         <Step label="Cart" active />
@@ -71,7 +82,7 @@ export default function Checkout() {
           <h3>ORDER SUMMARY</h3>
 
           <div className="summary-items">
-            {cart.map(item => (
+            {products.map(item => (
               <SummaryItem
                 key={item.id}
                 image={item.image}

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchCategories } from "../../api/categories.api";
-import "./CategoryHero.css";
 
 export default function CategoryHero() {
   const { slug } = useParams();
@@ -14,50 +13,26 @@ export default function CategoryHero() {
     });
   }, [slug]);
 
-  if (!category) return null; // or loader
+  if (!category) return null;
 
   return (
-    <section className="category-hero">
+    <section className="relative h-[30vh] lg:h-[40vh] w-full overflow-hidden bg-black">
       <div
-        className="hero-bg"
-        style={{
-          backgroundImage: `url(${category.image})`
-        }}
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 scale-105"
+        style={{ backgroundImage: `url(${category.image})` }}
       >
-        <div className="cinematic-overlay"></div>
+        {/* Cinematic Overlay from HTML */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/80"></div>
       </div>
 
-      <div className="hero-content">
-        <span className="hero-eyebrow">
+      <div className="relative h-full flex flex-col items-center justify-center text-center px-4">
+        <span className="text-accent text-[9px] lg:text-[11px] font-black tracking-[0.4em] lg:tracking-[0.6em] uppercase mb-2 lg:mb-4 block opacity-80">
           Collection 04
         </span>
-
-        <h1 className="hero-title">
+        <h1 className="text-white text-5xl md:text-8xl lg:text-9xl font-[Oswald] leading-none tracking-tighter uppercase">
           {category.name}
         </h1>
-
-        <p className="hero-subtitle">
-          {getCategorySubtitle(category.slug)}
-        </p>
       </div>
     </section>
   );
-}
-
-/* 🔥 subtitle logic */
-function getCategorySubtitle(slug) {
-  switch (slug) {
-    case "clothes":
-      return "Modern Essentials & Daily Wear";
-    case "electronics":
-      return "Smart Tech & Innovation";
-    case "shoes":
-      return "Designed for Motion & Style";
-    case "furniture":
-      return "Crafted Comfort & Design";
-    case "miscellaneous":
-      return "Curated Lifestyle Objects";
-    default:
-      return "Uncompromising Utility & Form";
-  }
 }

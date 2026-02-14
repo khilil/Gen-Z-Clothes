@@ -8,14 +8,15 @@ export function addOrUpdateText(canvas, activeTextRef, options, printArea) {
     const PADDING = 20;
     const maxWidth = printArea.width - PADDING * 2;
 
-    // 🔁 UPDATE EXISTING TEXT
     if (activeTextRef.current) {
         activeTextRef.current.set({
-            ...(options.text !== undefined && { text: options.text }),
-            ...(options.fontFamily && { fontFamily: options.fontFamily }),
-            ...(options.fill && { fill: options.fill }),
+            text: options.text ?? activeTextRef.current.text,
+            fontFamily: options.fontFamily ?? activeTextRef.current.fontFamily,
+            fill: options.fill ?? activeTextRef.current.fill,
             width: maxWidth,
         });
+
+
 
         activeTextRef.current.initDimensions();
         activeTextRef.current.setCoords();
@@ -23,7 +24,6 @@ export function addOrUpdateText(canvas, activeTextRef, options, printArea) {
         return;
     }
 
-    // ➕ CREATE NEW TEXT
     const textbox = new fabric.Textbox(options.text || "Studio Edit", {
         left: printArea.left,
         top: printArea.top,
@@ -34,12 +34,25 @@ export function addOrUpdateText(canvas, activeTextRef, options, printArea) {
         fontSize: 64,
         fill: options.fill || "#000",
         textAlign: "center",
+
+        hasControls: true,
+        hasBorders: true,
+        lockScalingX: false,
+        lockScalingY: false,
+        lockRotation: false,
+        selectable: true,
+
     });
+
+    console.log("TYPE:", textbox.type); 
+    console.log("SCALE:", textbox.scaleX, textbox.scaleY);
+
 
     canvas.add(textbox);
     canvas.setActiveObject(textbox);
     activeTextRef.current = textbox;
 }
+
 
 
 

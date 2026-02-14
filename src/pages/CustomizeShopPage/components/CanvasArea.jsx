@@ -1,11 +1,12 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useFabric } from "../../../context/FabricContext";
 import { initFabric } from "../fabric/fabricCanvas.js";
 import { clampToPrintArea } from "../../../utils/printAreaClamp.js";
 import { addBaseImage } from "../fabric/baseImage";
+import { useLocation, useParams } from "react-router-dom";
+import * as fabric from "fabric";
 
 export default function CanvasArea() {
-
     const {
         canvasRef,
         fabricCanvas,
@@ -19,9 +20,37 @@ export default function CanvasArea() {
         backDesignRef
     } = useFabric();
 
+    const location = useLocation();
+    const { slug } = useParams();
+
     const [viewSide, setViewSide] = useState("front");
+    const [productData, setProductData] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-
+    // ✅ GET PRODUCT DATA (State OR API fallback)
+    useEffect(() => {
+        if (location.state?.frontImage) {
+            setProductData({
+                frontImage: location.state.frontImage,
+                backImage: location.state.backImage
+            });
+            setLoading(false);
+        } else {
+            // Direct URL access → fetch product
+            fetch(`https://api.escuelajs.co/api/v1/products/slug/${slug}`)
+                .then(res => res.json())
+                .then(data => {
+                    setProductData({
+                        frontImage: data.images?.[0],
+                        backImage: data.images?.[1]
+                    });
+                    setLoading(false);
+                })
+                .catch(() => {
+                    setLoading(false);
+                });
+        }
+    }, [slug]);
 
     const updateLayers = () => {
         const canvas = fabricCanvas.current;
@@ -29,12 +58,12 @@ export default function CanvasArea() {
         layersRef.current = [...canvas.getObjects()].reverse();
     };
 
-    // 🔥 SIDE SWITCH LOGIC
+    // 🔥 SIDE SWITCH
     const switchSide = async (side) => {
         const canvas = fabricCanvas.current;
-        if (!canvas) return;
+        if (!canvas || !productData) return;
 
-        // 🔥 Save current side as PNG BEFORE switching
+        // Save current design
         const dataURL = canvas.toDataURL({
             format: "png",
             quality: 1,
@@ -48,8 +77,7 @@ export default function CanvasArea() {
         }
 
         // Clear canvas except printArea
-        const objects = canvas.getObjects();
-        objects.forEach((obj) => {
+        canvas.getObjects().forEach((obj) => {
             if (!obj.excludeFromExport && obj !== canvas.printArea) {
                 canvas.remove(obj);
             }
@@ -59,7 +87,15 @@ export default function CanvasArea() {
         const baseImage = canvas.getObjects().find(o => o.excludeFromExport);
         if (baseImage) canvas.remove(baseImage);
 
-        // Load saved PNG as image if exists
+        // Load correct base image
+        const baseImageURL =
+            side === "front"
+                ? productData.frontImage
+                : productData.backImage || productData.frontImage;
+
+        await addBaseImage(canvas, baseImageURL);
+
+        // Restore saved design
         const savedDesign =
             side === "front"
                 ? frontDesignRef.current
@@ -79,17 +115,15 @@ export default function CanvasArea() {
             });
         }
 
-        await addBaseImage(canvas, side);
-
         viewSideRef.current = side;
         setViewSide(side);
     };
 
-
+    // ✅ INIT FABRIC CANVAS
     useEffect(() => {
-
         if (!canvasRef.current) return;
         if (fabricCanvas.current) return;
+        if (!productData) return;
 
         fabricCanvas.current = initFabric(
             canvasRef.current,
@@ -100,8 +134,8 @@ export default function CanvasArea() {
 
         const canvas = fabricCanvas.current;
 
-        // 🔥 Initially load FRONT
-        addBaseImage(canvas, "front");
+        // Load front image initially
+        addBaseImage(canvas, productData.frontImage);
 
         canvas.on("object:modified", (e) => {
             const obj = e.target;
@@ -130,13 +164,12 @@ export default function CanvasArea() {
             activeObjectRef.current = null;
             activeTextRef.current = null;
         });
+
         canvas.on("object:moving", (e) => {
             const obj = e.target;
             if (!obj || obj.excludeFromExport) return;
-
             clampToPrintArea(obj, canvas.printArea);
         });
-
 
         canvas.on("object:added", updateLayers);
         canvas.on("object:removed", updateLayers);
@@ -144,46 +177,53 @@ export default function CanvasArea() {
 
         updateLayers();
 
+    }, [productData]);
 
-    }, []);
+    // ✅ LOADING STATE
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-[400px] text-white">
+                Loading Design Studio...
+            </div>
+        );
+    }
+
+    if (!productData) {
+        return (
+            <div className="flex items-center justify-center h-[400px] text-red-500">
+                Failed to load product.
+            </div>
+        );
+    }
 
     return (
-        <div className="w-full h-full flex flex-col items-center justify-center gap-6">
+        <div className="w-full h-full flex flex-col items-center justify-center p-4 md:p-8">
 
-            {/* FRONT / BACK TOGGLE */}
-            <div className="flex items-center bg-[#1a1a1d] border border-white/[0.06] rounded-full p-1">
-
+            {/* FRONT / BACK TOGGLE - Mobile ma thodu nanu kari didhu */}
+            <div className="flex items-center bg-[#1a1a1d] border border-white/[0.06] rounded-full p-1 mb-4 scale-90 md:scale-100">
                 <button
                     onClick={() => switchSide("front")}
-                    className={`px-6 py-2 text-xs font-black uppercase tracking-widest rounded-full transition-all duration-300
-            ${viewSide === "front"
-                            ? "bg-[#d4c4b1] text-black"
-                            : "text-[#9a9a9a] hover:text-white"
-                        }`}
+                    className={`px-5 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-full transition-all duration-300
+                    ${viewSide === "front" ? "bg-[#d4c4b1] text-black" : "text-[#9a9a9a]"}`}
                 >
                     Front
                 </button>
-
                 <button
                     onClick={() => switchSide("back")}
-                    className={`px-6 py-2 text-xs font-black uppercase tracking-widest rounded-full transition-all duration-300
-            ${viewSide === "back"
-                            ? "bg-[#d4c4b1] text-black"
-                            : "text-[#9a9a9a] hover:text-white"
-                        }`}
+                    className={`px-5 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-full transition-all duration-300
+                    ${viewSide === "back" ? "bg-[#d4c4b1] text-black" : "text-[#9a9a9a]"}`}
                 >
                     Back
                 </button>
-
             </div>
 
-            {/* CANVAS */}
-            <div className="w-full h-full flex items-center justify-center">
+            {/* CANVAS CONTAINER - Mobile ma Max-Height set kari */}
+            <div className="relative w-full flex items-center justify-center overflow-hidden max-h-[70vh] md:max-h-full">
                 <canvas
                     ref={canvasRef}
-                    width={450}
+                    width={550}
                     height={500}
-                    className="max-w-full max-h-full"
+                    className="max-w-full max-h-full object-contain shadow-2xl"
                 />
             </div>
 

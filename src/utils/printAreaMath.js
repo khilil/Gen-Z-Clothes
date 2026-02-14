@@ -2,13 +2,20 @@ export function getPrintArea(canvas) {
     const w = canvas.getWidth();
     const h = canvas.getHeight();
 
-    return {
+    const area = {
         left: w * 0.225,
         top: h * 0.15,
         width: w * 0.55,
         height: h * 0.65,
     };
+
+    return {
+        ...area,
+        right: area.left + area.width,
+        bottom: area.top + area.height,
+    };
 }
+
 
 export function clampObjectToPrintArea(obj, canvas) {
     if (!obj) return;
@@ -93,23 +100,24 @@ export function clampPosition(obj, printArea) {
  * Clamp scale so object never exceeds print area
  */
 export function clampScale(obj, printArea) {
-    const bounds = getObjectBounds(obj);
+    if (!obj || !printArea) return;
 
-    const scaleX = obj.scaleX;
-    const scaleY = obj.scaleY;
+    // Get object real width/height (without scale)
+    const originalWidth = obj.width;
+    const originalHeight = obj.height;
 
-    if (
-        bounds.width > printArea.width ||
-        bounds.height > printArea.height
-    ) {
-        const scaleFactorX = printArea.width / bounds.width;
-        const scaleFactorY = printArea.height / bounds.height;
-        const scaleFactor = Math.min(scaleFactorX, scaleFactorY);
+    // Max allowed scale
+    const maxScaleX = printArea.width / originalWidth;
+    const maxScaleY = printArea.height / originalHeight;
 
-        obj.scaleX = scaleX * scaleFactor;
-        obj.scaleY = scaleY * scaleFactor;
-    }
+    const maxScale = Math.min(maxScaleX, maxScaleY);
+
+    if (obj.scaleX > maxScale) obj.scaleX = maxScale;
+    if (obj.scaleY > maxScale) obj.scaleY = maxScale;
+
+    obj.setCoords();
 }
+
 
 /**
  * Hard snap object back fully inside print area

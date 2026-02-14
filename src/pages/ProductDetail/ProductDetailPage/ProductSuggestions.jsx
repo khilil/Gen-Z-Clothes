@@ -32,45 +32,47 @@ export const ProductSuggestions = ({ product }) => {
 
   if (!relatedProducts.length) return null;
 
+  // ... (imports and logic remains same)
+
   return (
-    <section className="py-32 bg-black border-t border-white/5">
-      <div className="max-w-[1920px] mx-auto px-8 md:px-12">
+    <section className="py-16 md:py-32 bg-black border-t border-white/5">
+      <div className="max-w-[1920px] mx-auto px-4 md:px-12">
 
         {/* HEADER */}
-        <div className="flex justify-between items-end mb-16">
-          <h2 className="text-5xl font-impact tracking-tighter">
+        <div className="flex justify-between items-end mb-8 md:mb-16">
+          <h2 className="text-3xl md:text-5xl font-impact tracking-tighter">
             COMPLETE THE LOOK
           </h2>
 
-          <div className="flex gap-4">
+          {/* Hidden arrows on small mobile to save space, or kept small */}
+          <div className="flex gap-2 md:gap-4">
             <button
               onClick={() => scroll("right")}
-              className="w-12 h-12 border border-white/10 flex items-center justify-center hover:border-white transition"
+              className="w-10 h-10 md:w-12 md:h-12 border border-white/10 flex items-center justify-center hover:border-white transition"
             >
-              <span className="material-symbols-outlined">west</span>
+              <span className="material-symbols-outlined !text-sm md:!text-base">west</span>
             </button>
 
             <button
               onClick={() => scroll("left")}
-              className="w-12 h-12 border border-white/10 flex items-center justify-center hover:border-white transition"
+              className="w-10 h-10 md:w-12 md:h-12 border border-white/10 flex items-center justify-center hover:border-white transition"
             >
-              <span className="material-symbols-outlined">east</span>
+              <span className="material-symbols-outlined !text-sm md:!text-base">east</span>
             </button>
           </div>
         </div>
 
-        {/* HORIZONTAL SCROLL (RTL STYLE) */}
+        {/* HORIZONTAL SCROLL */}
         <div
           ref={scrollRef}
-          className="flex gap-8 overflow-x-auto scroll-smooth scrollbar-hide"
+          className="flex gap-4 md:gap-8 overflow-x-auto scroll-smooth no-scrollbar snap-x snap-mandatory"
         >
           {relatedProducts.map(item => (
             <div
               key={item.id}
-              className="min-w-[280px] group cursor-pointer"
+              className="min-w-[200px] sm:min-w-[280px] group cursor-pointer snap-start"
             >
-              {/* IMAGE */}
-              <div className="relative aspect-[3/4] overflow-hidden bg-charcoal border border-white/5 mb-6">
+              <div className="relative aspect-[3/4] overflow-hidden bg-charcoal border border-white/5 mb-4 md:mb-6">
                 <img
                   src={item.images?.[0]}
                   alt={item.title}
@@ -78,18 +80,16 @@ export const ProductSuggestions = ({ product }) => {
                 />
               </div>
 
-              {/* TEXT */}
-              <h3 className="text-[11px] font-black uppercase tracking-widest mb-1">
+              <h3 className="text-[9px] md:text-[11px] font-black uppercase tracking-widest mb-1 truncate">
                 {item.title}
               </h3>
 
-              <p className="text-lg font-impact tracking-tight">
+              <p className="text-base md:text-lg font-impact tracking-tight">
                 ${item.price}
               </p>
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );
