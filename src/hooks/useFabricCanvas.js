@@ -16,26 +16,15 @@ export default function useFabricCanvas({
 } = {}) {
     const fabricRef = useRef(null);
 
-
     useEffect(() => {
-        // const canvas = new fabric.Canvas(canvasRef.current, {
-        //     preserveObjectStacking: true,
-        //     selection: true
-        // });
-
-        // Retina scaling
         const canvas = new fabric.Canvas(canvasRef.current, {
             preserveObjectStacking: true,
             selection: true
         });
 
+        // Retina scaling
         const dpr = window.devicePixelRatio || 1;
-
-        canvas.setWidth(canvasRef.current.clientWidth * dpr);
-        canvas.setHeight(canvasRef.current.clientHeight * dpr);
-
-        canvas.getContext().scale(dpr, dpr);
-
+        canvas.setZoom(dpr);
 
         fabricRef.current = canvas;
 

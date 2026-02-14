@@ -1,12 +1,6 @@
 
-// export function isEditableObject(obj) {
-//     return obj && obj.selectable && !obj.isBaseProduct;
-// }
-
 export function isEditableObject(obj) {
-    return obj &&
-        obj.type !== "image" &&
-        obj.selectable !== false;
+  return obj && obj.selectable && !obj.isBaseProduct;
 }
 
 

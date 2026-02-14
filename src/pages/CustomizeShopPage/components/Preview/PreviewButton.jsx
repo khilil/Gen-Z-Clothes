@@ -5,25 +5,28 @@ import { useFabric } from "../../../../context/FabricContext";
 export default function PreviewButton() {
     const navigate = useNavigate();
     const { slug } = useParams();
-    const { fabricCanvas, frontDesignRef, backDesignRef, viewSideRef } = useFabric();
+    const { fabricCanvas, frontDesignRef, backDesignRef, viewSideRef, productDataRef } = useFabric();
 
     const handlePreview = () => {
         const canvas = fabricCanvas.current;
         if (!canvas) return;
 
-        const dataURL = canvas.toDataURL({
-            format: "png",
-            quality: 1,
-            multiplier: 2,
-        });
-
+        const json = canvas.toJSON();
+        console.log("🔥 Saving JSON:", json);
         if (viewSideRef.current === "front") {
-            frontDesignRef.current = dataURL;
+            frontDesignRef.current = json;
+            console.log("💾 Saved FRONT before preview");
         } else {
-            backDesignRef.current = dataURL;
+            backDesignRef.current = json;
+            console.log("💾 Saved BACK before preview");
         }
 
-        navigate(`/customize/${slug}/preview`);
+        navigate(`/customize/${slug}/preview`, {
+            state: {
+                frontImage: productDataRef.current.frontImage,
+                backImage: productDataRef.current.backImage
+            }
+        });
     };
 
 

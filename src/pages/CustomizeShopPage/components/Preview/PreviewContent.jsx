@@ -1,39 +1,129 @@
 import { useEffect, useState } from "react";
 import { useFabric } from "../../../../context/FabricContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
+import * as fabric from 'fabric'
 
 export default function PreviewContent() {
+    const location = useLocation();
     const navigate = useNavigate();
+    const frontImage = location.state?.frontImage;
+    const backImage = location.state?.backImage;
+    const { slug } = useParams();
+
     const { fabricCanvas, frontDesignRef, backDesignRef } = useFabric();
     const [previewImage, setPreviewImage] = useState(null);
+    const [productData, setProductData] = useState(null);
     const [selectedSize, setSelectedSize] = useState("L");
     const [baseColor, setBaseColor] = useState("white");
     const [viewSide, setViewSide] = useState("front");
 
-    const mockups = {
-        white: {
-            front: "https://www.freeiconspng.com/uploads/white-t-shirt-png-2.png",
-            back: "https://www.freeiconspng.com/uploads/white-t-shirt-blank-back-png-23.png"
-        },
-        black: {
-            front: "https://www.freeiconspng.com/uploads/black-t-shirt-png-15.png",
-            back: "https://www.freeiconspng.com/uploads/black-t-shirt-blank-back-png-2.png"
-        },
-    };
 
+    /* =============================
+        GET PRODUCT IMAGE (SAFE)
+     ============================= */
     useEffect(() => {
-        if (viewSide === "front") {
-            setPreviewImage(frontDesignRef.current);
+        if (location.state?.frontImage) {
+            console.log("✅ Using image from location state");
+            setProductData({
+                frontImage: location.state.frontImage,
+                backImage: location.state.backImage
+            });
         } else {
-            setPreviewImage(backDesignRef.current);
+            console.log("⚠ location.state missing → fetching again");
+            fetch(`https://api.escuelajs.co/api/v1/products/slug/${slug}`)
+                .then(res => res.json())
+                .then(data => {
+                    setProductData({
+                        frontImage: data.images?.[0],
+                        backImage: data.images?.[1]
+                    });
+                });
         }
-    }, [viewSide, frontDesignRef, backDesignRef]);
+    }, [slug]);
+
+    console.log("👀 FRONT in Preview:", frontDesignRef.current);
+    /* =============================
+       LOAD PREVIEW
+    ============================= */
+    useEffect(() => {
+        const loadPreview = async () => {
+            if (!productData) return;
+
+
+
+            const savedDesign =
+                viewSide === "front"
+                    ? frontDesignRef.current
+                    : backDesignRef.current;
+
+            const baseImageURL =
+                viewSide === "front"
+                    ? productData.frontImage
+                    : productData.backImage || productData.frontImage;
+
+
+            if (!baseImageURL) {
+                console.log("❌ Base image missing!");
+                return;
+            }
+
+            const tempCanvas = new fabric.Canvas(null, {
+                width: 450,
+                height: 500
+            });
+
+            // 1️⃣ Load base image
+            const img = await fabric.Image.fromURL(baseImageURL);
+
+            const scale = Math.min(
+                tempCanvas.width / img.width,
+                tempCanvas.height / img.height
+            ) * 1.5;
+
+            img.scale(scale);
+
+            img.set({
+                left: tempCanvas.width / 2,
+                top: tempCanvas.height / 2,
+                originX: "center",
+                originY: "center",
+                selectable: false,
+                evented: false
+            });
+
+            tempCanvas.add(img);
+            tempCanvas.sendObjectToBack(img);
+
+            // 2️⃣ Load design JSON
+            if (savedDesign) {
+                await tempCanvas.loadFromJSON(savedDesign);
+            }
+
+            tempCanvas.renderAll();
+
+            const dataURL = tempCanvas.toDataURL({
+                format: "png",
+                multiplier: 2
+            });
+
+            setPreviewImage(dataURL);
+
+            tempCanvas.dispose();
+        };
+
+        loadPreview();
+    }, [viewSide, productData]);
+
+
+
 
     return (
         <div className="fixed inset-0 z-[100] bg-black flex flex-col lg:flex-row overflow-hidden font-sans">
             {/* Left Section: Visual Preview */}
             <div className="flex-[3] relative bg-[#0a0a0a] flex items-center justify-center p-10 md:p-20 overflow-hidden">
-                
+
                 {/* Branding Overlay */}
                 <div className="absolute top-12 left-1/2 -translate-x-1/2 text-center pointer-events-none hidden md:block">
                     <h2 className="text-4xl font-impact tracking-tighter mb-1 text-white">MODERN MEN</h2>
@@ -109,10 +199,10 @@ export default function PreviewContent() {
                         <span className="text-[9px] font-bold uppercase tracking-widest text-white/40">Fabric Color</span>
                         <div className="flex gap-4">
                             {['white', 'black'].map((color) => (
-                                <button 
-                                    key={color} 
-                                    onClick={() => setBaseColor(color)} 
-                                    className={`w-8 h-8 rounded-full border transition-all ${baseColor === color ? 'ring-1 ring-white ring-offset-4 ring-offset-[#121212]' : 'border-white/10 hover:scale-110'}`} 
+                                <button
+                                    key={color}
+                                    onClick={() => setBaseColor(color)}
+                                    className={`w-8 h-8 rounded-full border transition-all ${baseColor === color ? 'ring-1 ring-white ring-offset-4 ring-offset-[#121212]' : 'border-white/10 hover:scale-110'}`}
                                     style={{ backgroundColor: color }}>
                                 </button>
                             ))}
@@ -126,9 +216,9 @@ export default function PreviewContent() {
                         </div>
                         <div className="grid grid-cols-4 gap-2">
                             {['S', 'M', 'L', 'XL'].map((size) => (
-                                <button 
-                                    key={size} 
-                                    onClick={() => setSelectedSize(size)} 
+                                <button
+                                    key={size}
+                                    onClick={() => setSelectedSize(size)}
                                     className={`h-12 border flex items-center justify-center text-[11px] font-bold transition-all ${selectedSize === size ? 'border-white bg-white/5 text-white' : 'border-white/10 text-white/60 hover:border-white'}`}>
                                     {size}
                                 </button>

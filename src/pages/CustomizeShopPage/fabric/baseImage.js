@@ -27,6 +27,8 @@ export async function addBaseImage(canvas, imageURL) {
     excludeFromExport: true,
   });
 
+
+  canvas.toJSON()
   canvas.add(img);
   canvas.moveObjectTo(img, 0);
   canvas.renderAll();

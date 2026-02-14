@@ -1,4 +1,14 @@
 import * as fabric from "fabric";
+import { FabricObject } from "fabric";
+
+FabricObject.prototype.set({
+    transparentCorners: false,
+    cornerStyle: "rect",
+    cornerSize: 12,
+    cornerColor: "#ffffff",
+    borderColor: "#000000",
+});
+
 
 
 
@@ -25,8 +35,8 @@ export function addOrUpdateText(canvas, activeTextRef, options, printArea) {
     }
 
     const textbox = new fabric.Textbox(options.text || "Studio Edit", {
-        left: printArea.left,
-        top: printArea.top,
+        left: printArea.left + printArea.width / 2,
+        top: printArea.top + printArea.height / 2,
         width: maxWidth,
         originX: "center",
         originY: "center",
@@ -35,16 +45,24 @@ export function addOrUpdateText(canvas, activeTextRef, options, printArea) {
         fill: options.fill || "#000",
         textAlign: "center",
 
+        selectable: true,
+        evented: true,
+
         hasControls: true,
         hasBorders: true,
+
         lockScalingX: false,
         lockScalingY: false,
         lockRotation: false,
-        selectable: true,
+        lockMovementX: false,
+        lockMovementY: false,
 
+        centeredScaling: false,
+        centeredRotation: true,
     });
 
-    console.log("TYPE:", textbox.type); 
+
+    console.log("TYPE:", textbox.type);
     console.log("SCALE:", textbox.scaleX, textbox.scaleY);
 
 

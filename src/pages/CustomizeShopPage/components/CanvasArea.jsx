@@ -4,7 +4,6 @@ import { initFabric } from "../fabric/fabricCanvas.js";
 import { clampToPrintArea } from "../../../utils/printAreaClamp.js";
 import { addBaseImage } from "../fabric/baseImage";
 import { useLocation, useParams } from "react-router-dom";
-import * as fabric from "fabric";
 
 export default function CanvasArea() {
     const {
@@ -17,7 +16,8 @@ export default function CanvasArea() {
         syncLayers,
         viewSideRef,
         frontDesignRef,
-        backDesignRef
+        backDesignRef,
+        productDataRef
     } = useFabric();
 
     const location = useLocation();
@@ -27,67 +27,94 @@ export default function CanvasArea() {
     const [productData, setProductData] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // ✅ GET PRODUCT DATA (State OR API fallback)
+    /* =============================
+       FETCH PRODUCT DATA
+    ============================= */
+    // useEffect(() => {
+    //     if (location.state?.frontImage) {
+    //         setProductData({
+    //             frontImage: location.state.frontImage,
+    //             backImage: location.state.backImage
+    //         });
+    //         setLoading(false);
+    //     } else {
+    //         fetch(`https://api.escuelajs.co/api/v1/products/slug/${slug}`)
+    //             .then(res => res.json())
+    //             .then(data => {
+    //                 setProductData({
+    //                     frontImage: data.images?.[0],
+    //                     backImage: data.images?.[1]
+    //                 });
+    //                 setLoading(false);
+    //             })
+    //             .catch(() => setLoading(false));
+    //     }
+    // }, [slug]);
+
     useEffect(() => {
         if (location.state?.frontImage) {
-            setProductData({
+
+            const data = {
                 frontImage: location.state.frontImage,
                 backImage: location.state.backImage
-            });
+            };
+
+            setProductData(data);
+            productDataRef.current = data;   // ✅ set here safely
             setLoading(false);
+
         } else {
-            // Direct URL access → fetch product
+
             fetch(`https://api.escuelajs.co/api/v1/products/slug/${slug}`)
                 .then(res => res.json())
                 .then(data => {
-                    setProductData({
+
+                    const product = {
                         frontImage: data.images?.[0],
                         backImage: data.images?.[1]
-                    });
+                    };
+
+                    setProductData(product);
+                    productDataRef.current = product;  // ✅ set here safely
                     setLoading(false);
+
                 })
-                .catch(() => {
-                    setLoading(false);
-                });
+                .catch(() => setLoading(false));
         }
     }, [slug]);
 
-    const updateLayers = () => {
-        const canvas = fabricCanvas.current;
-        if (!canvas) return;
-        layersRef.current = [...canvas.getObjects()].reverse();
-    };
 
-    // 🔥 SIDE SWITCH
+
+    /* =============================
+       SIDE SWITCH LOGIC
+    ============================= */
     const switchSide = async (side) => {
         const canvas = fabricCanvas.current;
         if (!canvas || !productData) return;
 
-        // Save current design
-        const dataURL = canvas.toDataURL({
-            format: "png",
-            quality: 1,
-            multiplier: 2,
-        });
+        // console.log("🔁 Switching to:", side);
 
+        // 1️⃣ Save current design JSON
+        const json = canvas.toJSON();
         if (viewSideRef.current === "front") {
-            frontDesignRef.current = dataURL;
+            frontDesignRef.current = json;
+            // console.log("💾 Saved FRONT JSON");
         } else {
-            backDesignRef.current = dataURL;
+            backDesignRef.current = json;
+            // console.log("💾 Saved BACK JSON");
         }
 
-        // Clear canvas except printArea
-        canvas.getObjects().forEach((obj) => {
-            if (!obj.excludeFromExport && obj !== canvas.printArea) {
-                canvas.remove(obj);
-            }
-        });
+        // 2️⃣ Load saved design of new side
+        const savedDesign =
+            side === "front"
+                ? frontDesignRef.current
+                : backDesignRef.current;
 
-        // Remove base image
-        const baseImage = canvas.getObjects().find(o => o.excludeFromExport);
-        if (baseImage) canvas.remove(baseImage);
+        // console.log("📦 Loading saved JSON:", savedDesign ? "YES" : "NO");
 
-        // Load correct base image
+        await canvas.loadFromJSON(savedDesign || { objects: [] });
+
+        // 3️⃣ Add base image AFTER JSON load
         const baseImageURL =
             side === "front"
                 ? productData.frontImage
@@ -95,35 +122,31 @@ export default function CanvasArea() {
 
         await addBaseImage(canvas, baseImageURL);
 
-        // Restore saved design
-        const savedDesign =
-            side === "front"
-                ? frontDesignRef.current
-                : backDesignRef.current;
-
-        if (savedDesign) {
-            fabric.Image.fromURL(savedDesign, (img) => {
-                img.set({
-                    left: canvas.width / 2,
-                    top: canvas.height / 2,
-                    originX: "center",
-                    originY: "center",
-                    selectable: false,
-                });
-                canvas.add(img);
-                canvas.renderAll();
-            });
+        // 4️⃣ Ensure base image always at bottom
+        const baseImg = canvas.getObjects().find(o => o.excludeFromExport);
+        if (baseImg) {
+            canvas.sendObjectToBack(baseImg);
+            // console.log("🖼 Base image sent to back");
         }
+
+        canvas.renderAll();
+
+        // console.log("🧱 Canvas Objects:", canvas.getObjects());
 
         viewSideRef.current = side;
         setViewSide(side);
     };
 
-    // ✅ INIT FABRIC CANVAS
+    /* =============================
+       INIT FABRIC CANVAS
+    ============================= */
     useEffect(() => {
-        if (!canvasRef.current) return;
-        if (fabricCanvas.current) return;
-        if (!productData) return;
+        if (!canvasRef.current || !productData) return;
+
+        if (fabricCanvas.current) {
+            fabricCanvas.current.dispose();
+            fabricCanvas.current = null;
+        }
 
         fabricCanvas.current = initFabric(
             canvasRef.current,
@@ -134,9 +157,28 @@ export default function CanvasArea() {
 
         const canvas = fabricCanvas.current;
 
-        // Load front image initially
-        addBaseImage(canvas, productData.frontImage);
+        // console.log("🎨 Fabric initialized");
 
+        const initialLoad = async () => {
+            const savedDesign =
+                viewSideRef.current === "front"
+                    ? frontDesignRef.current
+                    : backDesignRef.current;
+
+            await canvas.loadFromJSON(savedDesign || { objects: [] });
+
+            await addBaseImage(canvas, productData.frontImage);
+
+            const baseImg = canvas.getObjects().find(o => o.excludeFromExport);
+            if (baseImg) canvas.sendObjectToBack(baseImg);
+
+            canvas.renderAll();
+        };
+
+
+        initialLoad();
+
+        /* ===== EVENTS ===== */
         canvas.on("object:modified", (e) => {
             const obj = e.target;
             if (!obj || obj.excludeFromExport) return;
@@ -165,21 +207,11 @@ export default function CanvasArea() {
             activeTextRef.current = null;
         });
 
-        canvas.on("object:moving", (e) => {
-            const obj = e.target;
-            if (!obj || obj.excludeFromExport) return;
-            clampToPrintArea(obj, canvas.printArea);
-        });
-
-        canvas.on("object:added", updateLayers);
-        canvas.on("object:removed", updateLayers);
-        canvas.on("object:modified", updateLayers);
-
-        updateLayers();
-
     }, [productData]);
 
-    // ✅ LOADING STATE
+    /* =============================
+       LOADING UI
+    ============================= */
     if (loading) {
         return (
             <div className="flex items-center justify-center h-[400px] text-white">
@@ -196,34 +228,56 @@ export default function CanvasArea() {
         );
     }
 
+    /* =============================
+       RENDER
+    ============================= */
     return (
-        <div className="w-full h-full flex flex-col items-center justify-center p-4 md:p-8">
+        <div className="w-full h-full flex flex-col items-center justify-center gap-6">
 
-            {/* FRONT / BACK TOGGLE - Mobile ma thodu nanu kari didhu */}
-            <div className="flex items-center bg-[#1a1a1d] border border-white/[0.06] rounded-full p-1 mb-4 scale-90 md:scale-100">
-                <button
-                    onClick={() => switchSide("front")}
-                    className={`px-5 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-full transition-all duration-300
-                    ${viewSide === "front" ? "bg-[#d4c4b1] text-black" : "text-[#9a9a9a]"}`}
-                >
-                    Front
-                </button>
-                <button
-                    onClick={() => switchSide("back")}
-                    className={`px-5 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-full transition-all duration-300
-                    ${viewSide === "back" ? "bg-[#d4c4b1] text-black" : "text-[#9a9a9a]"}`}
-                >
-                    Back
-                </button>
+            {/* FRONT / BACK TOGGLE */}
+            <div className="flex items-center justify-center w-full mt-6">
+                <div className="flex items-center bg-[#1a1a1d] border border-white/[0.06] 
+        rounded-full p-1 
+        w-full max-w-[260px] 
+        md:max-w-[320px] md:p-1.5">
+
+                    <button
+                        onClick={() => switchSide("front")}
+                        className={`flex-1 px-4 md:px-6 py-2.5 text-[10px] md:text-xs 
+            font-black uppercase tracking-widest 
+            rounded-full transition-all duration-300
+            ${viewSide === "front"
+                                ? "bg-[#d4c4b1] text-black shadow-md"
+                                : "text-[#9a9a9a] hover:text-white"
+                            }`}
+                    >
+                        Front
+                    </button>
+
+                    <button
+                        onClick={() => switchSide("back")}
+                        className={`flex-1 px-4 md:px-6 py-2.5 text-[10px] md:text-xs 
+            font-black uppercase tracking-widest 
+            rounded-full transition-all duration-300
+            ${viewSide === "back"
+                                ? "bg-[#d4c4b1] text-black shadow-md"
+                                : "text-[#9a9a9a] hover:text-white"
+                            }`}
+                    >
+                        Back
+                    </button>
+
+                </div>
             </div>
 
-            {/* CANVAS CONTAINER - Mobile ma Max-Height set kari */}
-            <div className="relative w-full flex items-center justify-center overflow-hidden max-h-[70vh] md:max-h-full">
+
+            {/* CANVAS */}
+            <div className="w-full h-full flex items-center justify-center">
                 <canvas
                     ref={canvasRef}
-                    width={550}
+                    width={450}
                     height={500}
-                    className="max-w-full max-h-full object-contain shadow-2xl"
+                    className="max-w-full max-h-full"
                 />
             </div>
 

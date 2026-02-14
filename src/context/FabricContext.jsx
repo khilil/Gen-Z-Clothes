@@ -9,6 +9,7 @@ export function FabricProvider({ children }) {
     const activeTextRef = useRef(null);
     const activeShapeRef = useRef(null);
     const activeObjectRef = useRef(null);
+    const productDataRef = useRef(null);
 
     // 🔥 Store JSON instead of PNG
     const frontDesignRef = useRef(null);
@@ -42,6 +43,7 @@ export function FabricProvider({ children }) {
                 viewSideRef,
                 frontDesignRef,
                 backDesignRef,
+                productDataRef,
             }}
         >
             {children}
