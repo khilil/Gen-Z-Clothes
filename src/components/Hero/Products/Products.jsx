@@ -17,7 +17,7 @@ const products = [
   }
 ];
 
-function Products() {
+function AdminProducts() {
   return (
     <section className="products">
       <div className="products-header">
@@ -48,4 +48,4 @@ function Products() {
   );
 }
 
-export default Products;
+export default AdminProducts;
