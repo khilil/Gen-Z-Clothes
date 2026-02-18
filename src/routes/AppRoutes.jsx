@@ -21,11 +21,15 @@ import GraphicsEditorPage from "../pages/CustomizeShopPage/GraphicsEditorPage";
 import PreviewPage from "../pages/CustomizeShopPage/components/Preview/PreviewPage";
 import AdminLayout from "../Admin/AdminLayout";
 import AdminDashboard from "../Admin/AdminDashboard";
-import { AdminOrders } from "../Admin/AdminOrders";
 import Inventory from "../Admin/Pages/Inventory/AdminInventory";
 import MainLayout from "../pages/MainLayout";
 import AdminProducts from "../Admin/Pages/Product/AdminProducts";
 import ProductDetailsPage from "../Admin/Pages/Product/ProductDetailsPage";
+import AdminOrders from "../Admin/Pages/Orders/AdminOrders";
+import AdminOrderDetails from "../Admin/Pages/Orders/AdminOrderDetails";
+import AdminCustomers from "../Admin/Pages/Customer/AdminCustomers";
+import AdminCustomerDetail from "../Admin/Pages/Customer/AdminCustomerDetail";
+import LoginAuth from "../Auth/Login";
 
 
 export default function AppRoutes() {
@@ -38,9 +42,14 @@ export default function AppRoutes() {
                 <Route path="products" element={<AdminProducts />} />
                 <Route path="inventory" element={<Inventory />} />
                 <Route path="orders" element={<AdminOrders />} />
+                <Route path="/admin/customers" element={<AdminCustomers />} />
             </Route>
 
+            <Route path="/admin/orders/:orderId" element={<AdminOrderDetails />} />
+            <Route path="/admin/customers/:id" element={<AdminCustomerDetail />} />
             <Route path="/admin/products/new" element={<ProductDetailsPage />} />
+
+            <Route path="/login" element={<LoginAuth />} />
 
             <Route element={<MainLayout />}>
                 {/* NORMAL ROUTES */}

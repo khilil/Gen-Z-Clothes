@@ -69,10 +69,11 @@ export default function Header() {
             </button>
 
             {!isAccountPage && (
-              <Link to="/account/dashboard" className="icon-btn hidden md:block">
+              <Link to="/login" className="icon-btn hidden md:block">
                 <FiUser />
               </Link>
             )}
+
 
             {!isAccountPage && (
               <button
