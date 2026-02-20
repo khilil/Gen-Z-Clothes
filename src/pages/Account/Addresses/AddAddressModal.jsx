@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
+import api from "../../../services/api";
 import "./AddAddressModal.css";
 
-const AddAddressModal = ({ open, onClose, onSave }) => {
+const AddAddressModal = ({
+    open,
+    onClose,
+    onSave,
+    initialData = null,
+    addressId = null,
+}) => {
+
     const [form, setForm] = useState({
         name: "",
         phone: "",
@@ -13,6 +21,48 @@ const AddAddressModal = ({ open, onClose, onSave }) => {
         pincode: "",
         isDefault: false,
     });
+
+    const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
+
+    // 🔥 Prefill when editing
+    useEffect(() => {
+        if (initialData) {
+            const parts = initialData.streetAddress?.split(",") || [];
+
+            setForm({
+                name: `${initialData.firstName || ""} ${initialData.lastName || ""}`.trim(),
+                phone: initialData.phone || "",
+                house: parts[0]?.trim() || "",
+                area: parts[1]?.trim() || "",
+                landmark: parts[2]?.trim() || "",
+                city: initialData.city || "",
+                state: "",
+                pincode: initialData.pinCode || "",
+                isDefault: initialData.isDefault || false,
+            });
+        } else {
+            setForm({
+                name: "",
+                phone: "",
+                house: "",
+                area: "",
+                landmark: "",
+                city: "",
+                state: "",
+                pincode: "",
+                isDefault: false,
+            });
+        }
+    }, [initialData, open]);
+
+    // 🔒 Lock scroll
+    useEffect(() => {
+        document.body.style.overflow = open ? "hidden" : "";
+        return () => (document.body.style.overflow = "");
+    }, [open]);
+
+    if (!open) return null;
 
     const validate = () => {
         const newErrors = {};
@@ -35,33 +85,58 @@ const AddAddressModal = ({ open, onClose, onSave }) => {
         return Object.keys(newErrors).length === 0;
     };
 
-    const [errors, setErrors] = useState({});
-
-    // 🔒 Lock background scroll
-    useEffect(() => {
-        if (open) {
-            document.body.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = "";
-        }
-        return () => (document.body.style.overflow = "");
-    }, [open]);
-
-    if (!open) return null;
-
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setForm({ ...form, [name]: type === "checkbox" ? checked : value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!validate()) return;
 
-        onSave?.(form);
-        onClose();
-    };
+        try {
+            setLoading(true);
 
+            const [firstName, ...rest] = form.name.trim().split(" ");
+            const lastName = rest.length ? rest.join(" ") : "NA";
+
+            const payload = {
+                fullName: form.name.trim(),
+                phone: form.phone,
+                streetAddress: `${form.house}, ${form.area}, ${form.landmark || ""}`,
+                city: form.city,
+                state: form.state,
+                pinCode: form.pincode,
+            };
+            
+
+            let savedAddressId = addressId;
+
+            // 🔥 ADD
+            if (!addressId) {
+                const res = await api.post("/users/addresses", payload);
+                const addresses = res.data.data;
+                savedAddressId = addresses[addresses.length - 1]?._id;
+            }
+            // 🔥 UPDATE
+            else {
+                await api.put(`/users/address/${addressId}`, payload);
+            }
+
+            // 🔥 Set Default
+            if (form.isDefault && savedAddressId) {
+                await api.patch(`/users/addresses/${savedAddressId}/default`);
+            }
+
+            onSave?.();
+            onClose();
+
+        } catch (error) {
+            console.error("Address save error:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="address-modal-overlay" onClick={onClose}>
@@ -69,29 +144,27 @@ const AddAddressModal = ({ open, onClose, onSave }) => {
                 className="address-modal"
                 onClick={(e) => e.stopPropagation()}
             >
-                {/* HEADER */}
                 <header className="address-modal-header">
-                    <h2>Add New Address</h2>
+                    <h2>{addressId ? "Edit Address" : "Add New Address"}</h2>
                     <button className="close-btn" onClick={onClose}>
                         <span className="material-symbols-outlined">close</span>
                     </button>
                 </header>
 
-                {/* BODY */}
                 <form className="address-modal-body" onSubmit={handleSubmit}>
                     <div className="grid-2">
                         <div className="field">
                             <label>Full Name</label>
                             <input
                                 name="name"
-                                placeholder="e.g. Vikram Sharma"
                                 value={form.name}
                                 onChange={handleChange}
                             />
+                            {errors.name && <span className="error-text">{errors.name}</span>}
                         </div>
 
                         <div className="field">
-                            <label>Mobile Number</label>    
+                            <label>Mobile Number</label>
                             <input
                                 name="phone"
                                 value={form.phone}
@@ -100,34 +173,32 @@ const AddAddressModal = ({ open, onClose, onSave }) => {
                             />
                             {errors.phone && <span className="error-text">{errors.phone}</span>}
                         </div>
-
                     </div>
 
                     <div className="field">
                         <label>House / Flat No.</label>
                         <input
                             name="house"
-                            placeholder="Flat 402, Sea View Apartments"
                             value={form.house}
                             onChange={handleChange}
                         />
+                        {errors.house && <span className="error-text">{errors.house}</span>}
                     </div>
 
                     <div className="field">
                         <label>Area / Street / Locality</label>
                         <input
                             name="area"
-                            placeholder="Juhu Tara Road"
                             value={form.area}
                             onChange={handleChange}
                         />
+                        {errors.area && <span className="error-text">{errors.area}</span>}
                     </div>
 
                     <div className="field">
                         <label>Landmark (Optional)</label>
                         <input
                             name="landmark"
-                            placeholder="Near Juhu Beach"
                             value={form.landmark}
                             onChange={handleChange}
                         />
@@ -138,34 +209,34 @@ const AddAddressModal = ({ open, onClose, onSave }) => {
                             <label>City</label>
                             <input
                                 name="city"
-                                placeholder="Mumbai"
                                 value={form.city}
                                 onChange={handleChange}
                             />
+                            {errors.city && <span className="error-text">{errors.city}</span>}
                         </div>
 
                         <div className="field">
                             <label>State</label>
                             <input
                                 name="state"
-                                placeholder="Maharashtra"
                                 value={form.state}
                                 onChange={handleChange}
                             />
+                            {errors.state && <span className="error-text">{errors.state}</span>}
                         </div>
 
                         <div className="field">
                             <label>Pincode</label>
                             <input
                                 name="pincode"
-                                placeholder="400049"
                                 value={form.pincode}
                                 onChange={handleChange}
+                                className={errors.pincode ? "error" : ""}
                             />
+                            {errors.pincode && <span className="error-text">{errors.pincode}</span>}
                         </div>
                     </div>
 
-                    {/* TOGGLE */}
                     <div className="default-toggle">
                         <label className="switch">
                             <input
@@ -179,10 +250,9 @@ const AddAddressModal = ({ open, onClose, onSave }) => {
                         <span>Set as Default Address</span>
                     </div>
 
-                    {/* ACTIONS */}
                     <div className="modal-actions">
-                        <button type="submit" className="btn-primary">
-                            Save Address
+                        <button type="submit" className="btn-primary" disabled={loading}>
+                            {loading ? "Saving..." : addressId ? "Update Address" : "Save Address"}
                         </button>
                         <button
                             type="button"

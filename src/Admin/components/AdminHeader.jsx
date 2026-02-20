@@ -1,7 +1,10 @@
 import React from 'react';
+import { useSelector } from "react-redux";
 import { Search, Bell, Plus, Command, Sun, Moon, ChevronDown } from 'lucide-react';
 
-const Header = ({ title = "Dashboard Overview", subtitle = "Welcome back, Alex!" }) => {
+const Header = ({ title = "Dashboard Overview", subtitle }) => {
+    const { user } = useSelector((state) => state.auth);
+
     return (
         <header className="h-20 sticky top-0 bg-white/70 dark:bg-[#0f172a]/70 backdrop-blur-xl border-b border-slate-200/60 dark:border-slate-800/60 z-40 px-8 flex items-center justify-between transition-all">
 
@@ -12,7 +15,7 @@ const Header = ({ title = "Dashboard Overview", subtitle = "Welcome back, Alex!"
                 </h2>
                 <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400 mt-1 flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    {subtitle}
+                    {subtitle || `Welcome back, ${user?.name || "User"}!`}
                 </p>
             </div>
 
@@ -60,7 +63,10 @@ const Header = ({ title = "Dashboard Overview", subtitle = "Welcome back, Alex!"
                 <div className="flex items-center gap-2 pl-2 border-l border-slate-200 dark:border-slate-800 ml-2">
                     <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 p-[2px]">
                         <img
-                            src="https://ui-avatars.com/api/?name=Alex+Chen&background=fff&color=6366f1"
+                            src={
+                                user?.avatar ||
+                                `https://ui-avatars.com/api/?name=${user?.name || "User"}&background=fff&color=6366f1`
+                            }
                             alt="User"
                             className="w-full h-full rounded-full object-cover border-2 border-white dark:border-slate-900"
                         />

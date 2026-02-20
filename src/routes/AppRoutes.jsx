@@ -30,6 +30,7 @@ import AdminOrderDetails from "../Admin/Pages/Orders/AdminOrderDetails";
 import AdminCustomers from "../Admin/Pages/Customer/AdminCustomers";
 import AdminCustomerDetail from "../Admin/Pages/Customer/AdminCustomerDetail";
 import LoginAuth from "../Auth/Login";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 
 export default function AppRoutes() {
@@ -37,7 +38,14 @@ export default function AppRoutes() {
         <Routes>
 
             {/* Admin Routes */}
-            <Route path="/admin" element={<AdminLayout />}>
+            <Route
+                path="/admin"
+                element={
+                    <ProtectedRoute allowedRole="admin">
+                        <AdminLayout />
+                    </ProtectedRoute>
+                }
+            >
                 <Route index element={<AdminDashboard />} />
                 <Route path="products" element={<AdminProducts />} />
                 <Route path="inventory" element={<Inventory />} />
@@ -45,9 +53,22 @@ export default function AppRoutes() {
                 <Route path="/admin/customers" element={<AdminCustomers />} />
             </Route>
 
-            <Route path="/admin/orders/:orderId" element={<AdminOrderDetails />} />
-            <Route path="/admin/customers/:id" element={<AdminCustomerDetail />} />
-            <Route path="/admin/products/new" element={<ProductDetailsPage />} />
+            <Route path="/admin/orders/:orderId" element={
+                <ProtectedRoute allowedRole="admin">
+                    <AdminOrderDetails />
+                </ProtectedRoute>
+            } />
+            <Route path="/admin/customers/:id" element={
+                <ProtectedRoute allowedRole="admin">
+                    <AdminCustomerDetail />
+                </ProtectedRoute>
+            } />
+            
+            <Route path="/admin/products/new" element={
+                <ProtectedRoute allowedRole="admin">
+                    <ProductDetailsPage />
+                </ProtectedRoute>
+            } />
 
             <Route path="/login" element={<LoginAuth />} />
 
@@ -71,7 +92,14 @@ export default function AppRoutes() {
                 </Route>
 
                 {/* ACCOUNT */}
-                <Route path="/account" element={<AccountLayout />}>
+                <Route
+                    path="/account"
+                    element={
+                        <ProtectedRoute allowedRole="customer">
+                            <AccountLayout />
+                        </ProtectedRoute>
+                    }
+                >
                     <Route index element={<Navigate to="orders" replace />} />
                     <Route path="dashboard" element={<Dashboard />} />
                     <Route path="orders" element={<Orders />} />

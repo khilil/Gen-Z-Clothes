@@ -1,5 +1,3 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
 import {
     LayoutGrid,
     Package,
@@ -11,8 +9,22 @@ import {
     LogOut,
     ShoppingBasket
 } from 'lucide-react';
+import React from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from "../../features/auth/authSlice";
 
 const Sidebar = () => {
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { user } = useSelector((state) => state.auth);
+
+    const handleLogout = async () => {
+        await dispatch(logoutUser());
+        navigate("/login");
+    };
+
     // Navigation items config - jethi future ma add/remove karvu easy rahe
     const menuItems = [
         { name: 'Overview', path: '/admin', icon: LayoutGrid },
@@ -98,7 +110,10 @@ const Sidebar = () => {
                 <div className="flex items-center gap-3 p-2 rounded-xl transition-colors">
                     <div className="relative">
                         <img
-                            src="https://ui-avatars.com/api/?name=Alex+Chen&background=6366f1&color=fff"
+                            src={
+                                user?.avatar ||
+                                `https://ui-avatars.com/api/?name=${user?.name || "User"}&background=6366f1&color=fff`
+                            }
                             alt="User"
                             className="w-9 h-9 rounded-full border border-white dark:border-slate-700 object-cover shadow-sm"
                         />
@@ -106,11 +121,12 @@ const Sidebar = () => {
                     </div>
                     <div className="flex-1 min-w-0">
                         <p className="text-sm font-bold text-slate-900 dark:text-white truncate leading-none mb-1">
-                            Alex Chen
+                            {user?.name || "User"}
                         </p>
-                        <p className="text-[11px] text-slate-500 truncate">Store Admin</p>
+                        <p className="text-[11px] text-slate-500 truncate"> {user?.role || "Store Admin"}</p>
                     </div>
                     <button
+                        onClick={handleLogout}
                         title="Logout"
                         className="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg transition-all"
                     >

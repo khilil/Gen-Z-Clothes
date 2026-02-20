@@ -1,12 +1,39 @@
 import "./Dashboard.css";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 const Dashboard = () => {
+
+  // 🔥 Get current user from Redux
+  const { user } = useSelector((state) => state.auth);
+
+  // 🔥 Dummy state (future real API mate ready)
+  const [stats, setStats] = useState({
+    totalOrders: 0,
+    activeOrders: 0,
+    wishlistItems: 0,
+  });
+
+  // 👉 Future ma ahiya real API call muki sako
+  useEffect(() => {
+    if (user) {
+      // Example dummy values (replace with real API later)
+      setStats({
+        totalOrders: 12,
+        activeOrders: 1,
+        wishlistItems: 8,
+      });
+    }
+  }, [user]);
+
   return (
     <div className="dashboard">
 
       {/* WELCOME HEADER */}
       <header className="dashboard-header">
-        <h1 className="dashboard-title">Welcome back, Vikram!</h1>
+        <h1 className="dashboard-title">
+          Welcome back, {user?.name || "User"}!
+        </h1>
         <p className="dashboard-subtitle">
           Here's an overview of your recent activity and account status.
         </p>
@@ -17,7 +44,7 @@ const Dashboard = () => {
         <div className="stat-card">
           <span className="material-symbols-outlined stat-icon">package_2</span>
           <span className="stat-meta">Lifetime</span>
-          <h3 className="stat-value">12</h3>
+          <h3 className="stat-value">{stats.totalOrders}</h3>
           <p className="stat-label">Total Orders</p>
         </div>
 
@@ -26,7 +53,7 @@ const Dashboard = () => {
             local_shipping
           </span>
           <span className="stat-dot" />
-          <h3 className="stat-value">01</h3>
+          <h3 className="stat-value">{stats.activeOrders}</h3>
           <p className="stat-label">Active Orders</p>
         </div>
 
@@ -35,7 +62,7 @@ const Dashboard = () => {
             favorite_border
           </span>
           <span className="stat-meta">New</span>
-          <h3 className="stat-value">08</h3>
+          <h3 className="stat-value">{stats.wishlistItems}</h3>
           <p className="stat-label">Wishlist Items</p>
         </div>
       </section>

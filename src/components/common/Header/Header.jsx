@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 import {
   FiSearch,
   FiUser,
@@ -22,6 +23,17 @@ export default function Header() {
   const { cart } = useCart();
   const [cartOpen, setCartOpen] = useState(false);
   const [collectionExpanded, setCollectionExpanded] = useState(false);
+
+  // 🔥 Get current user from Redux
+  const { user } = useSelector((state) => state.auth);
+
+  // 🔥 Generate initials
+  const getInitials = (name) => {
+    if (!name) return "";
+    const parts = name.trim().split(" ");
+    if (parts.length === 1) return parts[0][0]?.toUpperCase();
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  };
 
   useEffect(() => {
     fetchCategories().then(setCategories);
@@ -68,13 +80,22 @@ export default function Header() {
               <FiSearch />
             </button>
 
+            {/* 🔥 LOGIN OR PROFILE ICON */}
             {!isAccountPage && (
-              <Link to="/login" className="icon-btn hidden md:block">
-                <FiUser />
-              </Link>
+              user ? (
+                <Link to="/account/dashboard" className="icon-btn hidden md:block">
+                  <div className="account-avatar">
+                    <span>{getInitials(user.name)}</span>
+                  </div>
+                </Link>
+              ) : (
+                <Link to="/login" className="icon-btn hidden md:block">
+                  <FiUser />
+                </Link>
+              )
             )}
 
-
+            {/* CART */}
             {!isAccountPage && (
               <button
                 className="icon-btn cart-btn relative"
@@ -87,10 +108,11 @@ export default function Header() {
               </button>
             )}
 
-            {isAccountPage && (
+            {/* ACCOUNT PAGE AVATAR */}
+            {isAccountPage && user && (
               <div className="account-avatar-wrapper">
                 <div className="account-avatar">
-                  <span>JD</span>
+                  <span>{getInitials(user.name)}</span>
                 </div>
               </div>
             )}
@@ -108,7 +130,7 @@ export default function Header() {
 
       <MiniCart open={cartOpen} onClose={() => setCartOpen(false)} />
 
-      {/* MOBILE DRAWER OVERLAY */}
+      {/* MOBILE OVERLAY */}
       <div
         className={`fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] transition-opacity duration-300 lg:hidden ${mobileOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
         onClick={() => setMobileOpen(false)}
@@ -155,9 +177,16 @@ export default function Header() {
             About
           </Link>
 
-          <Link className="mobile-anchor text-lg uppercase tracking-widest border-b border-white/5 pb-4 md:hidden" to="/account/dashboard" onClick={() => setMobileOpen(false)}>
-            Account
-          </Link>
+          {/* 🔥 MOBILE ACCOUNT LINK ONLY IF LOGGED IN */}
+          {user && (
+            <Link
+              className="mobile-anchor text-lg uppercase tracking-widest border-b border-white/5 pb-4 md:hidden"
+              to="/account/dashboard"
+              onClick={() => setMobileOpen(false)}
+            >
+              Account
+            </Link>
+          )}
         </nav>
       </aside>
     </>
