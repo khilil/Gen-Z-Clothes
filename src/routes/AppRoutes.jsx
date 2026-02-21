@@ -31,6 +31,8 @@ import AdminCustomers from "../Admin/Pages/Customer/AdminCustomers";
 import AdminCustomerDetail from "../Admin/Pages/Customer/AdminCustomerDetail";
 import LoginAuth from "../Auth/Login";
 import ProtectedRoute from "../components/ProtectedRoute";
+import AddProduct from "../Admin/Pages/Product/ProductDetailsPage";
+import AddProductPage from "../Admin/Pages/Product/ProductDetailsPage";
 
 
 export default function AppRoutes() {
@@ -66,7 +68,7 @@ export default function AppRoutes() {
             
             <Route path="/admin/products/new" element={
                 <ProtectedRoute allowedRole="admin">
-                    <ProductDetailsPage />
+                    <AddProductPage />
                 </ProtectedRoute>
             } />
 
