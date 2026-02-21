@@ -24,15 +24,15 @@ import AdminDashboard from "../Admin/AdminDashboard";
 import Inventory from "../Admin/Pages/Inventory/AdminInventory";
 import MainLayout from "../pages/MainLayout";
 import AdminProducts from "../Admin/Pages/Product/AdminProducts";
-import ProductDetailsPage from "../Admin/Pages/Product/ProductDetailsPage";
+// import ProductDetailsPage from "../Admin/Pages/Product/ProductDetailsPage";
 import AdminOrders from "../Admin/Pages/Orders/AdminOrders";
 import AdminOrderDetails from "../Admin/Pages/Orders/AdminOrderDetails";
 import AdminCustomers from "../Admin/Pages/Customer/AdminCustomers";
 import AdminCustomerDetail from "../Admin/Pages/Customer/AdminCustomerDetail";
 import LoginAuth from "../Auth/Login";
 import ProtectedRoute from "../components/ProtectedRoute";
-import AddProduct from "../Admin/Pages/Product/ProductDetailsPage";
-import AddProductPage from "../Admin/Pages/Product/ProductDetailsPage";
+// import AddProductPage from "../Admin/Pages/Product/ProductDetailsPage";
+import AddProductLayout from "../Admin/Pages/Product/AddProductLayout";
 
 
 export default function AppRoutes() {
@@ -65,10 +65,10 @@ export default function AppRoutes() {
                     <AdminCustomerDetail />
                 </ProtectedRoute>
             } />
-            
+
             <Route path="/admin/products/new" element={
                 <ProtectedRoute allowedRole="admin">
-                    <AddProductPage />
+                    <AddProductLayout />
                 </ProtectedRoute>
             } />
 
