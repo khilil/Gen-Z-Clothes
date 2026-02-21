@@ -321,22 +321,22 @@ function AddProductLayout() {
                 </div>
 
             </main>
-                    {/* Action Bar (Sticky) */}
-                    <div className="fixed bottom-0 right-0 z-50 w-full border-t border-slate-200 bg-white p-4 lg:left-64 lg:w-[calc(100%-16rem)] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-                        <div className="mx-auto flex max-w-7xl items-center justify-between">
-                            <button className="px-6 py-2.5 text-sm font-semibold text-slate-600 transition-all hover:text-slate-900">
-                                Cancel
-                            </button>
-                            <div className="flex gap-4">
-                                <button className="rounded-xl border border-slate-200 bg-white px-6 py-2.5 text-sm font-semibold text-slate-900 transition-all hover:bg-slate-50">
-                                    Save as Draft
-                                </button>
-                                <button className="rounded-xl bg-indigo-600 px-8 py-2.5 text-sm font-semibold text-white transition-all shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:shadow-indigo-300">
-                                    Publish Product
-                                </button>
-                            </div>
-                        </div>
+            {/* Action Bar (Sticky) */}
+            <div className="fixed bottom-0 right-0 z-50 w-full border-t border-slate-200 bg-white p-4 lg:left-64 lg:w-[calc(100%-16rem)] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+                <div className="mx-auto flex max-w-7xl items-center justify-between">
+                    <button className="px-6 py-2.5 text-sm font-semibold text-slate-600 transition-all hover:text-slate-900">
+                        Cancel
+                    </button>
+                    <div className="flex gap-4">
+                        <button className="rounded-xl border border-slate-200 bg-white px-6 py-2.5 text-sm font-semibold text-slate-900 transition-all hover:bg-slate-50">
+                            Save as Draft
+                        </button>
+                        <button className="rounded-xl bg-indigo-600 px-8 py-2.5 text-sm font-semibold text-white transition-all shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:shadow-indigo-300">
+                            Publish Product
+                        </button>
                     </div>
+                </div>
+            </div>
         </div>
     );
 }

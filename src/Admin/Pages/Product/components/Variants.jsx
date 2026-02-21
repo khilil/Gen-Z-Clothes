@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {
     ChevronDown,
@@ -11,7 +12,7 @@ import {
 } from 'lucide-react';
 
 const Variants = ({ variants, onAdd, onDelete, onChange, onResetSku, onToggleExpand }) => {
-    const getStockStatus = (stock, reserved, threshold) => {
+    const getStockStatus = (stock, reserved, threshold) => {    
         const available = stock - reserved;
         if (available <= 0) return { label: 'Out of Stock', color: 'text-red-600 bg-red-50 border-red-100', icon: <XCircle size={14} /> };
         if (available <= threshold) return { label: 'Low Stock', color: 'text-amber-600 bg-amber-50 border-amber-100', icon: <AlertCircle size={14} /> };
