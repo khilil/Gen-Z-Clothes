@@ -1,6 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { getAllCategories } from '../../../../services/categoryService';
+import { Loader2 } from 'lucide-react';
 
 const ProductInfo = ({ data, onChange }) => {
+    const [categories, setCategories] = useState([]);
+    const [loadingCategories, setLoadingCategories] = useState(false);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            setLoadingCategories(true);
+            try {
+                const res = await getAllCategories();
+                setCategories(res.data || []);
+            } catch (err) {
+                console.error("Failed to load categories:", err);
+            } finally {
+                setLoadingCategories(false);
+            }
+        };
+        fetchCategories();
+    }, []);
+
+    // Helper to handle multiple categories if needed in future
+    // For now keeping it compatible with singular "category" prop but sending as array
+    const handleCategoryChange = (e) => {
+        const value = e.target.value;
+        onChange('category', value); // Maintain compatibility for now
+    };
+
     return (
         <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 shadow-sm transition-all hover:shadow-md">
             <div className="border-b border-slate-800 px-6 py-5">
@@ -46,18 +73,26 @@ const ProductInfo = ({ data, onChange }) => {
                         />
                     </div>
                     <div className="space-y-2">
-                        <label htmlFor="category" className="text-sm font-semibold text-slate-400">Category</label>
+                        <div className="flex items-center justify-between">
+                            <label htmlFor="category" className="text-sm font-semibold text-slate-400">Category</label>
+                            {loadingCategories && <Loader2 size={14} className="animate-spin text-indigo-500" />}
+                        </div>
                         <select
                             id="category"
-                            className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 outline-none transition-all focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%2364748b%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-[right_0.5rem_center] bg-no-repeat"
-                            value={data.category}
-                            onChange={(e) => onChange('category', e.target.value)}
+                            className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 outline-none transition-all focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%2364748b%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-[right_0.5rem_center] bg-no-repeat disabled:opacity-50"
+                            value={data.category || (data.categories?.[0] || '')}
+                            onChange={handleCategoryChange}
+                            disabled={loadingCategories}
                         >
                             <option value="" className="bg-slate-900">Select Category</option>
-                            <option value="tops" className="bg-slate-900">Tops</option>
-                            <option value="bottoms" className="bg-slate-900">Bottoms</option>
-                            <option value="dresses" className="bg-slate-900">Dresses</option>
-                            <option value="outerwear" className="bg-slate-900">Outerwear</option>
+                            {categories.map(cat => (
+                                <option key={cat._id} value={cat.name} className="bg-slate-900">
+                                    {cat.name}
+                                </option>
+                            ))}
+                            {!loadingCategories && categories.length === 0 && (
+                                <option disabled className="bg-slate-900">No categories found</option>
+                            )}
                         </select>
                     </div>
                 </div>

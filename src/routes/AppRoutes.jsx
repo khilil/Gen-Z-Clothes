@@ -24,15 +24,17 @@ import AdminDashboard from "../Admin/AdminDashboard";
 import Inventory from "../Admin/Pages/Inventory/AdminInventory";
 import MainLayout from "../pages/MainLayout";
 import AdminProducts from "../Admin/Pages/Product/AdminProducts";
-// import ProductDetailsPage from "../Admin/Pages/Product/ProductDetailsPage";
+import ProductDetailsPage from "../Admin/Pages/Product/ProductDetailsPage";
 import AdminOrders from "../Admin/Pages/Orders/AdminOrders";
 import AdminOrderDetails from "../Admin/Pages/Orders/AdminOrderDetails";
 import AdminCustomers from "../Admin/Pages/Customer/AdminCustomers";
 import AdminCustomerDetail from "../Admin/Pages/Customer/AdminCustomerDetail";
+import AdminCategories from "../Admin/Pages/Category/AdminCategories";
 import LoginAuth from "../Auth/Login";
 import ProtectedRoute from "../components/ProtectedRoute";
 // import AddProductPage from "../Admin/Pages/Product/ProductDetailsPage";
 import AddProductLayout from "../Admin/Pages/Product/AddProductLayout";
+import UpdateProductLayout from "../Admin/Pages/Product/UpdateProductLayout";
 
 
 export default function AppRoutes() {
@@ -52,6 +54,7 @@ export default function AppRoutes() {
                 <Route path="products" element={<AdminProducts />} />
                 <Route path="inventory" element={<Inventory />} />
                 <Route path="orders" element={<AdminOrders />} />
+                <Route path="categories" element={<AdminCategories />} />
                 <Route path="/admin/customers" element={<AdminCustomers />} />
             </Route>
 
@@ -69,6 +72,18 @@ export default function AppRoutes() {
             <Route path="/admin/products/new" element={
                 <ProtectedRoute allowedRole="admin">
                     <AddProductLayout />
+                </ProtectedRoute>
+            } />
+
+            <Route path="/admin/products/edit/:slug" element={
+                <ProtectedRoute allowedRole="admin">
+                    <UpdateProductLayout />
+                </ProtectedRoute>
+            } />
+
+            <Route path="/admin/products/view/:slug" element={
+                <ProtectedRoute allowedRole="admin">
+                    <ProductDetailsPage />
                 </ProtectedRoute>
             } />
 
