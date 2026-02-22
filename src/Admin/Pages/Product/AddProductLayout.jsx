@@ -19,6 +19,10 @@ import Variants from './components/Variants';
 import Images from './components/Images';
 import VariantImages from './components/VariantImages';
 import { InventorySettings, ProductFlags, SEOSettings } from './components/Settings';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { motion, AnimatePresence } from 'framer-motion';
+import { CheckCircle2, AlertCircle, Loader2, X } from 'lucide-react';
 
 // Helper to generate SKU
 const generateSKU = (title, color, size) => {
@@ -33,6 +37,7 @@ const generateSKU = (title, color, size) => {
 };
 
 function AddProductLayout() {
+    const navigate = useNavigate();
     const [activeItem, setActiveItem] = useState('Products');
     const [productData, setProductData] = useState({
         title: '',
@@ -59,6 +64,14 @@ function AddProductLayout() {
     const [variants, setVariants] = useState([]);
     const [images, setImages] = useState([]);
     const [seoExpanded, setSeoExpanded] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [notification, setNotification] = useState(null);
+
+    const showNotification = (type, message) => {
+        setNotification({ type, message });
+        setTimeout(() => setNotification(null), 5000);
+    };
+
 
     // Handlers for Variants
     const handleAddVariant = () => {
@@ -138,12 +151,15 @@ function AddProductLayout() {
     const totalStock = variants.reduce((sum, v) => sum + v.stock, 0);
 
     // Handlers for Images
-    const handleAddImage = () => {
-        const newImg = {
-            id: Date.now().toString(),
+    const handleAddImage = (files) => {
+        const newImages = Array.from(files).map(file => ({
+            id: Date.now().toString() + Math.random(),
+            file,
+            preview: URL.createObjectURL(file),
             isMain: images.length === 0
-        };
-        setImages([...images, newImg]);
+        }));
+
+        setImages(prev => [...prev, ...newImages]);
     };
 
     const handleDeleteImage = (id) => {
@@ -158,15 +174,22 @@ function AddProductLayout() {
     };
 
     // Handlers for Variant-Specific Images
-    const handleAddVariantImage = (variantId) => {
+    const handleAddVariantImage = (variantId, files) => {
+        const newImages = Array.from(files).map(file => ({
+            id: Date.now().toString() + Math.random(),
+            file,
+            url: URL.createObjectURL(file), // Generate local preview URL
+            isPrimary: false
+        }));
+
         setVariants(variants.map(v => {
             if (v.id === variantId) {
-                const newImg = {
-                    id: Date.now().toString(),
-                    url: 'https://via.placeholder.com/150', // Mock URL
-                    isPrimary: v.images.length === 0
-                };
-                return { ...v, images: [...v.images, newImg] };
+                const combinedImages = [...v.images, ...newImages];
+                // If there were no images before, set the first one as primary
+                if (v.images.length === 0 && combinedImages.length > 0) {
+                    combinedImages[0].isPrimary = true;
+                }
+                return { ...v, images: combinedImages };
             }
             return v;
         }));
@@ -218,6 +241,67 @@ function AddProductLayout() {
         });
     };
 
+    const handlePublish = async () => {
+        setIsLoading(true);
+        try {
+            const formData = new FormData();
+
+            // Append basic product data
+            Object.keys(productData).forEach(key => {
+                formData.append(key, productData[key]);
+            });
+
+            // Append general images
+            images.forEach((img) => {
+                if (img.file) {
+                    formData.append('images', img.file);
+                }
+            });
+
+            // Append variants as a JSON string
+            // We'll filter out the Blob objects/previews before stringifying
+            const variantsMetadata = variants.map(v => ({
+                id: v.id,
+                size: v.size,
+                color: v.color,
+                colorCode: v.colorCode,
+                sku: v.sku,
+                stock: v.stock,
+                reservedStock: v.reservedStock,
+                lowStockThreshold: v.lowStockThreshold,
+                allowBackorder: v.allowBackorder
+            }));
+            formData.append('variants', JSON.stringify(variantsMetadata));
+
+            // Append variant-specific images
+            variants.forEach(v => {
+                v.images.forEach(img => {
+                    if (img.file) {
+                        formData.append('variantImages', img.file);
+                    }
+                });
+            });
+
+            const response = await axios.post('http://localhost:5000/api/v1/products', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            showNotification('success', 'Product published successfully!');
+            console.log("Response:", response.data);
+            // Optionally navigate back after success
+            // setTimeout(() => navigate('/admin/products'), 2000);
+
+        } catch (error) {
+            console.error("Publish Error:", error);
+            const errorMsg = error.response?.data?.message || "Failed to publish product. Please try again.";
+            showNotification('error', errorMsg);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const menuItems = [
         { icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
         { icon: <ShoppingBag size={20} />, label: 'Products' },
@@ -229,35 +313,35 @@ function AddProductLayout() {
     ];
 
     return (
-        <div className="flex min-h-screen bg-slate-50">
+        <div className="flex min-h-screen bg-slate-950">
 
 
             {/* Main Content Area */}
             <main className="flex-1">
                 {/* Header */}
-                <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/80 backdrop-blur-md px-8 py-5">
+                <header className="sticky top-0 z-40 border-b border-slate-800 bg-slate-900/80 backdrop-blur-md px-8 py-5">
                     <div className="mx-auto flex max-w-7xl items-center justify-between">
                         <div>
                             <nav className="mb-1 flex items-center gap-2 text-xs font-medium text-slate-500">
-                                <span>Products</span>
+                                <span onClick={() => navigate(-1)} className="hover:text-slate-300 cursor-pointer transition-colors">Products</span>
                                 <ChevronRight size={12} />
-                                <span className="text-slate-900">Add Product</span>
+                                <span className="text-slate-300">Add Product</span>
                             </nav>
-                            <h1 className="text-2xl font-bold text-slate-900">Add New Product</h1>
+                            <h1 className="text-2xl font-bold text-white">Add New Product</h1>
                         </div>
                         <div className="flex items-center gap-4">
                             <div className="relative hidden md:block">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
                                 <input
                                     type="text"
                                     placeholder="Search anything..."
-                                    className="h-10 w-64 rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 text-sm outline-none transition-all focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50"
+                                    className="h-10 w-64 rounded-xl border border-slate-800 bg-slate-950 pl-10 pr-4 text-sm text-slate-200 outline-none transition-all focus:border-indigo-500 focus:bg-slate-900 focus:ring-4 focus:ring-indigo-500/10"
                                 />
                             </div>
-                            <button className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition-all hover:bg-slate-50 hover:text-slate-900">
+                            <button className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 text-slate-400 transition-all hover:bg-slate-800 hover:text-white">
                                 <Bell size={20} />
                             </button>
-                            <div className="h-10 w-10 rounded-full bg-slate-200 border-2 border-white ring-1 ring-slate-200"></div>
+                            <div className="h-10 w-10 rounded-full bg-slate-800 border-2 border-slate-700 ring-1 ring-slate-800"></div>
                         </div>
                     </div>
                 </header>
@@ -322,21 +406,66 @@ function AddProductLayout() {
 
             </main>
             {/* Action Bar (Sticky) */}
-            <div className="fixed bottom-0 right-0 z-50 w-full border-t border-slate-200 bg-white p-4 lg:left-64 lg:w-[calc(100%-16rem)] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+            <div className="fixed bottom-0 right-0 z-50 w-full border-t border-slate-800 bg-slate-900 p-4 lg:left-64 lg:w-[calc(100%-16rem)] shadow-[0_-8px_30px_rgb(0,0,0,0.12)]">
                 <div className="mx-auto flex max-w-7xl items-center justify-between">
-                    <button className="px-6 py-2.5 text-sm font-semibold text-slate-600 transition-all hover:text-slate-900">
+                    <button onClick={() => navigate(-1)} className="px-6 py-2.5 text-sm font-semibold text-slate-400 transition-all hover:text-white">
                         Cancel
                     </button>
                     <div className="flex gap-4">
-                        <button className="rounded-xl border border-slate-200 bg-white px-6 py-2.5 text-sm font-semibold text-slate-900 transition-all hover:bg-slate-50">
+                        <button className="rounded-xl border border-slate-700 bg-slate-800 px-6 py-2.5 text-sm font-semibold text-slate-300 transition-all hover:bg-slate-700 hover:text-white">
                             Save as Draft
                         </button>
-                        <button className="rounded-xl bg-indigo-600 px-8 py-2.5 text-sm font-semibold text-white transition-all shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:shadow-indigo-300">
-                            Publish Product
+                        <button
+                            disabled={isLoading}
+                            className={`rounded-xl bg-indigo-600 px-8 py-2.5 text-sm font-semibold text-white transition-all shadow-lg shadow-indigo-600/20 hover:bg-indigo-700 hover:shadow-indigo-600/40 flex items-center gap-2 ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                            onClick={handlePublish}
+                        >
+                            {isLoading ? (
+                                <>
+                                    <Loader2 size={18} className="animate-spin" />
+                                    Publishing...
+                                </>
+                            ) : (
+                                'Publish Product'
+                            )}
                         </button>
                     </div>
                 </div>
             </div>
+
+            {/* Premium Notification ("Pop Pop") */}
+            <AnimatePresence>
+                {notification && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 20, scale: 0.9 }}
+                        className="fixed bottom-24 right-8 z-[100] flex items-center gap-4 rounded-2xl border border-slate-800 bg-slate-900/95 p-4 pr-6 shadow-2xl backdrop-blur-xl ring-1 ring-white/10"
+                    >
+                        <div className={`flex h-12 w-12 items-center justify-center rounded-full ${notification.type === 'success' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`}>
+                            {notification.type === 'success' ? <CheckCircle2 size={24} /> : <AlertCircle size={24} />}
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-sm font-bold text-white">
+                                {notification.type === 'success' ? 'Success!' : 'Error'}
+                            </span>
+                            <span className="text-xs text-slate-400">{notification.message}</span>
+                        </div>
+                        <button
+                            onClick={() => setNotification(null)}
+                            className="ml-4 text-slate-500 transition-colors hover:text-white"
+                        >
+                            <X size={16} />
+                        </button>
+                        <motion.div
+                            initial={{ width: '100%' }}
+                            animate={{ width: '0%' }}
+                            transition={{ duration: 5, ease: 'linear' }}
+                            className={`absolute bottom-0 left-0 h-1 rounded-full ${notification.type === 'success' ? 'bg-emerald-500' : 'bg-rose-500'}`}
+                        />
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
