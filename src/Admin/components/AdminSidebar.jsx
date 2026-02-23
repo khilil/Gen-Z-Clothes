@@ -8,7 +8,8 @@ import {
     HelpCircle,
     LogOut,
     ShoppingBasket,
-    Layers
+    Layers,
+    Palette
 } from 'lucide-react';
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -33,6 +34,7 @@ const Sidebar = () => {
         { name: 'Inventory', path: '/admin/inventory', icon: Package },
         { name: 'Orders', path: '/admin/orders', icon: ShoppingCart },
         { name: 'Categories', path: '/admin/categories', icon: Layers },
+        { name: 'Attributes', path: '/admin/attributes', icon: Palette },
         { name: 'Customers', path: '/admin/customers', icon: Users },
         { name: 'Analytics', path: '/admin/analytics', icon: BarChart3 },
     ];

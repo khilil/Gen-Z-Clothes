@@ -16,7 +16,6 @@ import {
 import ProductInfo from './components/ProductInfo';
 import Pricing from './components/Pricing';
 import Variants from './components/Variants';
-import Images from './components/Images';
 import VariantImages from './components/VariantImages';
 import { InventorySettings, ProductFlags, SEOSettings } from './components/Settings';
 import { useNavigate } from 'react-router-dom';
@@ -25,14 +24,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, AlertCircle, Loader2, X } from 'lucide-react';
 
 // Helper to generate SKU
-const generateSKU = (title, color, size) => {
+const generateSKU = (title, colorName, sizeName) => {
     if (!title) return '';
     const base = title
         .toLowerCase()
         .replace(/[^\w ]+/g, '')
         .replace(/ +/g, '-');
-    const colorSuffix = color ? `-${color.toLowerCase()}` : '';
-    const sizeSuffix = size ? `-${size.toLowerCase()}` : '';
+    const colorSuffix = colorName ? `-${colorName.toLowerCase()}` : '';
+    const sizeSuffix = sizeName ? `-${sizeName.toLowerCase()}` : '';
     return `${base}${colorSuffix}${sizeSuffix}`;
 };
 
@@ -42,6 +41,8 @@ function AddProductLayout() {
     const [productData, setProductData] = useState({
         title: '',
         slug: '',
+        productType: 'tshirt',
+        garmentType: 'top',
         brand: '',
         category: '',
         gender: 'unisex',
@@ -62,10 +63,28 @@ function AddProductLayout() {
     });
 
     const [variants, setVariants] = useState([]);
-    const [images, setImages] = useState([]);
     const [seoExpanded, setSeoExpanded] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [notification, setNotification] = useState(null);
+
+    const [availableSizes, setAvailableSizes] = useState([]);
+    const [availableColors, setAvailableColors] = useState([]);
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [sizesRes, colorsRes] = await Promise.all([
+                    axios.get('http://localhost:5000/api/v1/sizes'),
+                    axios.get('http://localhost:5000/api/v1/colors')
+                ]);
+                setAvailableSizes(sizesRes.data.data || []);
+                setAvailableColors(colorsRes.data.data || []);
+            } catch (err) {
+                console.error("Failed to fetch sizes/colors:", err);
+            }
+        };
+        fetchData();
+    }, []);
 
     const showNotification = (type, message) => {
         setNotification({ type, message });
@@ -77,16 +96,21 @@ function AddProductLayout() {
     const handleAddVariant = () => {
         const newVariant = {
             id: Date.now().toString(),
-            size: '',
-            color: 'White',
-            colorCode: '#ffffff',
-            sku: generateSKU(productData.title, 'White', ''),
+            size: '', // ObjectId
+            color: '', // ObjectId
+            sku: '',
+            price: 0,
             isSkuManual: false,
-            images: [], // Each variant now has its own images
+            images: [],
             stock: 0,
             reservedStock: 0,
             lowStockThreshold: 5,
             allowBackorder: false,
+            measurements: {
+                garmentType: productData.garmentType,
+                top: { chest: 0, frontLength: 0, sleeveLength: 0 },
+                bottom: { waist: 0, outseamLength: 0 }
+            },
             isExpanded: true
         };
         setVariants([...variants, newVariant]);
@@ -99,29 +123,37 @@ function AddProductLayout() {
     const handleVariantChange = (id, field, value) => {
         setVariants(variants.map(v => {
             if (v.id === id) {
-                const updated = { ...v, [field]: value };
+                let updated = { ...v };
 
-                // Auto-generate SKU if color or size changes AND not manually edited
-                if ((field === 'color' || field === 'size') && !v.isSkuManual) {
-                    updated.sku = generateSKU(productData.title, updated.color, updated.size);
+                if (field.startsWith('meas_')) {
+                    const [_, type, mField] = field.split('_');
+                    updated.measurements = {
+                        ...updated.measurements,
+                        [type]: {
+                            ...updated.measurements[type],
+                            [mField]: value
+                        }
+                    };
+                } else if (field === 'garmentType') {
+                    updated.measurements = {
+                        ...updated.measurements,
+                        garmentType: value
+                    };
+                } else {
+                    updated[field] = value;
                 }
 
-                // If SKU itself is manually edited, mark it as manual
+                // If size or color changed and SKU is NOT manual, regenerate SKU
+                if ((field === 'size' || field === 'color') && !updated.isSkuManual) {
+                    const sizeObj = availableSizes.find(s => s._id === updated.size);
+                    const colorObj = availableColors.find(c => c._id === updated.color);
+                    updated.sku = generateSKU(productData.title, colorObj?.name, sizeObj?.name);
+                }
+
                 if (field === 'sku') {
                     updated.isSkuManual = true;
                 }
 
-                // Simple color code mapping for demonstration
-                if (field === 'color') {
-                    const colors = {
-                        'Black': '#000000',
-                        'White': '#ffffff',
-                        'Navy': '#000080',
-                        'Red': '#ff0000',
-                        'Forest': '#228b22'
-                    };
-                    updated.colorCode = colors[value] || '#cccccc';
-                }
                 return updated;
             }
             return v;
@@ -131,9 +163,11 @@ function AddProductLayout() {
     const handleResetSku = (id) => {
         setVariants(variants.map(v => {
             if (v.id === id) {
+                const sizeObj = availableSizes.find(s => s._id === v.size);
+                const colorObj = availableColors.find(c => c._id === v.color);
                 return {
                     ...v,
-                    sku: generateSKU(productData.title, v.color, v.size),
+                    sku: generateSKU(productData.title, colorObj?.name, sizeObj?.name),
                     isSkuManual: false
                 };
             }
@@ -143,53 +177,27 @@ function AddProductLayout() {
 
     const toggleVariantExpand = (id) => {
         setVariants(variants.map(v =>
-            v.id === id ? { ...v, isExpanded: !v.isExpanded } : v
+            (v.id === id || v._id === id) ? { ...v, isExpanded: !v.isExpanded } : v
         ));
     };
 
-    // Calculate total stock
-    const totalStock = variants.reduce((sum, v) => sum + v.stock, 0);
-
-    // Handlers for Images
-    const handleAddImage = (files) => {
-        const newImages = Array.from(files).map(file => ({
-            id: Date.now().toString() + Math.random(),
-            file,
-            preview: URL.createObjectURL(file),
-            isMain: images.length === 0
-        }));
-
-        setImages(prev => [...prev, ...newImages]);
-    };
-
-    const handleDeleteImage = (id) => {
-        setImages(images.filter(img => img.id !== id));
-    };
-
-    const handleSetMainImage = (id) => {
-        setImages(images.map(img => ({
-            ...img,
-            isMain: img.id === id
-        })));
-    };
-
-    // Handlers for Variant-Specific Images
+    // Variant Image Handlers
     const handleAddVariantImage = (variantId, files) => {
-        const newImages = Array.from(files).map(file => ({
+        const fileArray = Array.from(files).map(file => ({
             id: Date.now().toString() + Math.random(),
             file,
-            url: URL.createObjectURL(file), // Generate local preview URL
+            url: URL.createObjectURL(file),
             isPrimary: false
         }));
 
         setVariants(variants.map(v => {
             if (v.id === variantId) {
-                const combinedImages = [...v.images, ...newImages];
-                // If there were no images before, set the first one as primary
-                if (v.images.length === 0 && combinedImages.length > 0) {
-                    combinedImages[0].isPrimary = true;
+                const newImages = [...v.images, ...fileArray];
+                // If no primary image, set the first one as primary
+                if (!newImages.find(img => img.isPrimary)) {
+                    newImages[0].isPrimary = true;
                 }
-                return { ...v, images: combinedImages };
+                return { ...v, images: newImages };
             }
             return v;
         }));
@@ -204,7 +212,7 @@ function AddProductLayout() {
         }));
     };
 
-    const handleSetPrimaryVariantImage = (variantId, imageId) => {
+    const handleSetVariantPrimaryImage = (variantId, imageId) => {
         setVariants(variants.map(v => {
             if (v.id === variantId) {
                 return {
@@ -219,6 +227,9 @@ function AddProductLayout() {
         }));
     };
 
+    // Calculate total stock
+    const totalStock = variants.reduce((sum, v) => sum + v.stock, 0);
+
     const handleDataChange = (field, value) => {
         setProductData(prev => {
             const newData = { ...prev, [field]: value };
@@ -231,10 +242,15 @@ function AddProductLayout() {
                     .replace(/ +/g, '-');
 
                 // Also update variant SKUs if title changes AND not manually edited
-                setVariants(prevVariants => prevVariants.map(v => ({
-                    ...v,
-                    sku: v.isSkuManual ? v.sku : generateSKU(value, v.color, v.size)
-                })));
+                setVariants(prevVariants => prevVariants.map(v => {
+                    if (v.isSkuManual) return v;
+                    const sizeObj = availableSizes.find(s => s._id === v.size);
+                    const colorObj = availableColors.find(c => c._id === v.color);
+                    return {
+                        ...v,
+                        sku: generateSKU(value, colorObj?.name, sizeObj?.name)
+                    };
+                }));
             }
 
             return newData;
@@ -242,34 +258,47 @@ function AddProductLayout() {
     };
 
     const handlePublish = async () => {
+        // 🔹 Basic Validation
+        if (!productData.title || !productData.slug || !productData.price) {
+            showNotification('error', 'Title, Slug and Price are required');
+            return;
+        }
+
+        if (variants.length > 0) {
+            const invalidVariant = variants.find(v => !v.size || !v.color || !v.sku);
+            if (invalidVariant) {
+                showNotification('error', 'All variants must have a Size, Color, and SKU');
+                return;
+            }
+        }
+
         setIsLoading(true);
         try {
             const formData = new FormData();
 
             // Append basic product data
             Object.keys(productData).forEach(key => {
-                formData.append(key, productData[key]);
-            });
-
-            // Append general images
-            images.forEach((img) => {
-                if (img.file) {
-                    formData.append('images', img.file);
+                if (productData[key] !== undefined && productData[key] !== null) {
+                    if (Array.isArray(productData[key])) {
+                        formData.append(key, JSON.stringify(productData[key]));
+                    } else {
+                        formData.append(key, productData[key]);
+                    }
                 }
             });
 
             // Append variants as a JSON string
-            // We'll filter out the Blob objects/previews before stringifying
             const variantsMetadata = variants.map(v => ({
                 id: v.id,
                 size: v.size,
                 color: v.color,
-                colorCode: v.colorCode,
                 sku: v.sku,
                 stock: v.stock,
+                price: v.price,
                 reservedStock: v.reservedStock,
                 lowStockThreshold: v.lowStockThreshold,
                 allowBackorder: v.allowBackorder,
+                measurements: v.measurements,
                 newImageCount: v.images?.filter(img => img.file).length || 0
             }));
             formData.append('variants', JSON.stringify(variantsMetadata));
@@ -282,6 +311,11 @@ function AddProductLayout() {
                     }
                 });
             });
+
+            // DEBUG: Log FormData entries
+            for (let [key, value] of formData.entries()) {
+                console.log(`📤 FormData [${key}]:`, value instanceof File ? `File: ${value.name}` : value);
+            }
 
             const response = await axios.post('http://localhost:5000/api/v1/products', formData, {
                 headers: {
@@ -357,25 +391,25 @@ function AddProductLayout() {
 
                                 <Variants
                                     variants={variants}
+                                    productType={productData.productType}
                                     onAdd={handleAddVariant}
                                     onDelete={handleDeleteVariant}
                                     onChange={handleVariantChange}
                                     onResetSku={handleResetSku}
                                     onToggleExpand={toggleVariantExpand}
+                                    availableSizes={availableSizes}
+                                    availableColors={availableColors}
+                                    garmentType={productData.garmentType}
+                                    onGarmentTypeChange={(val) => handleDataChange('garmentType', val)}
                                 />
 
                                 <VariantImages
                                     variants={variants}
                                     onAddImage={handleAddVariantImage}
                                     onDeleteImage={handleDeleteVariantImage}
-                                    onSetPrimary={handleSetPrimaryVariantImage}
-                                />
-
-                                <Images
-                                    images={images}
-                                    onAdd={handleAddImage}
-                                    onDelete={handleDeleteImage}
-                                    onSetMain={handleSetMainImage}
+                                    onSetPrimary={handleSetVariantPrimaryImage}
+                                    availableSizes={availableSizes}
+                                    availableColors={availableColors}
                                 />
                             </div>
 

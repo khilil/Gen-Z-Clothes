@@ -195,6 +195,10 @@ export default function ProductDetailsPage() {
                                 <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Material</p>
                                 <p className="text-sm font-bold text-white">{product.material || 'Standard'}</p>
                             </div>
+                            <div className="space-y-1">
+                                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Type</p>
+                                <p className="text-sm font-bold text-white uppercase">{product.productType || 'Other'}</p>
+                            </div>
                             <div className="col-span-2 space-y-2 pt-2 border-t border-slate-800/50">
                                 <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Categories</p>
                                 <div className="flex flex-wrap gap-2">
@@ -309,12 +313,19 @@ export default function ProductDetailsPage() {
                                     {product.variants?.map((v, idx) => (
                                         <tr key={idx} className="group transition-colors hover:bg-slate-800/20">
                                             <td className="px-8 py-6">
-                                                <div>
-                                                    <p className="text-sm font-black text-white group-hover:text-indigo-400 transition-colors uppercase tracking-tight">{v.color} / {v.size}</p>
-                                                    <div className="flex items-center gap-1.5 mt-1.5">
-                                                        <div className="h-3 w-3 rounded-full border border-slate-800 shadow-inner" style={{ backgroundColor: v.colorCode }}></div>
-                                                        <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{v.colorCode}</p>
-                                                    </div>
+                                                <div className="flex flex-wrap gap-1.5">
+                                                    {v.attributes ? (
+                                                        Object.entries(v.attributes).map(([key, val]) => (
+                                                            <div key={key} className="flex flex-col">
+                                                                <span className="text-[8px] font-black text-slate-500 uppercase tracking-tighter leading-none mb-1">{key}</span>
+                                                                <span className="text-xs font-black text-white px-2 py-0.5 rounded bg-slate-800 border border-slate-700 uppercase tracking-tight">
+                                                                    {val}
+                                                                </span>
+                                                            </div>
+                                                        ))
+                                                    ) : (
+                                                        <p className="text-xs font-bold text-slate-500 italic">No attributes</p>
+                                                    )}
                                                 </div>
                                             </td>
                                             <td className="px-6 py-6">

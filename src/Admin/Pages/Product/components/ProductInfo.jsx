@@ -46,17 +46,37 @@ const ProductInfo = ({ data, onChange }) => {
                     />
                 </div>
 
-                <div className="space-y-2">
-                    <label htmlFor="slug" className="text-sm font-semibold text-slate-400">Slug (Auto-generated)</label>
-                    <div className="flex overflow-hidden rounded-xl border border-slate-800 bg-slate-950">
-                        <span className="flex items-center px-4 text-xs font-medium text-slate-500 select-none">myshop.com/products/</span>
-                        <input
-                            type="text"
-                            id="slug"
-                            className="flex-1 bg-transparent px-4 py-2.5 text-sm text-slate-200 outline-none transition-all focus:bg-slate-900/50"
-                            value={data.slug}
-                            onChange={(e) => onChange('slug', e.target.value)}
-                        />
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <div className="space-y-2">
+                        <label htmlFor="slug" className="text-sm font-semibold text-slate-400">Slug (Auto-generated)</label>
+                        <div className="flex overflow-hidden rounded-xl border border-slate-800 bg-slate-950">
+                            <span className="flex items-center px-4 text-xs font-medium text-slate-500 select-none">myshop.com/products/</span>
+                            <input
+                                type="text"
+                                id="slug"
+                                className="flex-1 bg-transparent px-4 py-2.5 text-sm text-slate-200 outline-none transition-all focus:bg-slate-900/50"
+                                value={data.slug}
+                                onChange={(e) => onChange('slug', e.target.value)}
+                            />
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <label htmlFor="productType" className="text-sm font-semibold text-slate-400">Product Type</label>
+                        <select
+                            id="productType"
+                            required
+                            className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 outline-none transition-all focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%2364748b%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-[right_0.5rem_center] bg-no-repeat"
+                            value={data.productType || ''}
+                            onChange={(e) => onChange('productType', e.target.value)}
+                        >
+                            <option value="" disabled className="bg-slate-900 text-slate-500">Select Type</option>
+                            <option value="tshirt" className="bg-slate-900">T-Shirt</option>
+                            <option value="jeans" className="bg-slate-900">Jeans</option>
+                            <option value="hoodie" className="bg-slate-900">Hoodie</option>
+                            <option value="shirt" className="bg-slate-900">Shirt</option>
+                            <option value="jacket" className="bg-slate-900">Jacket</option>
+                            <option value="other" className="bg-slate-900">Other</option>
+                        </select>
                     </div>
                 </div>
 
@@ -72,6 +92,9 @@ const ProductInfo = ({ data, onChange }) => {
                             onChange={(e) => onChange('brand', e.target.value)}
                         />
                     </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <div className="space-y-2">
                         <div className="flex items-center justify-between">
                             <label htmlFor="category" className="text-sm font-semibold text-slate-400">Category</label>
@@ -95,9 +118,6 @@ const ProductInfo = ({ data, onChange }) => {
                             )}
                         </select>
                     </div>
-                </div>
-
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <div className="space-y-2">
                         <label htmlFor="gender" className="text-sm font-semibold text-slate-400">Gender</label>
                         <select
@@ -111,6 +131,9 @@ const ProductInfo = ({ data, onChange }) => {
                             <option value="women" className="bg-slate-900">Women</option>
                         </select>
                     </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <div className="space-y-2">
                         <label htmlFor="material" className="text-sm font-semibold text-slate-400">Fabric / Material</label>
                         <input

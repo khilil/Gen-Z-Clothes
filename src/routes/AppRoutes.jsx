@@ -35,6 +35,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 // import AddProductPage from "../Admin/Pages/Product/ProductDetailsPage";
 import AddProductLayout from "../Admin/Pages/Product/AddProductLayout";
 import UpdateProductLayout from "../Admin/Pages/Product/UpdateProductLayout";
+import AttributeManagement from "../Admin/Pages/Attributes/AttributeManagement";
 
 
 export default function AppRoutes() {
@@ -55,6 +56,7 @@ export default function AppRoutes() {
                 <Route path="inventory" element={<Inventory />} />
                 <Route path="orders" element={<AdminOrders />} />
                 <Route path="categories" element={<AdminCategories />} />
+                <Route path="attributes" element={<AttributeManagement />} />
                 <Route path="/admin/customers" element={<AdminCustomers />} />
             </Route>
 
