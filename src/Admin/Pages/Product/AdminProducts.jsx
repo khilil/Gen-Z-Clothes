@@ -19,25 +19,35 @@ import {
     Loader2
 } from 'lucide-react';
 import { getProducts, deleteProduct } from '../../../services/productService';
+import { getAllCategories } from '../../../services/categoryService';
+import { productAttributes } from '../../../config/productAttributes';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
-/**
- * AdminProducts Component
- * Refined React version of the Product Catalog Management page.
- */
 export default function AdminProducts() {
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
-    const [categoryFilter, setCategoryFilter] = useState('All');
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedProducts, setSelectedProducts] = useState(new Set());
     const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [deleteModal, setDeleteModal] = useState({ isOpen: false, productId: null, productName: '' });
     const [isDeleting, setIsDeleting] = useState(false);
     const [notification, setNotification] = useState(null);
+
+    // Filter and Sort State
+    const [isFilterExpanded, setIsFilterExpanded] = useState(false);
+    const [filters, setFilters] = useState({
+        category: 'All',
+        stockStatus: 'All',
+        gender: 'All',
+        productType: 'All',
+        priceMin: '',
+        priceMax: ''
+    });
+    const [sortConfig, setSortConfig] = useState({ key: 'createdAt', direction: 'desc' });
 
     const showNotification = (type, message) => {
         setNotification({ type, message });
@@ -47,61 +57,130 @@ export default function AdminProducts() {
     useEffect(() => {
         const controller = new AbortController();
 
-        const fetchProductsData = async () => {
+        const fetchData = async () => {
             setIsLoading(true);
             try {
-                const data = await getProducts(controller.signal);
-                console.log("API Raw Response:", data);
-                if (data) {
-                    // Comprehensive check for the array in the response
-                    let list = [];
-                    if (Array.isArray(data)) {
-                        list = data;
-                    } else if (data.data && Array.isArray(data.data)) {
-                        list = data.data;
-                    } else if (data.products && Array.isArray(data.products)) {
-                        list = data.products;
-                    } else if (data.allProducts && Array.isArray(data.allProducts)) {
-                        list = data.allProducts;
-                    }
+                const [productData, categoryData] = await Promise.all([
+                    getProducts(controller.signal),
+                    getAllCategories()
+                ]);
 
-                    console.log("Parsed Products List:", list);
-                    setProducts(list);
-                    setError(null);
-                }
+                // Parse Products
+                let productList = [];
+                if (Array.isArray(productData)) productList = productData;
+                else if (productData?.data) productList = productData.data;
+                else if (productData?.products) productList = productData.products;
+                setProducts(productList);
+
+                // Parse Categories
+                let catList = [];
+                if (Array.isArray(categoryData)) catList = categoryData;
+                else if (categoryData?.data) catList = categoryData.data;
+                setCategories(catList);
+
+                setError(null);
             } catch (err) {
-                console.error("Fetch Products Error:", err);
-                setError("Failed to load products. Please try again later.");
+                if (err.name !== 'CanceledError' && err.name !== 'AbortError') {
+                    console.error("Fetch Error:", err);
+                    setError("Failed to load catalog data.");
+                }
             } finally {
+                setIsLoading(true); // Temporary to avoid flicker if needed, but let's set to false
                 setIsLoading(false);
             }
         };
 
-        fetchProductsData();
-
+        fetchData();
         return () => controller.abort();
     }, []);
 
+    const handleSort = (key) => {
+        let direction = 'asc';
+        if (sortConfig.key === key && sortConfig.direction === 'asc') {
+            direction = 'desc';
+        }
+        setSortConfig({ key, direction });
+    };
+
     const filteredProducts = useMemo(() => {
         if (!Array.isArray(products)) return [];
+
         return products.filter(p => {
             if (!p) return false;
 
-            // Flexible search across multiple fields
-            const nameMatch = (p.name || p.title || '').toLowerCase().includes(searchTerm.toLowerCase());
-            const idMatch = (p.id || p._id || '').toLowerCase().includes(searchTerm.toLowerCase());
-            const matchesSearch = nameMatch || idMatch;
+            // Search Filter
+            const nameMatch = (p.title || p.name || '').toLowerCase().includes(searchTerm.toLowerCase());
+            const idMatch = (p._id || p.id || '').toLowerCase().includes(searchTerm.toLowerCase());
+            const skuMatch = p.variants?.some(v => v.sku?.toLowerCase().includes(searchTerm.toLowerCase()));
+            if (searchTerm && !nameMatch && !idMatch && !skuMatch) return false;
 
-            // Flexible category matching (supports string or object with name property)
+            // Category Filter
             const pCategory = typeof p.category === 'object' ? p.category?.name : p.category;
-            const matchesCategory =
-                categoryFilter === 'All' ||
-                categoryFilter === 'All Categories' ||
-                pCategory === categoryFilter;
+            if (filters.category !== 'All' && pCategory !== filters.category) return false;
 
-            return matchesSearch && matchesCategory;
+            // Gender Filter
+            if (filters.gender !== 'All' && p.gender?.toLowerCase() !== filters.gender.toLowerCase()) return false;
+
+            // Product Type Filter
+            if (filters.productType !== 'All' && p.productType !== filters.productType) return false;
+
+            // Price Filter
+            const price = parseFloat(p.price) || 0;
+            if (filters.priceMin && price < parseFloat(filters.priceMin)) return false;
+            if (filters.priceMax && price > parseFloat(filters.priceMax)) return false;
+
+            // Stock Status Filter
+            const totalStock = p.variants?.reduce((sum, v) => sum + (v.stock || 0), 0) || 0;
+            if (filters.stockStatus === 'In Stock' && totalStock <= 0) return false;
+            if (filters.stockStatus === 'Low Stock' && (totalStock <= 0 || totalStock > 10)) return false;
+            if (filters.stockStatus === 'Out of Stock' && totalStock > 0) return false;
+
+            return true;
         });
-    }, [products, searchTerm, categoryFilter]);
+    }, [products, searchTerm, filters]);
+
+    const sortedProducts = useMemo(() => {
+        const items = [...filteredProducts];
+        if (sortConfig.key) {
+            items.sort((a, b) => {
+                let aValue = a[sortConfig.key];
+                let bValue = b[sortConfig.key];
+
+                // Handle nested or special fields
+                if (sortConfig.key === 'stock') {
+                    aValue = a.variants?.reduce((sum, v) => sum + (v.stock || 0), 0) || 0;
+                    bValue = b.variants?.reduce((sum, v) => sum + (v.stock || 0), 0) || 0;
+                }
+
+                if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+                if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+                return 0;
+            });
+        }
+        return items;
+    }, [filteredProducts, sortConfig]);
+
+    const handleExport = () => {
+        const headers = ["ID", "Title", "Category", "Price", "Gender", "Total Stock"];
+        const rows = sortedProducts.map(p => [
+            p._id || p.id,
+            p.title || p.name,
+            p.category || 'N/A',
+            p.price,
+            p.gender,
+            p.variants?.reduce((sum, v) => sum + (v.stock || 0), 0) || 0
+        ]);
+
+        const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", `products_export_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
 
     const toggleSelectProduct = (id) => {
         const next = new Set(selectedProducts);
@@ -143,68 +222,146 @@ export default function AdminProducts() {
 
     return (
         <div className="flex h-full flex-col bg-slate-950 font-sans text-slate-200">
-            {/* Header Area
-            <div className="border-b border-slate-800 bg-slate-900/50 px-8 py-6 backdrop-blur-md">
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-2xl font-black tracking-tight text-white">Product Catalog</h1>
-                        <p className="mt-1 text-sm font-medium text-slate-500">Manage and track your inventory across all categories</p>
-                    </div>
-                    <button
-                        onClick={() => navigate('/admin/products/new')}
-                        className="flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-indigo-600/20 transition-all hover:bg-indigo-700 hover:shadow-indigo-600/40 active:scale-95"
-                    >
-                        <Plus size={18} />
-                        Add New Product
-                    </button>
-                </div>
-            </div> */}
-
             {/* Scrollable Content */}
             <div className="flex-1 overflow-y-auto p-8">
-                {/* 2) Filter Bar Section */}
-                <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-800 bg-slate-900 p-4 shadow-sm ring-1 ring-white/5">
-                    <div className="flex flex-1 items-center gap-4 min-w-[300px]">
-                        <div className="relative flex-1 max-w-md">
-                            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
-                            <input
-                                className="w-full rounded-xl border border-slate-800 bg-slate-950 pl-11 pr-4 py-2.5 text-sm text-slate-200 outline-none transition-all focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 placeholder:text-slate-600"
-                                placeholder="Search by name or ID..."
-                                type="text"
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                            />
+                {/* Filter Bar Section */}
+                <div className="mb-6 space-y-4">
+                    <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-800 bg-slate-900 p-4 shadow-sm ring-1 ring-white/5">
+                        <div className="flex flex-1 items-center gap-4 min-w-[300px]">
+                            <div className="relative flex-1 max-w-md">
+                                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+                                <input
+                                    className="w-full rounded-xl border border-slate-800 bg-slate-950 pl-11 pr-4 py-2.5 text-sm text-slate-200 outline-none transition-all focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 placeholder:text-slate-600"
+                                    placeholder="Search by name, ID, or SKU..."
+                                    type="text"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                            </div>
+
+                            <div className="relative">
+                                <select
+                                    className="appearance-none rounded-xl border border-slate-800 bg-slate-950 pl-4 pr-10 py-2.5 text-sm text-slate-300 outline-none transition-all focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 cursor-pointer"
+                                    value={filters.category}
+                                    onChange={(e) => setFilters({ ...filters, category: e.target.value })}
+                                >
+                                    <option value="All">All Categories</option>
+                                    {categories.map(cat => (
+                                        <option key={cat._id} value={cat.name}>{cat.name}</option>
+                                    ))}
+                                </select>
+                                <ChevronRight className="absolute right-3 top-1/2 -translate-y-1/2 rotate-90 text-slate-500 pointer-events-none" size={16} />
+                            </div>
                         </div>
 
-                        <div className="relative">
-                            <select
-                                className="appearance-none rounded-xl border border-slate-800 bg-slate-950 pl-4 pr-10 py-2.5 text-sm text-slate-300 outline-none transition-all focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 cursor-pointer"
-                                value={categoryFilter}
-                                onChange={(e) => setCategoryFilter(e.target.value)}
+                        <div className="flex items-center gap-3">
+                            <button
+                                onClick={() => setIsFilterExpanded(!isFilterExpanded)}
+                                className={`flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-bold transition-all ${isFilterExpanded ? 'border-indigo-500 bg-indigo-500/10 text-indigo-400' : 'border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-white'}`}
                             >
-                                <option>All Categories</option>
-                                <option>Essentials</option>
-                                <option>Graphic Tees</option>
-                                <option>Premium</option>
-                                <option>Limited Edition</option>
-                            </select>
-                            <ChevronRight className="absolute right-3 top-1/2 -translate-y-1/2 rotate-90 text-slate-500 pointer-events-none" size={16} />
+                                <Filter size={16} />
+                                {isFilterExpanded ? 'Hide Filters' : 'Advanced Filters'}
+                            </button>
+                            <button
+                                onClick={handleExport}
+                                className="flex items-center gap-2 rounded-xl border border-slate-800 px-4 py-2.5 text-sm font-bold text-slate-400 transition-all hover:bg-slate-800 hover:text-white"
+                            >
+                                <Download size={16} />
+                                Export
+                            </button>
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
-                        <button className="flex items-center gap-2 rounded-xl border border-slate-800 px-4 py-2.5 text-sm font-bold text-slate-400 transition-all hover:bg-slate-800 hover:text-white">
-                            <Filter size={16} />
-                            Filters
-                        </button>
-                        <button className="flex items-center gap-2 rounded-xl border border-slate-800 px-4 py-2.5 text-sm font-bold text-slate-400 transition-all hover:bg-slate-800 hover:text-white">
-                            <Download size={16} />
-                            Export
-                        </button>
-                    </div>
+                    {/* Advanced Filter Panel */}
+                    <AnimatePresence>
+                        {isFilterExpanded && (
+                            <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                className="overflow-hidden"
+                            >
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 rounded-2xl border border-slate-800 bg-slate-900/50 p-6 shadow-sm ring-1 ring-white/5">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Gender</label>
+                                        <select
+                                            className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2 text-sm text-slate-300 outline-none focus:border-indigo-500"
+                                            value={filters.gender}
+                                            onChange={(e) => setFilters({ ...filters, gender: e.target.value })}
+                                        >
+                                            <option value="All">All Genders</option>
+                                            <option value="men">Men</option>
+                                            <option value="women">Women</option>
+                                            <option value="unisex">Unisex</option>
+                                        </select>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Stock Status</label>
+                                        <select
+                                            className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2 text-sm text-slate-300 outline-none focus:border-indigo-500"
+                                            value={filters.stockStatus}
+                                            onChange={(e) => setFilters({ ...filters, stockStatus: e.target.value })}
+                                        >
+                                            <option value="All">All Availability</option>
+                                            <option value="In Stock">In Stock</option>
+                                            <option value="Low Stock">Low Stock</option>
+                                            <option value="Out of Stock">Out of Stock</option>
+                                        </select>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Min Price ($)</label>
+                                        <input
+                                            type="number"
+                                            className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2 text-sm text-slate-300 outline-none focus:border-indigo-500"
+                                            placeholder="0"
+                                            value={filters.priceMin}
+                                            onChange={(e) => setFilters({ ...filters, priceMin: e.target.value })}
+                                        />
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Max Price ($)</label>
+                                        <input
+                                            type="number"
+                                            className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2 text-sm text-slate-300 outline-none focus:border-indigo-500"
+                                            placeholder="1000"
+                                            value={filters.priceMax}
+                                            onChange={(e) => setFilters({ ...filters, priceMax: e.target.value })}
+                                        />
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Product Type</label>
+                                        <select
+                                            className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2 text-sm text-slate-300 outline-none focus:border-indigo-500"
+                                            value={filters.productType}
+                                            onChange={(e) => setFilters({ ...filters, productType: e.target.value })}
+                                        >
+                                            <option value="All">All Types</option>
+                                            {Object.keys(productAttributes).map(type => (
+                                                <option key={type} value={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    <div className="lg:col-span-5 flex justify-end gap-3 mt-2">
+                                        <button
+                                            onClick={() => setFilters({ category: 'All', stockStatus: 'All', gender: 'All', productType: 'All', priceMin: '', priceMax: '' })}
+                                            className="flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-white transition-colors"
+                                        >
+                                            <X size={14} />
+                                            Reset All Filters
+                                        </button>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
 
-                {/* 3) Products Table Section */}
+                {/* Products Table Section */}
                 <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 shadow-xl ring-1 ring-white/5">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left">
@@ -218,20 +375,29 @@ export default function AdminProducts() {
                                             onChange={toggleSelectAll}
                                         />
                                     </th>
-                                    <th className="px-6 py-4">
+                                    <th className="px-6 py-4 cursor-pointer hover:bg-slate-700/50 transition-colors" onClick={() => handleSort('title')}>
                                         <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-500">
                                             Product Details
-                                            <ArrowUpDown size={12} />
+                                            <ArrowUpDown size={12} className={sortConfig.key === 'title' ? 'text-indigo-400' : ''} />
                                         </div>
                                     </th>
-                                    <th className="px-6 py-4">
-                                        <div className="text-xs font-black uppercase tracking-widest text-slate-500">Category</div>
+                                    <th className="px-6 py-4 cursor-pointer hover:bg-slate-700/50 transition-colors" onClick={() => handleSort('category')}>
+                                        <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-500">
+                                            Category
+                                            <ArrowUpDown size={12} className={sortConfig.key === 'category' ? 'text-indigo-400' : ''} />
+                                        </div>
                                     </th>
-                                    <th className="px-6 py-4">
-                                        <div className="text-xs font-black uppercase tracking-widest text-slate-500">Base Price</div>
+                                    <th className="px-6 py-4 cursor-pointer hover:bg-slate-700/50 transition-colors" onClick={() => handleSort('price')}>
+                                        <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-500">
+                                            Base Price
+                                            <ArrowUpDown size={12} className={sortConfig.key === 'price' ? 'text-indigo-400' : ''} />
+                                        </div>
                                     </th>
-                                    <th className="px-6 py-4">
-                                        <div className="text-xs font-black uppercase tracking-widest text-slate-500">Variants</div>
+                                    <th className="px-6 py-4 cursor-pointer hover:bg-slate-700/50 transition-colors" onClick={() => handleSort('stock')}>
+                                        <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-500">
+                                            Variants
+                                            <ArrowUpDown size={12} className={sortConfig.key === 'stock' ? 'text-indigo-400' : ''} />
+                                        </div>
                                     </th>
                                     <th className="px-6 py-4 text-right">
                                         <div className="text-xs font-black uppercase tracking-widest text-slate-500">Actions</div>
@@ -269,8 +435,8 @@ export default function AdminProducts() {
                                             </div>
                                         </td>
                                     </tr>
-                                ) : filteredProducts.length > 0 ? (
-                                    filteredProducts.map((product) => (
+                                ) : sortedProducts.length > 0 ? (
+                                    sortedProducts.map((product) => (
                                         <ProductRow
                                             key={product.id || product._id}
                                             product={product}
@@ -292,7 +458,7 @@ export default function AdminProducts() {
                                                 <p className="mt-1 text-sm text-slate-500">Try adjusting your filters or search terms.</p>
                                                 <button
                                                     className="mt-6 text-sm font-bold text-indigo-400 hover:text-indigo-300 transition-colors"
-                                                    onClick={() => { setSearchTerm(''); setCategoryFilter('All'); }}
+                                                    onClick={() => { setSearchTerm(''); setFilters({ category: 'All', stockStatus: 'All', gender: 'All', productType: 'All', priceMin: '', priceMax: '' }); }}
                                                 >
                                                     Clear all filters
                                                 </button>
@@ -304,27 +470,19 @@ export default function AdminProducts() {
                         </table>
                     </div>
 
-                    {/* 4) Pagination Section */}
+                    {/* Pagination Section */}
                     <div className="flex items-center justify-between border-t border-slate-800 bg-slate-900/50 px-6 py-4">
                         <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                             Showing <span className="text-slate-200">1</span> to{" "}
-                            <span className="text-slate-200">{filteredProducts.length}</span> of{" "}
-                            <span className="text-slate-200">{filteredProducts.length}</span> results
+                            <span className="text-slate-200">{sortedProducts.length}</span> of{" "}
+                            <span className="text-slate-200">{sortedProducts.length}</span> results
                         </p>
 
                         <div className="flex items-center gap-2">
                             <button className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-800 text-slate-500 transition-all hover:bg-slate-800 hover:text-white disabled:opacity-30" disabled>
                                 <ChevronLeft size={18} />
                             </button>
-
-                            <button className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-xs font-black text-white shadow-lg shadow-indigo-600/20">
-                                1
-                            </button>
-
-                            <button className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-800 text-xs font-bold text-slate-400 transition-all hover:bg-slate-800 hover:text-white">
-                                2
-                            </button>
-
+                            <button className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-xs font-black text-white shadow-lg shadow-indigo-600/20">1</button>
                             <button className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-800 text-slate-400 transition-all hover:bg-slate-800 hover:text-white">
                                 <ChevronRight size={18} />
                             </button>
@@ -333,7 +491,7 @@ export default function AdminProducts() {
                 </div>
             </div>
 
-            {/* Delete Confirmation Modal */}
+            {/* Modals and Toasts */}
             <AnimatePresence>
                 {deleteModal.isOpen && (
                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -356,7 +514,7 @@ export default function AdminProducts() {
                             <h2 className="text-xl font-black text-white mb-2 uppercase tracking-tight">Delete Product?</h2>
                             <p className="text-slate-400 mb-8 font-medium">
                                 Are you sure you want to delete <span className="text-white font-bold">"{deleteModal.productName}"</span>?
-                                This action cannot be undone and will permanently remove it from your catalog.
+                                This action cannot be undone.
                             </p>
                             <div className="flex gap-4">
                                 <button
@@ -368,13 +526,9 @@ export default function AdminProducts() {
                                 <button
                                     onClick={handleConfirmDelete}
                                     disabled={isDeleting}
-                                    className="flex-1 rounded-xl bg-rose-500 py-3 text-sm font-bold text-white shadow-lg shadow-rose-500/20 transition-all hover:bg-rose-600 hover:shadow-rose-500/40 flex items-center justify-center gap-2 disabled:opacity-50"
+                                    className="flex-1 rounded-xl bg-rose-500 py-3 text-sm font-bold text-white flex items-center justify-center gap-2 disabled:opacity-50"
                                 >
-                                    {isDeleting ? (
-                                        <Loader2 size={18} className="animate-spin" />
-                                    ) : (
-                                        'Delete Product'
-                                    )}
+                                    {isDeleting ? <Loader2 size={18} className="animate-spin" /> : 'Delete Product'}
                                 </button>
                             </div>
                         </motion.div>
@@ -382,30 +536,21 @@ export default function AdminProducts() {
                 )}
             </AnimatePresence>
 
-            {/* Notification Toast */}
             <AnimatePresence>
                 {notification && (
                     <motion.div
-                        initial={{ opacity: 0, y: 50, scale: 0.9 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 20, scale: 0.9 }}
-                        className="fixed bottom-8 right-8 z-[110] flex items-center gap-4 rounded-2xl border border-slate-800 bg-slate-900/95 p-4 pr-6 shadow-2xl backdrop-blur-xl ring-1 ring-white/10"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 20 }}
+                        className="fixed bottom-8 right-8 z-[110] flex items-center gap-4 rounded-2xl border border-slate-800 bg-slate-900/95 p-4 pr-6 shadow-2xl backdrop-blur-xl"
                     >
-                        <div className={`flex h-12 w-12 items-center justify-center rounded-full ${notification.type === 'success' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`}>
-                            {notification.type === 'success' ? <CheckCircle2 size={24} /> : <AlertCircle size={24} />}
+                        <div className={`flex h-10 w-10 items-center justify-center rounded-full ${notification.type === 'success' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`}>
+                            {notification.type === 'success' ? <CheckCircle2 size={20} /> : <AlertCircle size={20} />}
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-sm font-bold text-white">
-                                {notification.type === 'success' ? 'Success!' : 'Error'}
-                            </span>
+                            <span className="text-sm font-bold text-white">{notification.type === 'success' ? 'Success' : 'Error'}</span>
                             <span className="text-xs text-slate-400">{notification.message}</span>
                         </div>
-                        <button
-                            onClick={() => setNotification(null)}
-                            className="ml-4 text-slate-500 transition-colors hover:text-white"
-                        >
-                            <X size={16} />
-                        </button>
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -413,17 +558,14 @@ export default function AdminProducts() {
     );
 }
 
-/**
- * Reusable ProductRow Component
- */
 function ProductRow({ product, isSelected, onToggle, onView, onEdit, onDelete }) {
-    const { name, title, id, _id, category, price, variants, images, image, badgeClass } = product;
+    const { title, name, _id, id, category, price, variants, images } = product;
 
-    // Normalize data from backend
-    const displayName = name || title || "Untitled Product";
-    const displayId = id || _id || "N/A";
-    const displayImage = image || (images && images[0]?.url) || (images && images[0]) || "https://premium-clothing.com/placeholder.jpg";
-    const variantCount = variants?.length || variants || 0;
+    const displayName = title || name || "Untitled Product";
+    const displayId = _id || id || "N/A";
+    const displayImage = images?.[0]?.url || images?.[0] || "https://premium-clothing.com/placeholder.jpg";
+    const variantCount = Array.isArray(variants) ? variants.length : (variants || 0);
+    const totalStock = Array.isArray(variants) ? variants.reduce((sum, v) => sum + (v.stock || 0), 0) : 0;
 
     return (
         <tr className={`group transition-colors hover:bg-slate-800/30 ${isSelected ? 'bg-indigo-600/5' : ''}`}>
@@ -437,62 +579,39 @@ function ProductRow({ product, isSelected, onToggle, onView, onEdit, onDelete })
             </td>
             <td className="px-6 py-4">
                 <div className="flex items-center gap-4">
-                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-slate-800 bg-slate-950 p-1">
-                        <img
-                            className="h-full w-full rounded-lg object-cover"
-                            src={displayImage}
-                            alt={displayName}
-                        />
+                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-slate-800 bg-slate-950 p-1">
+                        <img className="h-full w-full rounded-lg object-cover" src={displayImage} alt={displayName} />
                     </div>
                     <div>
                         <p className="text-sm font-black text-white group-hover:text-indigo-400 transition-colors uppercase tracking-tight">{displayName}</p>
-                        <p className="font-mono text-[10px] font-bold text-slate-500 uppercase tracking-tighter">REF: {displayId}</p>
+                        <p className="font-mono text-[9px] font-bold text-slate-500 uppercase tracking-tighter">REF: {displayId}</p>
                     </div>
                 </div>
             </td>
-
             <td className="px-6 py-4">
-                <span className={`inline-flex items-center rounded-lg border px-3 py-1 text-[10px] font-black uppercase tracking-widest ${badgeClass || 'text-slate-400 bg-slate-500/10 border-slate-500/20'}`}>
+                <span className="inline-flex items-center rounded-lg border border-slate-700 bg-slate-800/50 px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-slate-400">
                     {category || 'Uncategorized'}
                 </span>
             </td>
-
-            <td className="px-6 py-4 font-mono text-sm font-black text-slate-200">
+            <td className="px-6 py-4 font-mono text-xs font-black text-slate-200">
                 ${(price || 0).toFixed(2)}
             </td>
-
             <td className="px-6 py-4">
-                <div className="flex items-center gap-2">
-                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-800 text-slate-400">
-                        <Layers size={14} />
+                <div className="flex flex-col gap-0.5">
+                    <div className="flex items-center gap-2">
+                        <Layers size={14} className="text-slate-500" />
+                        <span className="text-[10px] font-black text-slate-400 uppercase">{variantCount} Variants</span>
                     </div>
-                    <span className="text-xs font-black text-slate-400 uppercase">{variantCount} Variants</span>
+                    <span className={`text-[10px] font-bold ${totalStock <= 0 ? 'text-rose-500' : totalStock <= 10 ? 'text-amber-500' : 'text-emerald-500'}`}>
+                        {totalStock} in stock
+                    </span>
                 </div>
             </td>
-
             <td className="px-6 py-4 text-right">
                 <div className="flex items-center justify-end gap-1">
-                    <button
-                        onClick={onView}
-                        className="flex h-9 w-9 items-center justify-center rounded-xl text-slate-500 transition-all hover:bg-slate-800 hover:text-indigo-400"
-                        title="View details"
-                    >
-                        <Eye size={18} />
-                    </button>
-                    <button
-                        onClick={onEdit}
-                        className="flex h-9 w-9 items-center justify-center rounded-xl text-slate-500 transition-all hover:bg-slate-800 hover:text-indigo-400"
-                        title="Edit product"
-                    >
-                        <Edit3 size={18} />
-                    </button>
-                    <button
-                        onClick={onDelete}
-                        className="flex h-9 w-9 items-center justify-center rounded-xl text-slate-500 transition-all hover:bg-rose-500/10 hover:text-rose-400"
-                        title="Delete"
-                    >
-                        <Trash2 size={18} />
-                    </button>
+                    <button onClick={onView} className="h-8 w-8 flex items-center justify-center rounded-lg text-slate-500 hover:bg-slate-800 hover:text-indigo-400"><Eye size={16} /></button>
+                    <button onClick={onEdit} className="h-8 w-8 flex items-center justify-center rounded-lg text-slate-500 hover:bg-slate-800 hover:text-indigo-400"><Edit3 size={16} /></button>
+                    <button onClick={onDelete} className="h-8 w-8 flex items-center justify-center rounded-lg text-slate-500 hover:bg-rose-500/10 hover:text-rose-400"><Trash2 size={16} /></button>
                 </div>
             </td>
         </tr>
