@@ -106,7 +106,7 @@ function UpdateProductLayout() {
                     slug: product.slug || '',
                     productType: product.productType || 'tshirt',
                     brand: product.brand || '',
-                    category: product.category || '',
+                    category: product.category || (Array.isArray(product.categories) ? product.categories[0] : ''),
                     gender: product.gender || 'unisex',
                     material: product.material || '',
                     shortDescription: product.shortDescription || '',

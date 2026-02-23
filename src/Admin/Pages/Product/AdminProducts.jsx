@@ -115,7 +115,7 @@ export default function AdminProducts() {
             if (searchTerm && !nameMatch && !idMatch && !skuMatch) return false;
 
             // Category Filter
-            const pCategory = typeof p.category === 'object' ? p.category?.name : p.category;
+            const pCategory = typeof p.category === 'object' ? p.category?.name : (p.category || (Array.isArray(p.categories) ? p.categories[0] : ''));
             if (filters.category !== 'All' && pCategory !== filters.category) return false;
 
             // Gender Filter
@@ -152,6 +152,11 @@ export default function AdminProducts() {
                     bValue = b.variants?.reduce((sum, v) => sum + (v.stock || 0), 0) || 0;
                 }
 
+                if (sortConfig.key === 'category') {
+                    aValue = a.category || (Array.isArray(a.categories) ? a.categories[0] : '');
+                    bValue = b.category || (Array.isArray(b.categories) ? b.categories[0] : '');
+                }
+
                 if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
                 if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
                 return 0;
@@ -165,7 +170,7 @@ export default function AdminProducts() {
         const rows = sortedProducts.map(p => [
             p._id || p.id,
             p.title || p.name,
-            p.category || 'N/A',
+            p.category || (Array.isArray(p.categories) ? p.categories[0] : 'N/A'),
             p.price,
             p.gender,
             p.variants?.reduce((sum, v) => sum + (v.stock || 0), 0) || 0
@@ -590,7 +595,7 @@ function ProductRow({ product, isSelected, onToggle, onView, onEdit, onDelete })
             </td>
             <td className="px-6 py-4">
                 <span className="inline-flex items-center rounded-lg border border-slate-700 bg-slate-800/50 px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                    {category || 'Uncategorized'}
+                    {category || (Array.isArray(product.categories) ? product.categories[0] : 'Uncategorized')}
                 </span>
             </td>
             <td className="px-6 py-4 font-mono text-xs font-black text-slate-200">
