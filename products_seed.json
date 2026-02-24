@@ -1,0 +1,2382 @@
+[
+  {
+    "_id": "70726f643030303030303030",
+    "title": "UrbanFlex Tshirt 1",
+    "productType": "tshirt",
+    "slug": "urbanflex-tshirt-1",
+    "brand": "UrbanFlex",
+    "categories": [
+      "New arrivals"
+    ],
+    "gender": "men",
+    "material": "100% Cotton",
+    "shortDescription": "Comfortable and stylish tshirt for everyday wear.",
+    "fullDescription": "This UrbanFlex tshirt is made with high quality 100% Cotton. Perfect for daily wear and any occasion.",
+    "price": 4409,
+    "compareAtPrice": 5279,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": true,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-1-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-1-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-1-1",
+        "sku": "urbanflex-tshirt-1-navy blue-1",
+        "size": "699c4542b4deb13325fb93c7",
+        "color": "699c44570ed7fe98664de438",
+        "stock": 84,
+        "price": 4409,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 40,
+            "frontLength": 31,
+            "sleeveLength": 13
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-1-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-1-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.742Z",
+    "updatedAt": "2026-02-24T11:56:18.742Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "StreetCore Jacket 2",
+    "productType": "jacket",
+    "slug": "streetcore-jacket-2",
+    "brand": "StreetCore",
+    "categories": [
+      "Winter Collection"
+    ],
+    "gender": "women",
+    "material": "Denim",
+    "shortDescription": "Comfortable and stylish jacket for everyday wear.",
+    "fullDescription": "This StreetCore jacket is made with high quality Denim. Perfect for daily wear and any occasion.",
+    "price": 748,
+    "compareAtPrice": 960,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": false,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-2-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-2-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-2-1",
+        "sku": "streetcore-jacket-2-black-1",
+        "size": "699c4542b4deb13325fb93c9",
+        "color": "699c444a0ed7fe98664de431",
+        "stock": 55,
+        "price": 748,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 46,
+            "frontLength": 27,
+            "sleeveLength": 15
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-2-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-2-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "var-2-2",
+        "sku": "streetcore-jacket-2-white-2",
+        "size": "699c4542b4deb13325fb93c7",
+        "color": "699c44570ed7fe98664de436",
+        "stock": 89,
+        "price": 748,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 44,
+            "frontLength": 26,
+            "sleeveLength": 16
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-2-v2",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-2-v2.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.742Z",
+    "updatedAt": "2026-02-24T11:56:18.742Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "GenZ Wear Shirt 3",
+    "productType": "shirt",
+    "slug": "genz-wear-shirt-3",
+    "brand": "GenZ Wear",
+    "categories": [
+      "Essentials"
+    ],
+    "gender": "women",
+    "material": "Leather",
+    "shortDescription": "Comfortable and stylish shirt for everyday wear.",
+    "fullDescription": "This GenZ Wear shirt is made with high quality Leather. Perfect for daily wear and any occasion.",
+    "price": 1470,
+    "compareAtPrice": 2414,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": true,
+    "isNewArrival": true,
+    "isBestSeller": true,
+    "images": [
+      {
+        "id": "products/sample-img-3-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-3-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-3-1",
+        "sku": "genz-wear-shirt-3-grey-1",
+        "size": "699c4542b4deb13325fb93c7",
+        "color": "699c44570ed7fe98664de440",
+        "stock": 48,
+        "price": 1470,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 43,
+            "frontLength": 28,
+            "sleeveLength": 19
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-3-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-3-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.742Z",
+    "updatedAt": "2026-02-24T11:56:18.742Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "Modern Men Hoodie 4",
+    "productType": "hoodie",
+    "slug": "modern-men-hoodie-4",
+    "brand": "Modern Men",
+    "categories": [
+      "Essentials"
+    ],
+    "gender": "women",
+    "material": "Fleece",
+    "shortDescription": "Comfortable and stylish hoodie for everyday wear.",
+    "fullDescription": "This Modern Men hoodie is made with high quality Fleece. Perfect for daily wear and any occasion.",
+    "price": 2350,
+    "compareAtPrice": 2752,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": false,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-4-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-4-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-4-1",
+        "sku": "modern-men-hoodie-4-grey-1",
+        "size": "699c4542b4deb13325fb93c7",
+        "color": "699c44570ed7fe98664de440",
+        "stock": 70,
+        "price": 2350,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 49,
+            "frontLength": 27,
+            "sleeveLength": 25
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-4-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-4-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "var-4-2",
+        "sku": "modern-men-hoodie-4-black-2",
+        "size": "699c4537b4deb13325fb93bd",
+        "color": "699c444a0ed7fe98664de431",
+        "stock": 98,
+        "price": 2350,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 40,
+            "frontLength": 29,
+            "sleeveLength": 10
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-4-v2",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-4-v2.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.742Z",
+    "updatedAt": "2026-02-24T11:56:18.742Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "StreetCore Jacket 5",
+    "productType": "jacket",
+    "slug": "streetcore-jacket-5",
+    "brand": "StreetCore",
+    "categories": [
+      "Streetwear"
+    ],
+    "gender": "unisex",
+    "material": "Leather",
+    "shortDescription": "Comfortable and stylish jacket for everyday wear.",
+    "fullDescription": "This StreetCore jacket is made with high quality Leather. Perfect for daily wear and any occasion.",
+    "price": 2703,
+    "compareAtPrice": 3625,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": false,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-5-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-5-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-5-1",
+        "sku": "streetcore-jacket-5-white-1",
+        "size": "699c4542b4deb13325fb93c7",
+        "color": "699c44570ed7fe98664de436",
+        "stock": 46,
+        "price": 2703,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 47,
+            "frontLength": 31,
+            "sleeveLength": 11
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-5-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-5-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "var-5-2",
+        "sku": "streetcore-jacket-5-white-2",
+        "size": "699c4542b4deb13325fb93c9",
+        "color": "699c44570ed7fe98664de436",
+        "stock": 84,
+        "price": 2703,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 46,
+            "frontLength": 30,
+            "sleeveLength": 26
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-5-v2",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-5-v2.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.742Z",
+    "updatedAt": "2026-02-24T11:56:18.742Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "RetroVibe Shirt 6",
+    "productType": "shirt",
+    "slug": "retrovibe-shirt-6",
+    "brand": "RetroVibe",
+    "categories": [
+      "Essentials"
+    ],
+    "gender": "women",
+    "material": "Polyester Blend",
+    "shortDescription": "Comfortable and stylish shirt for everyday wear.",
+    "fullDescription": "This RetroVibe shirt is made with high quality Polyester Blend. Perfect for daily wear and any occasion.",
+    "price": 2911,
+    "compareAtPrice": 3718,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": false,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-6-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-6-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-6-1",
+        "sku": "retrovibe-shirt-6-red-1",
+        "size": "699c4537b4deb13325fb93bd",
+        "color": "699c44570ed7fe98664de442",
+        "stock": 14,
+        "price": 2911,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 46,
+            "frontLength": 30,
+            "sleeveLength": 17
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-6-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-6-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "var-6-2",
+        "sku": "retrovibe-shirt-6-red-2",
+        "size": "699c4537b4deb13325fb93bd",
+        "color": "699c44570ed7fe98664de442",
+        "stock": 79,
+        "price": 2911,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 41,
+            "frontLength": 27,
+            "sleeveLength": 24
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-6-v2",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-6-v2.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.742Z",
+    "updatedAt": "2026-02-24T11:56:18.742Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "RetroVibe Hoodie 7",
+    "productType": "hoodie",
+    "slug": "retrovibe-hoodie-7",
+    "brand": "RetroVibe",
+    "categories": [
+      "Summer Wear"
+    ],
+    "gender": "men",
+    "material": "Polyester Blend",
+    "shortDescription": "Comfortable and stylish hoodie for everyday wear.",
+    "fullDescription": "This RetroVibe hoodie is made with high quality Polyester Blend. Perfect for daily wear and any occasion.",
+    "price": 3056,
+    "compareAtPrice": 3502,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": false,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-7-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-7-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-7-1",
+        "sku": "retrovibe-hoodie-7-black-1",
+        "size": "699c4537b4deb13325fb93bd",
+        "color": "699c444a0ed7fe98664de431",
+        "stock": 32,
+        "price": 3056,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 47,
+            "frontLength": 28,
+            "sleeveLength": 23
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-7-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-7-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "var-7-2",
+        "sku": "retrovibe-hoodie-7-red-2",
+        "size": "699c4542b4deb13325fb93c7",
+        "color": "699c44570ed7fe98664de442",
+        "stock": 80,
+        "price": 3056,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 45,
+            "frontLength": 31,
+            "sleeveLength": 9
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-7-v2",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-7-v2.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.742Z",
+    "updatedAt": "2026-02-24T11:56:18.742Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "UrbanFlex Jeans 8",
+    "productType": "jeans",
+    "slug": "urbanflex-jeans-8",
+    "brand": "UrbanFlex",
+    "categories": [
+      "New arrivals"
+    ],
+    "gender": "unisex",
+    "material": "Fleece",
+    "shortDescription": "Comfortable and stylish jeans for everyday wear.",
+    "fullDescription": "This UrbanFlex jeans is made with high quality Fleece. Perfect for daily wear and any occasion.",
+    "price": 2469,
+    "compareAtPrice": 3040,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": false,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-8-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-8-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-8-1",
+        "sku": "urbanflex-jeans-8-white-1",
+        "size": "699c4542b4deb13325fb93c7",
+        "color": "699c44570ed7fe98664de436",
+        "stock": 55,
+        "price": 2469,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "bottom",
+          "bottom": {
+            "waist": 32,
+            "outseamLength": 41
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-8-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-8-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.742Z",
+    "updatedAt": "2026-02-24T11:56:18.742Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "Modern Men Jacket 9",
+    "productType": "jacket",
+    "slug": "modern-men-jacket-9",
+    "brand": "Modern Men",
+    "categories": [
+      "Winter Collection"
+    ],
+    "gender": "men",
+    "material": "Leather",
+    "shortDescription": "Comfortable and stylish jacket for everyday wear.",
+    "fullDescription": "This Modern Men jacket is made with high quality Leather. Perfect for daily wear and any occasion.",
+    "price": 2637,
+    "compareAtPrice": 3313,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": true,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-9-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-9-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-9-1",
+        "sku": "modern-men-jacket-9-navy blue-1",
+        "size": "699c4542b4deb13325fb93c9",
+        "color": "699c44570ed7fe98664de438",
+        "stock": 10,
+        "price": 2637,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 46,
+            "frontLength": 30,
+            "sleeveLength": 16
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-9-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-9-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.743Z",
+    "updatedAt": "2026-02-24T11:56:18.743Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "Modern Men Hoodie 10",
+    "productType": "hoodie",
+    "slug": "modern-men-hoodie-10",
+    "brand": "Modern Men",
+    "categories": [
+      "Winter Collection"
+    ],
+    "gender": "men",
+    "material": "Fleece",
+    "shortDescription": "Comfortable and stylish hoodie for everyday wear.",
+    "fullDescription": "This Modern Men hoodie is made with high quality Fleece. Perfect for daily wear and any occasion.",
+    "price": 573,
+    "compareAtPrice": 1423,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": false,
+    "isNewArrival": true,
+    "isBestSeller": true,
+    "images": [
+      {
+        "id": "products/sample-img-10-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-10-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-10-1",
+        "sku": "modern-men-hoodie-10-navy blue-1",
+        "size": "699c4542b4deb13325fb93c7",
+        "color": "699c44570ed7fe98664de438",
+        "stock": 68,
+        "price": 573,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 44,
+            "frontLength": 26,
+            "sleeveLength": 19
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-10-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-10-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "var-10-2",
+        "sku": "modern-men-hoodie-10-navy blue-2",
+        "size": "699c4537b4deb13325fb93bd",
+        "color": "699c44570ed7fe98664de438",
+        "stock": 26,
+        "price": 573,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 42,
+            "frontLength": 28,
+            "sleeveLength": 17
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-10-v2",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-10-v2.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.743Z",
+    "updatedAt": "2026-02-24T11:56:18.743Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "StreetCore Jacket 11",
+    "productType": "jacket",
+    "slug": "streetcore-jacket-11",
+    "brand": "StreetCore",
+    "categories": [
+      "Summer Wear"
+    ],
+    "gender": "unisex",
+    "material": "Polyester Blend",
+    "shortDescription": "Comfortable and stylish jacket for everyday wear.",
+    "fullDescription": "This StreetCore jacket is made with high quality Polyester Blend. Perfect for daily wear and any occasion.",
+    "price": 4892,
+    "compareAtPrice": 5546,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": false,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-11-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-11-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-11-1",
+        "sku": "streetcore-jacket-11-black-1",
+        "size": "699c4542b4deb13325fb93c7",
+        "color": "699c444a0ed7fe98664de431",
+        "stock": 88,
+        "price": 4892,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 48,
+            "frontLength": 26,
+            "sleeveLength": 8
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-11-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-11-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.743Z",
+    "updatedAt": "2026-02-24T11:56:18.743Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "GenZ Wear Hoodie 12",
+    "productType": "hoodie",
+    "slug": "genz-wear-hoodie-12",
+    "brand": "GenZ Wear",
+    "categories": [
+      "New arrivals"
+    ],
+    "gender": "men",
+    "material": "100% Cotton",
+    "shortDescription": "Comfortable and stylish hoodie for everyday wear.",
+    "fullDescription": "This GenZ Wear hoodie is made with high quality 100% Cotton. Perfect for daily wear and any occasion.",
+    "price": 2210,
+    "compareAtPrice": 3057,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": false,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-12-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-12-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-12-1",
+        "sku": "genz-wear-hoodie-12-grey-1",
+        "size": "699c4537b4deb13325fb93bd",
+        "color": "699c44570ed7fe98664de440",
+        "stock": 27,
+        "price": 2210,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 45,
+            "frontLength": 31,
+            "sleeveLength": 8
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-12-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-12-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.743Z",
+    "updatedAt": "2026-02-24T11:56:18.743Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "GenZ Wear Jacket 13",
+    "productType": "jacket",
+    "slug": "genz-wear-jacket-13",
+    "brand": "GenZ Wear",
+    "categories": [
+      "Summer Wear"
+    ],
+    "gender": "men",
+    "material": "100% Cotton",
+    "shortDescription": "Comfortable and stylish jacket for everyday wear.",
+    "fullDescription": "This GenZ Wear jacket is made with high quality 100% Cotton. Perfect for daily wear and any occasion.",
+    "price": 3568,
+    "compareAtPrice": 4259,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": false,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-13-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-13-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-13-1",
+        "sku": "genz-wear-jacket-13-navy blue-1",
+        "size": "699c4542b4deb13325fb93c9",
+        "color": "699c44570ed7fe98664de438",
+        "stock": 67,
+        "price": 3568,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 42,
+            "frontLength": 26,
+            "sleeveLength": 25
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-13-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-13-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "var-13-2",
+        "sku": "genz-wear-jacket-13-black-2",
+        "size": "699c4542b4deb13325fb93c9",
+        "color": "699c444a0ed7fe98664de431",
+        "stock": 30,
+        "price": 3568,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 40,
+            "frontLength": 31,
+            "sleeveLength": 9
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-13-v2",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-13-v2.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.743Z",
+    "updatedAt": "2026-02-24T11:56:18.743Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "UrbanFlex Tshirt 14",
+    "productType": "tshirt",
+    "slug": "urbanflex-tshirt-14",
+    "brand": "UrbanFlex",
+    "categories": [
+      "Winter Collection"
+    ],
+    "gender": "women",
+    "material": "100% Cotton",
+    "shortDescription": "Comfortable and stylish tshirt for everyday wear.",
+    "fullDescription": "This UrbanFlex tshirt is made with high quality 100% Cotton. Perfect for daily wear and any occasion.",
+    "price": 3827,
+    "compareAtPrice": 4238,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": true,
+    "isNewArrival": true,
+    "isBestSeller": true,
+    "images": [
+      {
+        "id": "products/sample-img-14-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-14-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-14-1",
+        "sku": "urbanflex-tshirt-14-grey-1",
+        "size": "699c4542b4deb13325fb93c7",
+        "color": "699c44570ed7fe98664de440",
+        "stock": 71,
+        "price": 3827,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 41,
+            "frontLength": 28,
+            "sleeveLength": 21
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-14-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-14-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.743Z",
+    "updatedAt": "2026-02-24T11:56:18.743Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "GenZ Wear Hoodie 15",
+    "productType": "hoodie",
+    "slug": "genz-wear-hoodie-15",
+    "brand": "GenZ Wear",
+    "categories": [
+      "Essentials"
+    ],
+    "gender": "men",
+    "material": "Denim",
+    "shortDescription": "Comfortable and stylish hoodie for everyday wear.",
+    "fullDescription": "This GenZ Wear hoodie is made with high quality Denim. Perfect for daily wear and any occasion.",
+    "price": 3284,
+    "compareAtPrice": 3856,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": false,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-15-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-15-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-15-1",
+        "sku": "genz-wear-hoodie-15-red-1",
+        "size": "699c4542b4deb13325fb93c7",
+        "color": "699c44570ed7fe98664de442",
+        "stock": 79,
+        "price": 3284,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 49,
+            "frontLength": 27,
+            "sleeveLength": 24
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-15-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-15-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "var-15-2",
+        "sku": "genz-wear-hoodie-15-black-2",
+        "size": "699c4542b4deb13325fb93c7",
+        "color": "699c444a0ed7fe98664de431",
+        "stock": 35,
+        "price": 3284,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 49,
+            "frontLength": 31,
+            "sleeveLength": 25
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-15-v2",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-15-v2.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.743Z",
+    "updatedAt": "2026-02-24T11:56:18.743Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "RetroVibe Shirt 16",
+    "productType": "shirt",
+    "slug": "retrovibe-shirt-16",
+    "brand": "RetroVibe",
+    "categories": [
+      "New arrivals"
+    ],
+    "gender": "women",
+    "material": "Polyester Blend",
+    "shortDescription": "Comfortable and stylish shirt for everyday wear.",
+    "fullDescription": "This RetroVibe shirt is made with high quality Polyester Blend. Perfect for daily wear and any occasion.",
+    "price": 2396,
+    "compareAtPrice": 2925,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": false,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-16-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-16-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-16-1",
+        "sku": "retrovibe-shirt-16-black-1",
+        "size": "699c4537b4deb13325fb93bd",
+        "color": "699c444a0ed7fe98664de431",
+        "stock": 48,
+        "price": 2396,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 49,
+            "frontLength": 27,
+            "sleeveLength": 18
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-16-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-16-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "var-16-2",
+        "sku": "retrovibe-shirt-16-navy blue-2",
+        "size": "699c4537b4deb13325fb93bd",
+        "color": "699c44570ed7fe98664de438",
+        "stock": 20,
+        "price": 2396,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 49,
+            "frontLength": 31,
+            "sleeveLength": 12
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-16-v2",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-16-v2.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.743Z",
+    "updatedAt": "2026-02-24T11:56:18.743Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "Modern Men Hoodie 17",
+    "productType": "hoodie",
+    "slug": "modern-men-hoodie-17",
+    "brand": "Modern Men",
+    "categories": [
+      "Summer Wear"
+    ],
+    "gender": "women",
+    "material": "Leather",
+    "shortDescription": "Comfortable and stylish hoodie for everyday wear.",
+    "fullDescription": "This Modern Men hoodie is made with high quality Leather. Perfect for daily wear and any occasion.",
+    "price": 3176,
+    "compareAtPrice": 4137,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": true,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-17-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-17-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-17-1",
+        "sku": "modern-men-hoodie-17-navy blue-1",
+        "size": "699c4537b4deb13325fb93bd",
+        "color": "699c44570ed7fe98664de438",
+        "stock": 45,
+        "price": 3176,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 43,
+            "frontLength": 29,
+            "sleeveLength": 13
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-17-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-17-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "var-17-2",
+        "sku": "modern-men-hoodie-17-grey-2",
+        "size": "699c4537b4deb13325fb93bd",
+        "color": "699c44570ed7fe98664de440",
+        "stock": 83,
+        "price": 3176,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 41,
+            "frontLength": 27,
+            "sleeveLength": 24
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-17-v2",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-17-v2.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.743Z",
+    "updatedAt": "2026-02-24T11:56:18.743Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "UrbanFlex Shirt 18",
+    "productType": "shirt",
+    "slug": "urbanflex-shirt-18",
+    "brand": "UrbanFlex",
+    "categories": [
+      "Essentials"
+    ],
+    "gender": "unisex",
+    "material": "Polyester Blend",
+    "shortDescription": "Comfortable and stylish shirt for everyday wear.",
+    "fullDescription": "This UrbanFlex shirt is made with high quality Polyester Blend. Perfect for daily wear and any occasion.",
+    "price": 4810,
+    "compareAtPrice": 5053,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": false,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-18-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-18-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-18-1",
+        "sku": "urbanflex-shirt-18-navy blue-1",
+        "size": "699c4537b4deb13325fb93bd",
+        "color": "699c44570ed7fe98664de438",
+        "stock": 99,
+        "price": 4810,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 42,
+            "frontLength": 29,
+            "sleeveLength": 16
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-18-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-18-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "var-18-2",
+        "sku": "urbanflex-shirt-18-red-2",
+        "size": "699c4542b4deb13325fb93c7",
+        "color": "699c44570ed7fe98664de442",
+        "stock": 83,
+        "price": 4810,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 45,
+            "frontLength": 28,
+            "sleeveLength": 8
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-18-v2",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-18-v2.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.743Z",
+    "updatedAt": "2026-02-24T11:56:18.743Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "StreetCore Shirt 19",
+    "productType": "shirt",
+    "slug": "streetcore-shirt-19",
+    "brand": "StreetCore",
+    "categories": [
+      "New arrivals"
+    ],
+    "gender": "women",
+    "material": "Fleece",
+    "shortDescription": "Comfortable and stylish shirt for everyday wear.",
+    "fullDescription": "This StreetCore shirt is made with high quality Fleece. Perfect for daily wear and any occasion.",
+    "price": 3686,
+    "compareAtPrice": 3944,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": true,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-19-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-19-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-19-1",
+        "sku": "streetcore-shirt-19-red-1",
+        "size": "699c4542b4deb13325fb93c7",
+        "color": "699c44570ed7fe98664de442",
+        "stock": 90,
+        "price": 3686,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 49,
+            "frontLength": 26,
+            "sleeveLength": 12
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-19-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-19-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "var-19-2",
+        "sku": "streetcore-shirt-19-grey-2",
+        "size": "699c4537b4deb13325fb93bd",
+        "color": "699c44570ed7fe98664de440",
+        "stock": 76,
+        "price": 3686,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 42,
+            "frontLength": 29,
+            "sleeveLength": 8
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-19-v2",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-19-v2.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.743Z",
+    "updatedAt": "2026-02-24T11:56:18.743Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "UrbanFlex Jacket 20",
+    "productType": "jacket",
+    "slug": "urbanflex-jacket-20",
+    "brand": "UrbanFlex",
+    "categories": [
+      "Winter Collection"
+    ],
+    "gender": "unisex",
+    "material": "Denim",
+    "shortDescription": "Comfortable and stylish jacket for everyday wear.",
+    "fullDescription": "This UrbanFlex jacket is made with high quality Denim. Perfect for daily wear and any occasion.",
+    "price": 4809,
+    "compareAtPrice": 5761,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": false,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-20-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-20-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-20-1",
+        "sku": "urbanflex-jacket-20-grey-1",
+        "size": "699c4542b4deb13325fb93c9",
+        "color": "699c44570ed7fe98664de440",
+        "stock": 31,
+        "price": 4809,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 45,
+            "frontLength": 28,
+            "sleeveLength": 17
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-20-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-20-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "var-20-2",
+        "sku": "urbanflex-jacket-20-red-2",
+        "size": "699c4542b4deb13325fb93c9",
+        "color": "699c44570ed7fe98664de442",
+        "stock": 18,
+        "price": 4809,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 43,
+            "frontLength": 26,
+            "sleeveLength": 17
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-20-v2",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-20-v2.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.743Z",
+    "updatedAt": "2026-02-24T11:56:18.743Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "UrbanFlex Tshirt 21",
+    "productType": "tshirt",
+    "slug": "urbanflex-tshirt-21",
+    "brand": "UrbanFlex",
+    "categories": [
+      "Essentials"
+    ],
+    "gender": "unisex",
+    "material": "Polyester Blend",
+    "shortDescription": "Comfortable and stylish tshirt for everyday wear.",
+    "fullDescription": "This UrbanFlex tshirt is made with high quality Polyester Blend. Perfect for daily wear and any occasion.",
+    "price": 4867,
+    "compareAtPrice": 5184,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": false,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-21-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-21-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-21-1",
+        "sku": "urbanflex-tshirt-21-black-1",
+        "size": "699c4537b4deb13325fb93bd",
+        "color": "699c444a0ed7fe98664de431",
+        "stock": 68,
+        "price": 4867,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 46,
+            "frontLength": 27,
+            "sleeveLength": 10
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-21-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-21-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.743Z",
+    "updatedAt": "2026-02-24T11:56:18.743Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "RetroVibe Tshirt 22",
+    "productType": "tshirt",
+    "slug": "retrovibe-tshirt-22",
+    "brand": "RetroVibe",
+    "categories": [
+      "Streetwear"
+    ],
+    "gender": "unisex",
+    "material": "Polyester Blend",
+    "shortDescription": "Comfortable and stylish tshirt for everyday wear.",
+    "fullDescription": "This RetroVibe tshirt is made with high quality Polyester Blend. Perfect for daily wear and any occasion.",
+    "price": 2884,
+    "compareAtPrice": 3810,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": false,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-22-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-22-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-22-1",
+        "sku": "retrovibe-tshirt-22-grey-1",
+        "size": "699c4537b4deb13325fb93bd",
+        "color": "699c44570ed7fe98664de440",
+        "stock": 34,
+        "price": 2884,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 40,
+            "frontLength": 27,
+            "sleeveLength": 17
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-22-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-22-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.743Z",
+    "updatedAt": "2026-02-24T11:56:18.743Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "GenZ Wear Hoodie 23",
+    "productType": "hoodie",
+    "slug": "genz-wear-hoodie-23",
+    "brand": "GenZ Wear",
+    "categories": [
+      "New arrivals"
+    ],
+    "gender": "women",
+    "material": "Denim",
+    "shortDescription": "Comfortable and stylish hoodie for everyday wear.",
+    "fullDescription": "This GenZ Wear hoodie is made with high quality Denim. Perfect for daily wear and any occasion.",
+    "price": 3733,
+    "compareAtPrice": 4224,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": true,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-23-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-23-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-23-1",
+        "sku": "genz-wear-hoodie-23-black-1",
+        "size": "699c4537b4deb13325fb93bd",
+        "color": "699c444a0ed7fe98664de431",
+        "stock": 48,
+        "price": 3733,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 46,
+            "frontLength": 29,
+            "sleeveLength": 15
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-23-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-23-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.743Z",
+    "updatedAt": "2026-02-24T11:56:18.743Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "GenZ Wear Shirt 24",
+    "productType": "shirt",
+    "slug": "genz-wear-shirt-24",
+    "brand": "GenZ Wear",
+    "categories": [
+      "Essentials"
+    ],
+    "gender": "unisex",
+    "material": "100% Cotton",
+    "shortDescription": "Comfortable and stylish shirt for everyday wear.",
+    "fullDescription": "This GenZ Wear shirt is made with high quality 100% Cotton. Perfect for daily wear and any occasion.",
+    "price": 533,
+    "compareAtPrice": 1340,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": true,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-24-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-24-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-24-1",
+        "sku": "genz-wear-shirt-24-black-1",
+        "size": "699c4537b4deb13325fb93bd",
+        "color": "699c444a0ed7fe98664de431",
+        "stock": 40,
+        "price": 533,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 43,
+            "frontLength": 26,
+            "sleeveLength": 15
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-24-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-24-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.743Z",
+    "updatedAt": "2026-02-24T11:56:18.743Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "RetroVibe Hoodie 25",
+    "productType": "hoodie",
+    "slug": "retrovibe-hoodie-25",
+    "brand": "RetroVibe",
+    "categories": [
+      "Essentials"
+    ],
+    "gender": "women",
+    "material": "100% Cotton",
+    "shortDescription": "Comfortable and stylish hoodie for everyday wear.",
+    "fullDescription": "This RetroVibe hoodie is made with high quality 100% Cotton. Perfect for daily wear and any occasion.",
+    "price": 1932,
+    "compareAtPrice": 2379,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": false,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-25-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-25-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-25-1",
+        "sku": "retrovibe-hoodie-25-navy blue-1",
+        "size": "699c4542b4deb13325fb93c7",
+        "color": "699c44570ed7fe98664de438",
+        "stock": 73,
+        "price": 1932,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 43,
+            "frontLength": 27,
+            "sleeveLength": 22
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-25-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-25-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.743Z",
+    "updatedAt": "2026-02-24T11:56:18.743Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "UrbanFlex Jacket 26",
+    "productType": "jacket",
+    "slug": "urbanflex-jacket-26",
+    "brand": "UrbanFlex",
+    "categories": [
+      "Summer Wear"
+    ],
+    "gender": "unisex",
+    "material": "Denim",
+    "shortDescription": "Comfortable and stylish jacket for everyday wear.",
+    "fullDescription": "This UrbanFlex jacket is made with high quality Denim. Perfect for daily wear and any occasion.",
+    "price": 4049,
+    "compareAtPrice": 4865,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": true,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-26-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-26-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-26-1",
+        "sku": "urbanflex-jacket-26-navy blue-1",
+        "size": "699c4542b4deb13325fb93c9",
+        "color": "699c44570ed7fe98664de438",
+        "stock": 43,
+        "price": 4049,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 41,
+            "frontLength": 27,
+            "sleeveLength": 12
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-26-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-26-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "var-26-2",
+        "sku": "urbanflex-jacket-26-grey-2",
+        "size": "699c4542b4deb13325fb93c9",
+        "color": "699c44570ed7fe98664de440",
+        "stock": 94,
+        "price": 4049,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 49,
+            "frontLength": 27,
+            "sleeveLength": 21
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-26-v2",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-26-v2.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.743Z",
+    "updatedAt": "2026-02-24T11:56:18.743Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "RetroVibe Jeans 27",
+    "productType": "jeans",
+    "slug": "retrovibe-jeans-27",
+    "brand": "RetroVibe",
+    "categories": [
+      "New arrivals"
+    ],
+    "gender": "men",
+    "material": "Polyester Blend",
+    "shortDescription": "Comfortable and stylish jeans for everyday wear.",
+    "fullDescription": "This RetroVibe jeans is made with high quality Polyester Blend. Perfect for daily wear and any occasion.",
+    "price": 813,
+    "compareAtPrice": 1742,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": true,
+    "isNewArrival": true,
+    "isBestSeller": true,
+    "images": [
+      {
+        "id": "products/sample-img-27-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-27-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-27-1",
+        "sku": "retrovibe-jeans-27-navy blue-1",
+        "size": "699c4542b4deb13325fb93c9",
+        "color": "699c44570ed7fe98664de438",
+        "stock": 40,
+        "price": 813,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "bottom",
+          "bottom": {
+            "waist": 35,
+            "outseamLength": 41
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-27-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-27-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.743Z",
+    "updatedAt": "2026-02-24T11:56:18.743Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "StreetCore Jacket 28",
+    "productType": "jacket",
+    "slug": "streetcore-jacket-28",
+    "brand": "StreetCore",
+    "categories": [
+      "New arrivals"
+    ],
+    "gender": "women",
+    "material": "Polyester Blend",
+    "shortDescription": "Comfortable and stylish jacket for everyday wear.",
+    "fullDescription": "This StreetCore jacket is made with high quality Polyester Blend. Perfect for daily wear and any occasion.",
+    "price": 3562,
+    "compareAtPrice": 4401,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": false,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-28-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-28-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-28-1",
+        "sku": "streetcore-jacket-28-white-1",
+        "size": "699c4542b4deb13325fb93c7",
+        "color": "699c44570ed7fe98664de436",
+        "stock": 53,
+        "price": 3562,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 46,
+            "frontLength": 30,
+            "sleeveLength": 15
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-28-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-28-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.743Z",
+    "updatedAt": "2026-02-24T11:56:18.743Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "Modern Men Hoodie 29",
+    "productType": "hoodie",
+    "slug": "modern-men-hoodie-29",
+    "brand": "Modern Men",
+    "categories": [
+      "Essentials"
+    ],
+    "gender": "women",
+    "material": "Polyester Blend",
+    "shortDescription": "Comfortable and stylish hoodie for everyday wear.",
+    "fullDescription": "This Modern Men hoodie is made with high quality Polyester Blend. Perfect for daily wear and any occasion.",
+    "price": 4168,
+    "compareAtPrice": 4532,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": false,
+    "isNewArrival": true,
+    "isBestSeller": false,
+    "images": [
+      {
+        "id": "products/sample-img-29-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-29-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-29-1",
+        "sku": "modern-men-hoodie-29-grey-1",
+        "size": "699c4542b4deb13325fb93c7",
+        "color": "699c44570ed7fe98664de440",
+        "stock": 13,
+        "price": 4168,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 40,
+            "frontLength": 29,
+            "sleeveLength": 13
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-29-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-29-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "var-29-2",
+        "sku": "modern-men-hoodie-29-navy blue-2",
+        "size": "699c4537b4deb13325fb93bd",
+        "color": "699c44570ed7fe98664de438",
+        "stock": 13,
+        "price": 4168,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 44,
+            "frontLength": 29,
+            "sleeveLength": 10
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-29-v2",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-29-v2.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.743Z",
+    "updatedAt": "2026-02-24T11:56:18.743Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  },
+  {
+    "_id": "70726f643030303030303030",
+    "title": "StreetCore Tshirt 30",
+    "productType": "tshirt",
+    "slug": "streetcore-tshirt-30",
+    "brand": "StreetCore",
+    "categories": [
+      "Winter Collection"
+    ],
+    "gender": "women",
+    "material": "Polyester Blend",
+    "shortDescription": "Comfortable and stylish tshirt for everyday wear.",
+    "fullDescription": "This StreetCore tshirt is made with high quality Polyester Blend. Perfect for daily wear and any occasion.",
+    "price": 2805,
+    "compareAtPrice": 3782,
+    "trackInventory": true,
+    "globalThreshold": 5,
+    "isActive": true,
+    "isFeatured": false,
+    "isNewArrival": true,
+    "isBestSeller": true,
+    "images": [
+      {
+        "id": "products/sample-img-30-1",
+        "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-30-1.png",
+        "isMain": true,
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-30-1",
+        "sku": "streetcore-tshirt-30-navy blue-1",
+        "size": "699c4542b4deb13325fb93c7",
+        "color": "699c44570ed7fe98664de438",
+        "stock": 16,
+        "price": 2805,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 44,
+            "frontLength": 31,
+            "sleeveLength": 21
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-30-v1",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-30-v1.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "var-30-2",
+        "sku": "streetcore-tshirt-30-white-2",
+        "size": "699c4537b4deb13325fb93bd",
+        "color": "699c44570ed7fe98664de436",
+        "stock": 93,
+        "price": 2805,
+        "reservedStock": 0,
+        "lowStockThreshold": 5,
+        "allowBackorder": false,
+        "measurements": {
+          "garmentType": "top",
+          "top": {
+            "chest": 48,
+            "frontLength": 31,
+            "sleeveLength": 9
+          }
+        },
+        "images": [
+          {
+            "id": "products/sample-img-30-v2",
+            "url": "https://res.cloudinary.com/dv0afouba/image/upload/v1771734316/products/sample-30-v2.png",
+            "isMain": false,
+            "isPrimary": true
+          }
+        ]
+      }
+    ],
+    "createdAt": "2026-02-24T11:56:18.743Z",
+    "updatedAt": "2026-02-24T11:56:18.743Z",
+    "__v": 0,
+    "metaDescription": "",
+    "metaKeywords": "",
+    "metaTitle": ""
+  }
+]

@@ -4,14 +4,13 @@ export default function FiltersSidebar({
   onFitChange,
   onPriceChange,
   onClear,
+  availableSizes = [],
+  availableFits = [],
   maxPrice = 1000,
-  isMobile = false // આ પ્રોપ ડ્રોઅરમાં સ્પેસિંગ મેનેજ કરવા માટે
+  isMobile = false
 }) {
   return (
-    // ડેસ્કટોપમાં p-12 રહેશે, મોબાઈલમાં ડ્રોઅર મુજબ એડજસ્ટ થશે
     <div className={`${isMobile ? "space-y-10" : "p-5 space-y-10"}`}>
-
-      {/* HEADER - ફક્ત ડેસ્કટોપમાં દેખાશે કારણ કે મોબાઈલમાં ડ્રોઅરનું પોતાનું હેડર છે */}
       {!isMobile && (
         <div className="flex items-center justify-between border-b border-white/10 pb-6">
           <h4 className="text-[11px] font-black uppercase tracking-[0.3em]">Refine By</h4>
@@ -28,11 +27,11 @@ export default function FiltersSidebar({
       <div className="space-y-6">
         <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/80">Size</span>
         <div className="grid grid-cols-3 gap-px bg-white/5 border border-white/5">
-          {["XS", "S", "M", "L", "XL", "XXL"].map(size => (
+          {(availableSizes.length > 0 ? availableSizes : ["S", "M", "L", "XL"]).map(size => (
             <button
               key={size}
               onClick={() => onSizeChange(size)}
-              className={`py-4 text-[10px] font-bold transition-all ${filters.size === size ? "bg-white text-black" : "bg-black hover:bg-white/10"
+              className={`py-4 text-[10px] font-bold transition-all ${filters.size === size ? "bg-accent text-black" : "bg-black hover:bg-white/10"
                 }`}
             >
               {size}
@@ -41,11 +40,11 @@ export default function FiltersSidebar({
         </div>
       </div>
 
-      {/* FIT FILTER */}
+      {/* FIT/TYPE FILTER */}
       <div className="space-y-6">
-        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/80">Fit</span>
+        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/80">Product Type</span>
         <div className="space-y-4">
-          {["slim", "regular", "oversized"].map(fit => (
+          {(availableFits.length > 0 ? availableFits : ["tshirt", "jeans"]).map(fit => (
             <label key={fit} className="flex items-center group cursor-pointer">
               <input
                 type="checkbox"
@@ -54,7 +53,7 @@ export default function FiltersSidebar({
                 onChange={() => onFitChange(fit)}
               />
               <div
-                className={`w-3 h-3 border border-white/20 mr-4 flex items-center justify-center transition-all ${filters.fit.includes(fit) ? "bg-white border-white" : ""
+                className={`w-3 h-3 border border-white/20 mr-4 flex items-center justify-center transition-all ${filters.fit.includes(fit) ? "bg-accent border-accent" : ""
                   }`}
               >
                 {filters.fit.includes(fit) && (
@@ -62,10 +61,10 @@ export default function FiltersSidebar({
                 )}
               </div>
               <span
-                className={`text-[10px] font-bold uppercase tracking-widest transition-colors ${filters.fit.includes(fit) ? "text-white" : "text-white/40 group-hover:text-white"
+                className={`text-[10px] font-bold uppercase tracking-widest transition-colors ${filters.fit.includes(fit) ? "text-accent" : "text-white/40 group-hover:text-white"
                   }`}
               >
-                {fit} Fit
+                {fit}
               </span>
             </label>
           ))}
@@ -87,11 +86,11 @@ export default function FiltersSidebar({
           <div className="flex justify-between mt-6">
             <div className="flex flex-col">
               <span className="text-[8px] text-white/30 uppercase font-black">Min</span>
-              <span className="text-[11px] font-impact mt-1">$0</span>
+              <span className="text-[11px] font-impact mt-1">₹0</span>
             </div>
             <div className="flex flex-col text-right">
               <span className="text-[8px] text-white/30 uppercase font-black">Max</span>
-              <span className="text-[11px] font-impact mt-1">${filters.price}</span>
+              <span className="text-[11px] font-impact mt-1">₹{filters.price}</span>
             </div>
           </div>
         </div>

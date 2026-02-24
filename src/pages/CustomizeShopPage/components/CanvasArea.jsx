@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useFabric } from "../../../context/FabricContext";
 import { initFabric } from "../fabric/fabricCanvas.js";
 import { clampToPrintArea } from "../../../utils/printAreaClamp.js";
 import { addBaseImage } from "../fabric/baseImage";
-import { useLocation, useParams } from "react-router-dom";
+import { getProductBySlug } from "../../../services/productService";
 
 export default function CanvasArea() {
     const {
@@ -30,33 +31,12 @@ export default function CanvasArea() {
     /* =============================
        FETCH PRODUCT DATA
     ============================= */
-    // useEffect(() => {
-    //     if (location.state?.frontImage) {
-    //         setProductData({
-    //             frontImage: location.state.frontImage,
-    //             backImage: location.state.backImage
-    //         });
-    //         setLoading(false);
-    //     } else {
-    //         fetch(`https://api.escuelajs.co/api/v1/products/slug/${slug}`)
-    //             .then(res => res.json())
-    //             .then(data => {
-    //                 setProductData({
-    //                     frontImage: data.images?.[0],
-    //                     backImage: data.images?.[1]
-    //                 });
-    //                 setLoading(false);
-    //             })
-    //             .catch(() => setLoading(false));
-    //     }
-    // }, [slug]);
-
     useEffect(() => {
         if (location.state?.frontImage) {
 
             const data = {
                 frontImage: location.state.frontImage,
-                backImage: location.state.backImage
+                backImage: location.state.backImage || location.state.frontImage
             };
 
             setProductData(data);
@@ -65,13 +45,21 @@ export default function CanvasArea() {
 
         } else {
 
-            fetch(`https://api.escuelajs.co/api/v1/products/slug/${slug}`)
-                .then(res => res.json())
-                .then(data => {
+            getProductBySlug(slug)
+                .then(res => {
+                    const data = res.data;
+                    const images = [];
+                    data.variants?.forEach(v => {
+                        v.images?.forEach(img => {
+                            if (img.url && !images.includes(img.url)) {
+                                images.push(img.url);
+                            }
+                        });
+                    });
 
                     const product = {
-                        frontImage: data.images?.[0],
-                        backImage: data.images?.[1]
+                        frontImage: images[0] || "https://placehold.co/600x800/121212/white?text=No+Front+Image",
+                        backImage: images[1] || images[0] || "https://placehold.co/600x800/121212/white?text=No+Back+Image"
                     };
 
                     setProductData(product);

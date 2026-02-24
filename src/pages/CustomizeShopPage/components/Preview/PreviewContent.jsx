@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { getProductBySlug } from "../../../../services/productService";
 import { useFabric } from "../../../../context/FabricContext";
-import { useNavigate, useParams } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-
 import * as fabric from 'fabric'
 
 export default function PreviewContent() {
@@ -20,6 +19,7 @@ export default function PreviewContent() {
     const [viewSide, setViewSide] = useState("front");
 
 
+
     /* =============================
         GET PRODUCT IMAGE (SAFE)
      ============================= */
@@ -28,17 +28,29 @@ export default function PreviewContent() {
             console.log("✅ Using image from location state");
             setProductData({
                 frontImage: location.state.frontImage,
-                backImage: location.state.backImage
+                backImage: location.state.backImage || location.state.frontImage
             });
         } else {
             console.log("⚠ location.state missing → fetching again");
-            fetch(`https://api.escuelajs.co/api/v1/products/slug/${slug}`)
-                .then(res => res.json())
-                .then(data => {
-                    setProductData({
-                        frontImage: data.images?.[0],
-                        backImage: data.images?.[1]
+            getProductBySlug(slug)
+                .then(res => {
+                    const data = res.data;
+                    const images = [];
+                    data.variants?.forEach(v => {
+                        v.images?.forEach(img => {
+                            if (img.url && !images.includes(img.url)) {
+                                images.push(img.url);
+                            }
+                        });
                     });
+
+                    setProductData({
+                        frontImage: images[0] || "https://placehold.co/600x800/121212/white?text=No+Front+Image",
+                        backImage: images[1] || images[0] || "https://placehold.co/600x800/121212/white?text=No+Back+Image"
+                    });
+                })
+                .catch(err => {
+                    console.error("Fetch product error in Preview:", err);
                 });
         }
     }, [slug]);

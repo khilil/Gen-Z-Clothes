@@ -1,19 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ProductSuggestions } from "./ProductSuggestions";
 import Reviews from "./Reviews";
 import CollectiveFooter from "../../../components/common/CollectiveFooter/CollectiveFooter";
 import { useCart } from "../../../context/CartContext";
 import CustomizationModal from "./CustomizationPop_popModel";
+import { getProductBySlug } from "../../../services/productService";
+import { Link } from "lucide-react";
 
 export default function ProductDetailPage() {
     const { slug } = useParams();
     const [product, setProduct] = useState(null);
     const [activeImage, setActiveImage] = useState(0);
-    const [selectedSize, setSelectedSize] = useState("M");
-    const [openAccordion, setOpenAccordion] = useState(null);
+    const [selectedSize, setSelectedSize] = useState("");
+    const [openAccordion, setOpenAccordion] = useState('fabric');
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const { addToCart } = useCart();
 
@@ -24,29 +27,44 @@ export default function ProductDetailPage() {
         setIsModalOpen(false);
         navigate(`/customize/${product.slug}`, {
             state: {
-                productId: product.id,
+                productId: product._id,
                 title: product.title,
-                frontImage: product.images?.[0],
-                backImage: product.images?.[1],
+                frontImage: images[0],
+                backImage: images[1] || images[0],
                 price: product.price,
             },
         });
     };
 
     useEffect(() => {
-        fetch(`https://api.escuelajs.co/api/v1/products/slug/${slug}`)
-            .then(res => res.json())
-            .then(setProduct);
+        setIsLoading(true);
+        getProductBySlug(slug)
+            .then(res => {
+                // response.data is the actual product object from our ApiResponse
+                const fetchedProduct = res.data;
+                setProduct(fetchedProduct);
+
+                // Set initial size from first variant if available
+                if (fetchedProduct.variants?.length > 0) {
+                    setSelectedSize(fetchedProduct.variants[0].size?.name || "");
+                }
+                setIsLoading(false);
+            })
+            .catch(err => {
+                console.error("Fetch product error:", err);
+                setIsLoading(false);
+            });
     }, [slug]);
 
     const handleQuickBuy = () => {
+        if (!product) return;
         navigate("/checkout", {
             state: {
                 product: {
-                    id: product.id,
+                    id: product._id,
                     title: product.title,
                     price: product.price,
-                    image: product.images?.[0],
+                    image: images[0],
                     size: selectedSize,
                     qty: 1
                 },
@@ -55,21 +73,52 @@ export default function ProductDetailPage() {
         });
     };
 
+    // Extract all images from all variants
+    const images = useMemo(() => {
+        if (!product) return [];
+        const allImgs = [];
+        product.variants?.forEach(v => {
+            v.images?.forEach(img => {
+                if (img.url && !allImgs.includes(img.url)) {
+                    allImgs.push(img.url);
+                }
+            });
+        });
+        // Fallback to placeholder if no images found
+        return allImgs.length > 0 ? allImgs : ["https://placehold.co/600x800/121212/white?text=No+Image"];
+    }, [product]);
 
-    if (!product) {
+    // Unique sizes from variants
+    const sizes = useMemo(() => {
+        if (!product) return [];
+        const sizeSet = new Set();
+        product.variants?.forEach(v => {
+            if (v.size?.name) sizeSet.add(v.size.name);
+        });
+        return Array.from(sizeSet);
+    }, [product]);
+
+
+    if (isLoading) {
         return (
             <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center text-white">
-                <div className="animate-pulse font-[Oswald] tracking-widest uppercase">Loading…</div>
+                <div className="animate-pulse font-[Oswald] tracking-widest uppercase text-accent">Loading Architecture…</div>
             </div>
         );
     }
 
-    const images = product.images?.length ? product.images : [product.images?.[0]];
+    if (!product) {
+        return (
+            <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center text-white">
+                <div className="text-center space-y-4">
+                    <h2 className="text-4xl font-impact">PRODUCT NOT FOUND</h2>
+                    <button onClick={() => navigate('/')} className="text-accent uppercase text-[10px] font-black tracking-widest border-b border-accent/30 p-2">Return Home</button>
+                </div>
+            </div>
+        );
+    }
 
-    const CUSTOMIZABLE_CATEGORY_ID = 1; // change later if needed
-
-    const isCustomizable =
-        product.category?.id === CUSTOMIZABLE_CATEGORY_ID;
+    const isCustomizable = product.productType === 'tshirt' || product.productType === 'hoodie';
 
 
     return (
@@ -121,7 +170,7 @@ export default function ProductDetailPage() {
                                 </button>
                             ))}
                         </div>
-                    </section>
+                    </section>+
 
                     {/* Right Section: Info Panel */}
                     <aside className="w-full lg:w-[40%]">
@@ -130,9 +179,9 @@ export default function ProductDetailPage() {
                             {/* Title & Price */}
                             <div className="space-y-4">
                                 <nav className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">
-                                    <span>Home</span>
+                                    <Link to="/">Home</Link>
                                     <span className="material-symbols-outlined text-[12px]">chevron_right</span>
-                                    <span className="text-white/60">{product.category?.name}</span>
+                                    <span className="text-white/60">COLLECTION</span>
                                 </nav>
 
                                 <h1 className="text-4xl sm:text-5xl lg:text-7xl font-[Oswald] tracking-tighter leading-[0.9] uppercase">
@@ -141,8 +190,10 @@ export default function ProductDetailPage() {
 
                                 <div className="flex flex-wrap items-center gap-4 md:gap-6">
                                     <div className="flex items-baseline gap-3">
-                                        <span className="text-2xl sm:text-3xl font-[Oswald] text-[#d4c4b1]">${product.price}.00</span>
-                                        <span className="text-sm sm:text-lg font-[Oswald] text-white/20 line-through">${product.price + 40}.00</span>
+                                        <span className="text-2xl sm:text-3xl font-[Oswald] text-accent">₹{product.price}</span>
+                                        {product.compareAtPrice > product.price && (
+                                            <span className="text-sm sm:text-lg font-[Oswald] text-white/20 line-through">₹{product.compareAtPrice}</span>
+                                        )}
                                     </div>
                                     <div className="h-4 w-px bg-white/10 hidden sm:block"></div>
                                     <div className="flex items-center gap-2">
@@ -173,7 +224,7 @@ export default function ProductDetailPage() {
                                     <button className="text-[10px] font-bold uppercase tracking-widest text-[#d4c4b1] border-b border-[#d4c4b1]/30">Size Guide</button>
                                 </div>
                                 <div className="grid grid-cols-5 gap-2">
-                                    {["XS", "S", "M", "L", "XL"].map(size => (
+                                    {sizes.map(size => (
                                         <button
                                             key={size}
                                             onClick={() => setSelectedSize(size)}
@@ -182,6 +233,7 @@ export default function ProductDetailPage() {
                                             {size}
                                         </button>
                                     ))}
+                                    {sizes.length === 0 && <p className="col-span-5 text-[10px] text-white/30 uppercase italic">No sizes available</p>}
                                 </div>
                             </div>
 

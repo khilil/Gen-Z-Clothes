@@ -29,7 +29,8 @@ export default function AdminCategories() {
     const [formData, setFormData] = useState({
         name: '',
         description: '',
-        parentCategory: ''
+        parentCategory: '',
+        displayOrder: 0
     });
 
     const showNotification = (type, message) => {
@@ -90,7 +91,8 @@ export default function AdminCategories() {
         setFormData({
             name: category.name,
             description: category.description || '',
-            parentCategory: category.parentCategory?._id || category.parentCategory || ''
+            parentCategory: category.parentCategory?._id || category.parentCategory || '',
+            displayOrder: category.displayOrder || 0
         });
         setShowAddModal(true);
     };
@@ -98,7 +100,7 @@ export default function AdminCategories() {
     const handleCloseModal = () => {
         setShowAddModal(false);
         setEditingCategory(null);
-        setFormData({ name: '', description: '', parentCategory: '' });
+        setFormData({ name: '', description: '', parentCategory: '', displayOrder: 0 });
     };
 
     const handleDeleteClick = (category) => {
@@ -165,6 +167,7 @@ export default function AdminCategories() {
                                 <tr>
                                     <th className="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-500">Category details</th>
                                     <th className="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-500">Parent</th>
+                                    <th className="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-500 text-center">Order</th>
                                     <th className="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-500">Slug</th>
                                     <th className="px-6 py-4 text-right text-xs font-black uppercase tracking-widest text-slate-500">Actions</th>
                                 </tr>
@@ -177,49 +180,76 @@ export default function AdminCategories() {
                                         </td>
                                     </tr>
                                 ) : filteredCategories.length > 0 ? (
-                                    filteredCategories.map((category) => (
-                                        <tr key={category._id} className="group transition-colors hover:bg-slate-800/30">
-                                            <td className="px-6 py-5">
-                                                <div className="flex items-center gap-3">
-                                                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-400">
-                                                        <Tag size={20} />
+                                    filteredCategories.map((category) => {
+                                        const isSubCategory = !!category.parentCategory;
+                                        return (
+                                            <tr
+                                                key={category._id}
+                                                className={`group transition-all duration-200 ${isSubCategory
+                                                        ? 'bg-slate-900/40 hover:bg-slate-800/40'
+                                                        : 'bg-indigo-500/5 hover:bg-indigo-500/10 border-l-2 border-indigo-500/30'
+                                                    }`}
+                                            >
+                                                <td className="px-6 py-5">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${isSubCategory
+                                                                ? 'bg-slate-800 text-slate-400'
+                                                                : 'bg-indigo-500/20 text-indigo-400 ring-1 ring-indigo-500/30'
+                                                            }`}>
+                                                            {isSubCategory ? <ChevronRight size={18} /> : <Layers size={20} />}
+                                                        </div>
+                                                        <div className={isSubCategory ? "pl-4" : ""}>
+                                                            <div className="flex items-center gap-2">
+                                                                <p className={`text-sm font-black uppercase tracking-tight ${isSubCategory ? 'text-slate-300' : 'text-white'
+                                                                    }`}>
+                                                                    {category.name}
+                                                                </p>
+                                                                {!isSubCategory && (
+                                                                    <span className="bg-indigo-500/20 text-indigo-400 text-[8px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-widest border border-indigo-500/30">
+                                                                        Root
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                            <p className="text-xs text-slate-500 line-clamp-1">{category.description || 'No description'}</p>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <p className="text-sm font-black text-white uppercase">{category.name}</p>
-                                                        <p className="text-xs text-slate-500 line-clamp-1">{category.description || 'No description'}</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-5">
-                                                {category.parentCategory ? (
-                                                    <span className="inline-flex items-center gap-1.5 rounded-lg bg-slate-800 px-2 py-1 text-[10px] font-black uppercase text-slate-400 border border-slate-700">
-                                                        {category.parentCategory.name || 'Parent'}
+                                                </td>
+                                                <td className="px-6 py-5">
+                                                    {category.parentCategory ? (
+                                                        <span className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-500/10 px-2 py-1 text-[10px] font-black uppercase text-indigo-400 border border-indigo-500/20">
+                                                            {category.parentCategory.name || 'Parent'}
+                                                        </span>
+                                                    ) : (
+                                                        <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest">—</span>
+                                                    )}
+                                                </td>
+                                                <td className="px-6 py-5 text-center">
+                                                    <span className="inline-flex items-center justify-center w-6 h-6 rounded bg-slate-800 text-[10px] font-black text-indigo-400 border border-slate-700">
+                                                        {category.displayOrder || 0}
                                                     </span>
-                                                ) : (
-                                                    <span className="text-xs font-bold text-slate-600">—</span>
-                                                )}
-                                            </td>
-                                            <td className="px-6 py-5">
-                                                <span className="font-mono text-xs text-slate-500">{category.slug}</span>
-                                            </td>
-                                            <td className="px-6 py-5 text-right">
-                                                <div className="flex items-center justify-end gap-1">
-                                                    <button
-                                                        onClick={() => handleEditClick(category)}
-                                                        className="flex h-9 w-9 items-center justify-center rounded-xl text-slate-500 transition-all hover:bg-slate-800 hover:text-indigo-400"
-                                                    >
-                                                        <Edit3 size={18} />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleDeleteClick(category)}
-                                                        className="flex h-9 w-9 items-center justify-center rounded-xl text-slate-500 transition-all hover:bg-rose-500/10 hover:text-rose-400"
-                                                    >
-                                                        <Trash2 size={18} />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))
+                                                </td>
+                                                <td className="px-6 py-5">
+                                                    <span className="font-mono text-xs text-slate-500">{category.slug}</span>
+                                                </td>
+                                                <td className="px-6 py-5 text-right">
+                                                    <div className="flex items-center justify-end gap-1">
+                                                        <button
+                                                            onClick={() => handleEditClick(category)}
+                                                            className="flex h-9 w-9 items-center justify-center rounded-xl text-slate-500 transition-all hover:bg-slate-800 hover:text-indigo-400"
+                                                        >
+                                                            <Edit3 size={18} />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDeleteClick(category)}
+                                                            className="flex h-9 w-9 items-center justify-center rounded-xl text-slate-500 transition-all hover:bg-rose-500/10 hover:text-rose-400"
+                                                        >
+                                                            <Trash2 size={18} />
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })
                                 ) : (
                                     <tr>
                                         <td colSpan="4" className="py-20 text-center text-slate-500 font-bold uppercase tracking-widest text-xs">
@@ -313,6 +343,18 @@ export default function AdminCategories() {
                                             className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 outline-none focus:border-indigo-500"
                                             placeholder="Briefly describe this category..."
                                         />
+                                    </div>
+                                    <div className="space-y-1.5">
+                                        <label className="text-xs font-black uppercase tracking-widest text-slate-500">Display Order</label>
+                                        <input
+                                            type="number"
+                                            name="displayOrder"
+                                            value={formData.displayOrder}
+                                            onChange={handleFormChange}
+                                            className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 outline-none focus:border-indigo-500"
+                                            placeholder="0"
+                                        />
+                                        <p className="text-[10px] text-slate-500 font-medium">Lower numbers appear first in the menu (e.g. 0, 1, 2...)</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-4 p-6 bg-slate-800/20 border-t border-slate-800">

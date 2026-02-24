@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { fetchProducts } from "../../api/products.api";
 
@@ -11,6 +11,7 @@ export default function CategoryPage() {
   const { slug } = useParams();
   const [allProducts, setAllProducts] = useState([]);
   const [filtered, setFiltered] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // મોબાઈલ ડ્રોઅર કંટ્રોલ કરવા માટે
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -18,12 +19,32 @@ export default function CategoryPage() {
   const [filters, setFilters] = useState({
     size: null,
     fit: [],
-    price: 1000
+    price: 10000 // Default higher to not hide everything initially
   });
 
-  const availableSizes = [...new Set(allProducts.flatMap(p => p.size || []))];
-  const availableFits = [...new Set(allProducts.map(p => p.fit).filter(Boolean))];
-  const maxPrice = allProducts.length > 0 ? Math.max(...allProducts.map(p => p.price)) : 1000;
+  // Extract available sizes and colors from variants
+  const availableSizes = useMemo(() => {
+    const sizeSet = new Set();
+    allProducts.forEach(p => {
+      p.variants?.forEach(v => {
+        if (v.size?.name) sizeSet.add(v.size.name);
+      });
+    });
+    return Array.from(sizeSet).sort();
+  }, [allProducts]);
+
+  const availableFits = useMemo(() => {
+    // Current schema uses productType instead of explicit "fit" usually, 
+    // but if fits exist in metadata we could pull them.
+    // For now, let's use product types as "fits" or just return common ones.
+    const types = new Set(allProducts.map(p => p.productType).filter(Boolean));
+    return Array.from(types);
+  }, [allProducts]);
+
+  const maxPrice = useMemo(() => {
+    if (allProducts.length === 0) return 10000;
+    return Math.max(...allProducts.map(p => p.price || 0));
+  }, [allProducts]);
 
   const handleSizeChange = size => setFilters(prev => ({ ...prev, size }));
 
@@ -48,25 +69,34 @@ export default function CategoryPage() {
 
   /* FETCH API */
   useEffect(() => {
-    fetchProducts().then(data => {
-      setAllProducts(data);
+    setIsLoading(true);
+    fetchProducts(slug).then(data => {
+      setAllProducts(data || []);
+      setIsLoading(false);
+    }).catch(err => {
+      console.error("Fetch products error:", err);
+      setIsLoading(false);
     });
-  }, []);
+  }, [slug]);
 
-  /* FILTER LOGIC */
+  /* FILTER LOGIC (FRONTEND) */
   useEffect(() => {
-    let result = allProducts.filter(p => p.category?.slug === slug);
+    let result = [...allProducts];
+
+    // Backend already filters by category, so no need to repeat that here
 
     if (filters.size) {
-      result = result.filter(p => p.size?.includes(filters.size));
+      result = result.filter(p =>
+        p.variants?.some(v => v.size?.name === filters.size)
+      );
     }
     if (filters.fit.length > 0) {
-      result = result.filter(p => p.fit && filters.fit.includes(p.fit.toLowerCase()));
+      result = result.filter(p => p.productType && filters.fit.includes(p.productType.toLowerCase()));
     }
-    result = result.filter(p => p.price <= filters.price);
+    result = result.filter(p => (p.price || 0) <= filters.price);
 
     setFiltered(result);
-  }, [allProducts, slug, filters]);
+  }, [allProducts, filters]);
 
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-[#0a0a0a] text-white">
@@ -133,6 +163,7 @@ export default function CategoryPage() {
                   onFitChange={handleFitChange}
                   onPriceChange={handlePriceChange}
                   onClear={handleClear}
+                  isMobile={true}
                 />
 
                 <div className="grid grid-cols-2 gap-4 sticky bottom-0 mt-8 pt-4 bg-[#121212]">
