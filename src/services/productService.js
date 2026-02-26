@@ -3,11 +3,13 @@ import api from "./api";
 /**
  * Fetch all products from the backend.
  * @param {AbortSignal} signal - Optional abort signal
+ * @param {boolean} isAdmin - Whether the request is from an admin
  * @returns {Promise<Array>} List of products
  */
-export const getProducts = async (signal) => {
+export const getProducts = async (signal, isAdmin = false) => {
     try {
-        const response = await api.get("/products", { signal });
+        const url = isAdmin ? "/products?isAdmin=true" : "/products";
+        const response = await api.get(url, { signal });
         console.log("Products Fetch Response:", response.data);
         return response.data;
     } catch (error) {
@@ -21,11 +23,13 @@ export const getProducts = async (signal) => {
 /**
  * Fetch a single product by SLUG.
  * @param {string} slug - Product Slug
+ * @param {boolean} isAdmin - Whether the request is from an admin
  * @returns {Promise<Object>} Product details
  */
-export const getProductBySlug = async (slug) => {
+export const getProductBySlug = async (slug, isAdmin = false) => {
     try {
-        const response = await api.get(`/products/${slug}`);
+        const url = isAdmin ? `/products/${slug}?isAdmin=true` : `/products/${slug}`;
+        const response = await api.get(url);
         return response.data;
     } catch (error) {
         throw error;

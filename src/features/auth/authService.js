@@ -24,3 +24,18 @@ export const googleLoginAPI = async (credential) => {
     const response = await api.post("/users/google-login", { credential });
     return response.data;
 };
+
+export const addAddressAPI = async (data) => {
+    const response = await api.post("/users/addresses", data);
+    return response.data;
+};
+
+export const updateAddressAPI = async (addressId, data) => {
+    const response = await api.put(`/users/address/${addressId}`, data);
+    return response.data;
+};
+
+export const deleteAddressAPI = async (addressId) => {
+    const response = await api.delete(`/users/address/${addressId}`);
+    return response.data;
+};

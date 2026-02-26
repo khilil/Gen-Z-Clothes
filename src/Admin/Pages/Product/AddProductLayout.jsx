@@ -57,6 +57,7 @@ function AddProductLayout() {
         isFeatured: false,
         isNewArrival: true,
         isBestSeller: false,
+        isCustomizable: false,
         metaTitle: '',
         metaDescription: '',
         metaKeywords: '',

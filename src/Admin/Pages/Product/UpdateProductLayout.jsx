@@ -57,6 +57,7 @@ function UpdateProductLayout() {
         isFeatured: false,
         isNewArrival: true,
         isBestSeller: false,
+        isCustomizable: false,
         metaTitle: '',
         metaDescription: '',
         metaKeywords: '',
@@ -96,7 +97,7 @@ function UpdateProductLayout() {
         const fetchProduct = async () => {
             setIsLoading(true);
             try {
-                const data = await getProductBySlug(slug);
+                const data = await getProductBySlug(slug, true);
                 const product = data.data || data.product || data;
 
                 setProductId(product._id || product.id);
@@ -119,6 +120,7 @@ function UpdateProductLayout() {
                     isFeatured: product.isFeatured ?? false,
                     isNewArrival: product.isNewArrival ?? true,
                     isBestSeller: product.isBestSeller ?? false,
+                    isCustomizable: product.isCustomizable ?? false,
                     metaTitle: product.metaTitle || '',
                     metaDescription: product.metaDescription || '',
                     metaKeywords: product.metaKeywords || '',

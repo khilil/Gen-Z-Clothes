@@ -24,7 +24,7 @@
   letter-spacing: 0.3em;
   margin-bottom: 32px;
   padding-bottom: 16px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* BLOCK */
@@ -39,7 +39,7 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255, 255, 255, 0.4);
   margin-bottom: 24px;
 }
 
@@ -53,7 +53,7 @@
 .size-grid button {
   padding: 12px 0;
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
   font-size: 10px;
   font-weight: 800;
@@ -101,7 +101,7 @@
   color: #d4c4b1;
 }
 
-.checkbox-list input:checked + label {
+.checkbox-list input:checked+label {
   color: #d4c4b1;
   text-decoration: underline;
   text-underline-offset: 4px;
@@ -111,7 +111,7 @@
 .price-range {
   width: 100%;
   height: 4px;
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
   appearance: none;
   cursor: pointer;
   margin-bottom: 12px;
@@ -132,7 +132,7 @@
   font-size: 9px;
   font-weight: 900;
   letter-spacing: 0.2em;
-  color: rgba(255,255,255,0.6);
+  color: rgba(255, 255, 255, 0.6);
 }
 
 /* CLEAR BUTTON */
@@ -140,7 +140,7 @@
   width: 100%;
   padding: 16px 0;
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: white;
   font-size: 10px;
   font-weight: 900;
@@ -166,60 +166,50 @@
   }
 }
 
-.filter-block {
-  margin-bottom: 24px;
-}
-
-/* Label */
-.filter-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
-  display: block;
-  margin-bottom: 16px;
-}
-
-/* Range slider */
-.filter-block input[type="range"] {
-  width: 100%;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 999px;
-  outline: none;
-  cursor: pointer;
-  margin-bottom: 16px;
-  accent-color: var(--accent-color); /* optional */
-}
-
-/* Chrome / Safari thumb */
-.filter-block input[type="range"]::-webkit-slider-thumb {
+/* Range slider thumb styling */
+.range-accent {
+  -webkit-appearance: none;
   appearance: none;
-  width: 14px;
-  height: 14px;
-  background: #ff6a00; /* accent color */
+  background: transparent;
+}
+
+.range-accent::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--accent);
+  border: 2px solid white;
   border-radius: 50%;
   cursor: pointer;
+  box-shadow: 0 0 10px rgba(197, 160, 89, 0.4);
+  margin-top: -6px;
+  /* center on track */
 }
 
-/* Firefox thumb */
-.filter-block input[type="range"]::-moz-range-thumb {
-  width: 14px;
-  height: 14px;
-  background: #ff6a00;
+.range-accent::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: var(--accent);
+  border: 2px solid white;
   border-radius: 50%;
   cursor: pointer;
-  border: none;
+  box-shadow: 0 0 10px rgba(197, 160, 89, 0.4);
 }
 
-/* Price values */
-.price-values {
-  display: flex;
-  justify-content: space-between;
-  font-size: 9px;
-  font-weight: 900;
-  letter-spacing: 0.15em;
-  color: rgba(255, 255, 255, 0.6);
+.range-accent:focus {
+  outline: none;
 }
 
+.filter-section {
+  transition: all 0.3s ease;
+}
+
+/* Scrollbar for mobile drawer */
+.drawer-content {
+  scrollbar-width: none;
+}
+
+.drawer-content::-webkit-scrollbar {
+  display: none;
+}

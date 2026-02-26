@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getCurrentUserAPI, googleLoginAPI, loginAPI, logoutAPI, registerAPI } from "./authService";
+import { getCurrentUserAPI, googleLoginAPI, loginAPI, logoutAPI, registerAPI, addAddressAPI } from "./authService";
 
 
 export const loginUser = createAsyncThunk(
@@ -51,6 +51,17 @@ export const googleLoginUser = createAsyncThunk(
     async (credential, thunkAPI) => {
         try {
             return await googleLoginAPI(credential);
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);
+
+export const addUserAddress = createAsyncThunk(
+    "auth/add-address",
+    async (data, thunkAPI) => {
+        try {
+            return await addAddressAPI(data);
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data);
         }
@@ -133,6 +144,20 @@ const authSlice = createSlice({
                 state.role = action.payload.data.role;
             })
             .addCase(googleLoginUser.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+            // 🔥 ADD ADDRESS
+            .addCase(addUserAddress.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(addUserAddress.fulfilled, (state, action) => {
+                state.loading = false;
+                if (state.user) {
+                    state.user.addresses = action.payload.data;
+                }
+            })
+            .addCase(addUserAddress.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             });

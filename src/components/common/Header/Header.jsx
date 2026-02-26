@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { getAllCategories } from "../../../services/categoryService";
 import { useCart } from "../../../context/CartContext";
 import MiniCart from "../../../pages/Cart/MiniCart";
+import { motion, AnimatePresence } from "framer-motion";
 import "./Header.css";
 
 export default function Header() {
@@ -14,6 +15,7 @@ export default function Header() {
   const [isLoading, setIsLoading] = useState(true);
   const { cart } = useCart();
   const [cartOpen, setCartOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Get current user from Redux
   const { user } = useSelector((state) => state.auth);
@@ -52,12 +54,27 @@ export default function Header() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-[100] bg-black/90 backdrop-blur-2xl border-b border-white/5 h-20">
+      <header className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${isMobileMenuOpen ? 'bg-black' : 'bg-black/90 backdrop-blur-2xl'} border-b border-white/5 h-20`}>
         <div className="max-w-[1920px] mx-auto h-full px-6 md:px-12 flex items-center justify-between relative">
 
+          {/* MOBILE BURGER (Visible on mobile/tablet) */}
+          <div className="lg:hidden z-[110]">
+            <button
+              className={`menu-toggle ${isMobileMenuOpen ? 'active' : ''}`}
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle Menu"
+            >
+              <div className="burger-icon">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </button>
+          </div>
+
           {/* LOGO */}
-          <div className="z-50 shrink-0">
-            <Link className="text-xl md:text-2xl font-impact tracking-tighter text-white hover:text-accent transition-colors" to="/">MODERN MEN</Link>
+          <div className={`z-[110] transition-all duration-500 ${isMobileMenuOpen ? 'md:opacity-100' : 'opacity-100'}`}>
+            <Link className="text-xl md:text-2xl font-impact tracking-tighter text-white hover:text-accent transition-colors" to="/" onClick={() => setIsMobileMenuOpen(false)}>MODERN MEN</Link>
           </div>
 
           {/* DESKTOP NAV */}
@@ -179,6 +196,121 @@ export default function Header() {
       </header>
 
       <MiniCart open={cartOpen} onClose={() => setCartOpen(false)} />
+
+      {/* MOBILE MENU DRAWER (Framer Motion) */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[101] lg:hidden"
+            />
+
+            {/* Drawer */}
+            <motion.div
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed top-0 left-0 w-full max-w-[320px] h-full bg-[#0a0a0a] z-[105] shadow-2xl lg:hidden flex flex-col border-r border-white/5"
+            >
+              <div className="drawer-inner p-8 pt-24 space-y-10 h-full overflow-y-auto custom-scrollbar">
+
+                {/* SEARCH BAR */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="relative"
+                >
+                  <input
+                    type="text"
+                    placeholder="SEARCH COLLECTION"
+                    className="w-full bg-white/5 border border-white/10 px-4 py-3 text-[10px] font-black tracking-widest text-white focus:border-accent outline-none"
+                  />
+                  <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-[18px]">search</span>
+                </motion.div>
+
+                {/* NAV LINKS */}
+                <nav className="flex flex-col gap-6">
+                  {['New Arrivals', 'Shoes', 'Accessories', 'Collections', 'Sale'].map((item, i) => (
+                    <motion.div
+                      key={item}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.3 + i * 0.05 }}
+                    >
+                      <Link
+                        className={`text-2xl font-impact uppercase tracking-wider transition-colors hover:text-accent ${item === 'Sale' ? 'text-accent' : 'text-white'}`}
+                        to={`/${item.toLowerCase().replace(' ', '-')}`}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {item}
+                      </Link>
+                    </motion.div>
+                  ))}
+
+                  {/* MOBILE ACCORDION (Clothing) */}
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="space-y-4 pt-4 border-t border-white/5"
+                  >
+                    <span className="text-accent text-[11px] font-black uppercase tracking-[0.4em] block">Clothing</span>
+                    <ul className="grid grid-cols-2 gap-x-4 gap-y-4">
+                      {isLoading ? (
+                        Array(4).fill(0).map((_, i) => (
+                          <div key={i} className="h-4 w-20 bg-white/5 rounded animate-pulse"></div>
+                        ))
+                      ) : categories.filter(c => !c.parentCategory).map(root => (
+                        <li key={root._id}>
+                          <Link
+                            className="text-[13px] text-white/50 hover:text-white uppercase tracking-widest font-black"
+                            to={`/category/${root.slug}`}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            {root.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </motion.div>
+                </nav>
+
+                {/* USER ACTIONS */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.7 }}
+                  className="pt-8 mt-auto border-t border-white/5"
+                >
+                  {user ? (
+                    <Link to="/account/dashboard" className="flex items-center gap-4 group" onClick={() => setIsMobileMenuOpen(false)}>
+                      <div className="account-avatar">
+                        <span>{getInitials(user.name)}</span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">Logged In As</span>
+                        <span className="text-[14px] text-white font-bold group-hover:text-accent transition-colors">{user.name}</span>
+                      </div>
+                    </Link>
+                  ) : (
+                    <Link to="/login" className="flex items-center gap-4 group" onClick={() => setIsMobileMenuOpen(false)}>
+                      <span className="material-symbols-outlined text-[32px]">person</span>
+                      <span className="text-[14px] font-black text-white uppercase tracking-[0.2em] group-hover:text-accent transition-colors">Sign In</span>
+                    </Link>
+                  )}
+                </motion.div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 }

@@ -121,9 +121,15 @@ const Variants = ({ variants, onAdd, onDelete, onChange, onResetSku, onToggleExp
                                                         onChange={(e) => onChange(v.id, 'size', e.target.value)}
                                                     >
                                                         <option value="">Select Size</option>
-                                                        {(availableSizes || []).map(s => (
-                                                            <option key={s._id} value={s._id}>{s.name} ({s.categoryType})</option>
-                                                        ))}
+                                                        {(availableSizes || [])
+                                                            .filter(s => {
+                                                                if (garmentType === 'top') return s.categoryType === 'topwear';
+                                                                if (garmentType === 'bottom') return s.categoryType === 'bottomwear';
+                                                                return true;
+                                                            })
+                                                            .map(s => (
+                                                                <option key={s._id} value={s._id}>{s.name} ({s.categoryType})</option>
+                                                            ))}
                                                     </select>
                                                 </div>
                                                 <div className="space-y-2">

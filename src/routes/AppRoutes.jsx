@@ -4,6 +4,7 @@ import CategoryPage from "../pages/Category/CategoryPage";
 import ProductListing from "../pages/ProductDetail/ProductListing";
 import Checkout from "../pages/Checkout/Checkout";
 import CheckoutDetails from "../pages/Checkout/CheckoutDetails";
+import CartPage from "../pages/Cart/CartPage";
 
 import AccountLayout from "../pages/Account/AccountLayout/AccountLayout";
 import Orders from "../pages/Account/Orders";
@@ -97,6 +98,7 @@ export default function AppRoutes() {
                 <Route path="/category/:slug" element={<CategoryPage />} />
                 <Route path="/shop/:category" element={<ProductListing />} />
                 <Route path="/product/:slug" element={<ProductDetailPage />} />
+                <Route path="/cart" element={<CartPage />} />
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/checkout/details" element={<CheckoutDetails />} />
                 <Route path="/about" element={<About />} />

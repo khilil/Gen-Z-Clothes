@@ -34,7 +34,7 @@ export default function ProductDetailsPage() {
         const fetchProduct = async () => {
             setIsLoading(true);
             try {
-                const response = await getProductBySlug(slug);
+                const response = await getProductBySlug(slug, true);
                 const data = response.data || response;
                 setProduct(data);
                 if (data.images && data.images.length > 0) {

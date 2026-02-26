@@ -1,32 +1,79 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getLowStockProducts, updateVariantStock } from '../../../services/inventoryService';
+import { getProducts } from '../../../services/productService';
+import { Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 const Inventory = () => {
   // --- State Management ---
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [sizeFilter, setSizeFilter] = useState('All');
+  const [colorFilter, setColorFilter] = useState('All');
+  const [items, setItems] = useState([]);
+  const [lowStockItems, setLowStockItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  
+  const [selectedProduct, setSelectedProduct] = useState(null); // This will be the variant for updates
+
   // Modal Form State
-  const [adjustmentType, setAdjustmentType] = useState('Add'); // Add, Subtract, Set
+  const [adjustmentType, setAdjustmentType] = useState('Set Fixed'); // Add, Subtract, Set
   const [quantity, setQuantity] = useState(0);
   const [note, setNote] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [notification, setNotification] = useState(null);
 
-  // --- Hardcoded Data ---
-  const inventoryData = [
-    { id: 'SKU-TSH-WHT-L', name: "Men's Essential Tee", color: 'White', hex: '#ffffff', size: 'L', stock: 45, status: 'In Stock' },
-    { id: 'SKU-TSH-NVY-M', name: "Classic V-Neck", color: 'Navy Blue', hex: '#1e3a8a', size: 'M', stock: 8, status: 'Low Stock' },
-    { id: 'SKU-TSH-BLK-XL', name: "Premium Cotton Crew", color: 'Midnight Black', hex: '#000000', size: 'XL', stock: 0, status: 'Out of Stock' },
-    { id: 'SKU-TSH-GRY-S', name: "Heather Sport Tee", color: 'Heather Grey', hex: '#94a3b8', size: 'S', stock: 124, status: 'In Stock' },
-    { id: 'SKU-TSH-RED-L', name: "Graphic Series Tee", color: 'Crimson Red', hex: '#ef4444', size: 'L', stock: 12, status: 'Low Stock' },
-  ];
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      // For a comprehensive inventory we fetch all products
+      const [allProductsRes, lowStockRes] = await Promise.all([
+        getProducts(null, true),
+        getLowStockProducts()
+      ]);
+
+      // Flatten products to SKUs/Variants
+      const flattened = [];
+      allProductsRes.data.forEach(p => {
+        p.variants.forEach(v => {
+          flattened.push({
+            productId: p._id,
+            variantId: v._id,
+            sku: v.sku,
+            name: p.title,
+            color: v.color?.name || 'N/A',
+            hex: v.color?.hexCode || '#ccc',
+            size: v.size?.name || 'N/A',
+            stock: v.stock,
+            lowStockThreshold: v.lowStockThreshold,
+            status: v.stock <= 0 ? 'Out of Stock' : (v.stock <= v.lowStockThreshold ? 'Low Stock' : 'In Stock')
+          });
+        });
+      });
+
+      setItems(flattened);
+      setLowStockItems(lowStockRes.data || []);
+    } catch (error) {
+      console.error("Failed to fetch inventory:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const showNotification = (type, message) => {
+    setNotification({ type, message });
+    setTimeout(() => setNotification(null), 3000);
+  };
 
   // --- Handlers ---
-  const openUpdateModal = (product) => {
-    setSelectedProduct(product);
-    setQuantity(0);
+  const openUpdateModal = (item) => {
+    setSelectedProduct(item);
+    setQuantity(item.stock);
     setNote('');
+    setAdjustmentType('Set Fixed');
     setIsModalOpen(true);
   };
 
@@ -35,9 +82,51 @@ const Inventory = () => {
     setSelectedProduct(null);
   };
 
+  const handleUpdateStock = async () => {
+    if (!selectedProduct) return;
+
+    let newStock = Number(quantity);
+    if (adjustmentType === 'Add') newStock = selectedProduct.stock + Number(quantity);
+    if (adjustmentType === 'Subtract') newStock = Math.max(0, selectedProduct.stock - Number(quantity));
+
+    setIsSubmitting(true);
+    try {
+      await updateVariantStock(selectedProduct.productId, selectedProduct.variantId, newStock);
+      showNotification('success', 'Stock updated successfully');
+      fetchData();
+      closeModal();
+    } catch (error) {
+      showNotification('error', error.message || 'Failed to update stock');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const filteredItems = items.filter(item => {
+    const matchesSearch = item.sku.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.color.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesStatus = statusFilter === 'All' || item.status === statusFilter;
+    const matchesSize = sizeFilter === 'All' || item.size === sizeFilter;
+    const matchesColor = colorFilter === 'All' || item.color === colorFilter;
+
+    return matchesSearch && matchesStatus && matchesSize && matchesColor;
+  });
+
+  const uniqueSizes = [...new Set(items.map(i => i.size))].sort();
+  const uniqueColors = [...new Set(items.map(i => i.color))].sort();
+
+  const metrics = {
+    totalSkus: items.length,
+    lowStock: items.filter(i => i.status === 'Low Stock').length,
+    outOfStock: items.filter(i => i.status === 'Out of Stock').length,
+    lastUpdate: 'Just now'
+  };
+
   return (
     <main className="p-4 md:p-8 bg-background-light dark:bg-background-dark min-h-screen transition-colors duration-300">
-      
+
       {/* 📌 MAIN HEADER */}
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
@@ -58,20 +147,20 @@ const Inventory = () => {
 
       {/* 📊 METRICS CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <MetricCard icon="inventory_2" label="Total SKUs" value="1,240" trend="+4.2%" color="primary" />
-        <MetricCard icon="warning" label="Low Stock Alerts" value="12" color="orange" isAlert />
-        <MetricCard icon="error_outline" label="Out of Stock" value="3" color="red" isAlert />
-        <MetricCard icon="update" label="Last 24h Updates" value="158" color="blue" />
+        <MetricCard icon="inventory_2" label="Total SKUs" value={metrics.totalSkus} trend="+0%" color="primary" />
+        <MetricCard icon="warning" label="Low Stock Alerts" value={metrics.lowStock} color="orange" isAlert />
+        <MetricCard icon="error_outline" label="Out of Stock" value={metrics.outOfStock} color="red" isAlert />
+        <MetricCard icon="update" label="Last Update" value={metrics.lastUpdate} color="blue" />
       </div>
 
       {/* 📋 INVENTORY TABLE SECTION */}
       <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-        
+
         {/* Controls Bar */}
         <div className="p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex flex-col md:flex-row gap-4 items-center justify-between">
           <div className="relative w-full md:w-96">
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
-            <input 
+            <input
               type="text"
               placeholder="Search by SKU, Color, or Size..."
               className="w-full pl-10 pr-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary outline-none text-sm transition-all dark:text-slate-200"
@@ -80,69 +169,99 @@ const Inventory = () => {
             />
           </div>
           <div className="flex items-center gap-2 w-full md:w-auto">
-            <select 
-              className="px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm outline-none dark:text-slate-300"
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-            >
-              <option>Status: All</option>
-              <option>In Stock</option>
-              <option>Low Stock</option>
-              <option>Out of Stock</option>
-            </select>
-            <select 
-              className="px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm outline-none dark:text-slate-300"
-              value={sizeFilter}
-              onChange={(e) => setSizeFilter(e.target.value)}
-            >
-              <option>Size: All</option>
-              <option>S</option><option>M</option><option>L</option><option>XL</option>
-            </select>
+            <span className="text-xs text-slate-400 font-medium italic">Click column headers to filter</span>
           </div>
         </div>
 
         {/* Table */}
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider font-semibold">
-              <tr>
-                <th className="px-6 py-4">SKU ID</th>
-                <th className="px-6 py-4">Product Name</th>
-                <th className="px-6 py-4">Color</th>
-                <th className="px-6 py-4">Size</th>
-                <th className="px-6 py-4">Available Stock</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-              {inventoryData.map((item) => (
-                <tr key={item.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors group">
-                  <td className="px-6 py-4 font-mono text-sm font-semibold dark:text-slate-300">{item.id}</td>
-                  <td className="px-6 py-4 text-sm dark:text-slate-400">{item.name}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2 text-sm dark:text-slate-400">
-                      <span className="w-3 h-3 rounded-full border border-slate-200" style={{ backgroundColor: item.hex }}></span>
-                      {item.color}
+          {isLoading ? (
+            <div className="p-20 flex flex-col items-center justify-center gap-4">
+              <Loader2 className="animate-spin text-primary" size={40} />
+              <p className="text-slate-500 font-bold">Synchronizing Stock Data...</p>
+            </div>
+          ) : (
+            <table className="w-full text-left">
+              <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider font-semibold">
+                <tr>
+                  <th className="px-6 py-4">SKU ID</th>
+                  <th className="px-6 py-4">Product Name</th>
+                  <th className="px-6 py-4">
+                    <div className="flex flex-col gap-1">
+                      <span>Color</span>
+                      <select
+                        value={colorFilter}
+                        onChange={(e) => setColorFilter(e.target.value)}
+                        className="bg-transparent border-none text-[10px] font-bold text-primary outline-none cursor-pointer uppercase"
+                      >
+                        <option value="All">All Colors</option>
+                        {uniqueColors.map(c => <option key={c} value={c}>{c}</option>)}
+                      </select>
                     </div>
-                  </td>
-                  <td className="px-6 py-4 text-sm dark:text-slate-400">{item.size}</td>
-                  <td className="px-6 py-4 text-sm font-medium dark:text-slate-200">{item.stock} units</td>
-                  <td className="px-6 py-4">
-                    <StatusBadge status={item.status} />
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button 
-                      onClick={() => openUpdateModal(item)}
-                      className="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors"
-                    >
-                      <span className="material-icons-round text-lg leading-none">edit_note</span>
-                    </button>
-                  </td>
+                  </th>
+                  <th className="px-6 py-4">
+                    <div className="flex flex-col gap-1">
+                      <span>Size</span>
+                      <select
+                        value={sizeFilter}
+                        onChange={(e) => setSizeFilter(e.target.value)}
+                        className="bg-transparent border-none text-[10px] font-bold text-primary outline-none cursor-pointer uppercase"
+                      >
+                        <option value="All">All Sizes</option>
+                        {uniqueSizes.map(s => <option key={s} value={s}>{s}</option>)}
+                      </select>
+                    </div>
+                  </th>
+                  <th className="px-6 py-4">Available Stock</th>
+                  <th className="px-6 py-4">Threshold</th>
+                  <th className="px-6 py-4">
+                    <div className="flex flex-col gap-1">
+                      <span>Status</span>
+                      <select
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        className="bg-transparent border-none text-[10px] font-bold text-primary outline-none cursor-pointer uppercase"
+                      >
+                        <option value="All">All Status</option>
+                        <option value="In Stock">In Stock</option>
+                        <option value="Low Stock">Low Stock</option>
+                        <option value="Out of Stock">Out of Stock</option>
+                      </select>
+                    </div>
+                  </th>
+                  <th className="px-6 py-4 text-right">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                {filteredItems.map((item) => (
+                  <tr key={item.sku} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors group">
+                    <td className="px-6 py-4 font-mono text-xs font-semibold dark:text-slate-300">{item.sku}</td>
+                    <td className="px-6 py-4 text-sm dark:text-slate-400">{item.name}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2 text-sm dark:text-slate-400">
+                        <span className="w-3 h-3 rounded-full border border-slate-200" style={{ backgroundColor: item.hex }}></span>
+                        {item.color}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-sm dark:text-slate-400">{item.size}</td>
+                    <td className="px-6 py-4 text-sm font-medium dark:text-slate-200">{item.stock} units</td>
+                    <td className="px-6 py-4 text-xs dark:text-slate-500">{item.lowStockThreshold}</td>
+                    <td className="px-6 py-4">
+                      <StatusBadge status={item.status} />
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <button
+                        onClick={() => openUpdateModal(item)}
+                        className="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors"
+                      >
+                        <span className="material-icons-round text-lg leading-none">edit_note</span>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
 
         {/* 📌 PAGINATION */}
@@ -169,9 +288,9 @@ const Inventory = () => {
                   <span className="material-icons-round">close</span>
                 </button>
               </div>
-              <p className="text-sm text-slate-500 mt-1">Adjust inventory for <span className="font-mono font-bold text-primary">{selectedProduct?.id}</span></p>
+              <p className="text-sm text-slate-500 mt-1">Adjust inventory for <span className="font-mono font-bold text-primary">{selectedProduct?.sku}</span></p>
             </div>
-            
+
             <div className="p-6 space-y-4">
               <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg flex items-center justify-between border border-slate-100 dark:border-slate-700">
                 <span className="text-sm text-slate-500">Current Stock</span>
@@ -185,11 +304,10 @@ const Inventory = () => {
                     <button
                       key={type}
                       onClick={() => setAdjustmentType(type)}
-                      className={`py-2 rounded-lg text-sm font-medium transition-all ${
-                        adjustmentType === type 
-                        ? 'bg-primary text-white shadow-md' 
+                      className={`py-2 rounded-lg text-sm font-medium transition-all ${adjustmentType === type
+                        ? 'bg-primary text-white shadow-md'
                         : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200'
-                      }`}
+                        }`}
                     >
                       {type}
                     </button>
@@ -199,7 +317,7 @@ const Inventory = () => {
 
               <div>
                 <label className="block text-sm font-medium mb-1 dark:text-slate-300">Quantity</label>
-                <input 
+                <input
                   type="number"
                   className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary outline-none transition-all dark:text-white"
                   value={quantity}
@@ -209,7 +327,7 @@ const Inventory = () => {
 
               <div>
                 <label className="block text-sm font-medium mb-1 dark:text-slate-300">Reason / Note</label>
-                <textarea 
+                <textarea
                   className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary outline-none h-24 transition-all dark:text-white"
                   placeholder="e.g. Restock from vendor"
                   value={note}
@@ -219,14 +337,27 @@ const Inventory = () => {
             </div>
 
             <div className="p-6 bg-slate-50 dark:bg-slate-800/50 flex gap-3">
-              <button onClick={closeModal} className="flex-1 px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg font-semibold hover:bg-slate-50 transition-colors dark:text-slate-300">
+              <button disabled={isSubmitting} onClick={closeModal} className="flex-1 px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg font-semibold hover:bg-slate-50 transition-colors dark:text-slate-300">
                 Cancel
               </button>
-              <button className="flex-1 px-4 py-3 bg-primary text-white rounded-lg font-semibold shadow-lg shadow-primary/20 hover:opacity-90 transition-all active:scale-95">
-                Confirm Update
+              <button
+                disabled={isSubmitting}
+                onClick={handleUpdateStock}
+                className="flex-1 px-4 py-3 bg-primary text-white rounded-lg font-semibold shadow-lg shadow-primary/20 hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
+              >
+                {isSubmitting ? <Loader2 className="animate-spin" size={18} /> : 'Confirm Update'}
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* 🔔 Notifications */}
+      {notification && (
+        <div className={`fixed bottom-8 right-8 z-[200] flex items-center gap-3 px-6 py-4 rounded-xl shadow-2xl animate-in slide-in-from-right-10 duration-300 border backdrop-blur-md ${notification.type === 'success' ? 'bg-emerald-500/90 border-emerald-400 text-white' : 'bg-rose-500/90 border-rose-400 text-white'
+          }`}>
+          {notification.type === 'success' ? <CheckCircle2 size={20} /> : <AlertCircle size={20} />}
+          <p className="font-bold text-sm tracking-wide">{notification.message}</p>
         </div>
       )}
     </main>
@@ -271,11 +402,10 @@ const StatusBadge = ({ status }) => {
 };
 
 const PaginationButton = ({ label, active }) => (
-  <button className={`px-3 py-1 rounded-md text-sm transition-colors ${
-    active 
-    ? 'bg-primary text-white shadow-md shadow-primary/20' 
+  <button className={`px-3 py-1 rounded-md text-sm transition-colors ${active
+    ? 'bg-primary text-white shadow-md shadow-primary/20'
     : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'
-  }`}>
+    }`}>
     {label}
   </button>
 );

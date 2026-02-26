@@ -22,7 +22,7 @@ const AttributeManagement = () => {
 
     // Form states
     const [newColor, setNewColor] = useState({ name: '', hexCode: '#000000' });
-    const [newSize, setNewSize] = useState({ name: '', categoryType: 'tshirt' });
+    const [newSize, setNewSize] = useState({ name: '', categoryType: 'topwear' });
     const [isSubmittingColor, setIsSubmittingColor] = useState(false);
     const [isSubmittingSize, setIsSubmittingSize] = useState(false);
 
@@ -75,7 +75,7 @@ const AttributeManagement = () => {
         setIsSubmittingSize(true);
         try {
             await createSize(newSize);
-            setNewSize({ name: '', categoryType: 'tshirt' });
+            setNewSize({ name: '', categoryType: 'topwear' });
             showNotification('success', 'Size created successfully');
             fetchData();
         } catch (error) {
@@ -237,9 +237,9 @@ const AttributeManagement = () => {
                                     value={newSize.categoryType}
                                     onChange={(e) => setNewSize({ ...newSize, categoryType: e.target.value })}
                                 >
-                                    <option value="tshirt">T-Shirt / Tops</option>
-                                    <option value="jeans">Jeans / Pants</option>
-                                    <option value="shoes">Shoes / Footwear</option>
+                                    <option value="topwear">Topwear (T-Shirts, Shirts, etc.)</option>
+                                    <option value="bottomwear">Bottomwear (Jeans, Pants, etc.)</option>
+                                    <option value="footwear">Footwear (Shoes, etc.)</option>
                                     <option value="accessory">Accessory</option>
                                     <option value="other">Other</option>
                                 </select>
