@@ -1,71 +1,71 @@
-/* ================= ROOT ================= */
-:root {
-  --primary: #000;
-  --accent: #d4c4b1;
-  --text-main: #000;
-  --text-muted: #717171;
-  --border: #e5e5e5;
-  --bg: #ffffff;
-  --danger: #dc2626;
-  --radius-xl: 24px;
-  --radius-lg: 16px;
-}
-
-/* ================= PAGE ================= */
 .profile-page {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 40px 0;
-  font-family: "Inter", sans-serif;
-  color: var(--text-main);
+  width: 100%;
+  color: #000000;
 }
 
+/* HEADER SECTION */
 .profile-page-header {
-  margin-bottom: 40px;
+  margin-bottom: 80px;
+  border-bottom: 1px solid #f1f1f1;
+  padding-bottom: 40px;
 }
 
 .profile-page-title {
   font-family: "Oswald", sans-serif;
-  font-size: 36px;
+  font-size: 64px;
+  font-weight: 700;
   text-transform: uppercase;
-  margin-bottom: 8px;
+  letter-spacing: -2px;
+  line-height: 0.9;
+  margin-bottom: 12px;
 }
 
 .profile-page-subtitle {
-  font-size: 14px;
-  color: var(--text-muted);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  color: #717171;
+  font-weight: 700;
 }
 
-/* ================= CARD ================= */
+/* MAIN DATA CARD */
 .profile-card {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 32px;
-  padding: 40px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  background: #ffffff;
+  border: 1px solid #f1f1f1;
+  border-radius: 4px;
+  padding: 60px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 100%;
+  background: #000000;
 }
 
 .profile-card-title {
   font-family: "Oswald", sans-serif;
-  font-size: 20px;
-  margin-bottom: 32px;
+  font-size: 24px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 48px;
+  color: #000000;
 }
 
-/* ================= GRID ================= */
+/* DATA GRID */
 .profile-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  column-gap: 48px;
-  row-gap: 32px;
+  column-gap: 80px;
+  row-gap: 48px;
 }
 
-@media (max-width: 768px) {
-  .profile-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ================= FIELD ================= */
+/* FIELD STYLING */
 .profile-field {
   display: flex;
   flex-direction: column;
@@ -73,226 +73,170 @@
 
 .field-label,
 .profile-field label {
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.2em;
+  font-size: 8px;
   text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 8px;
+  letter-spacing: 3px;
+  color: #717171;
+  margin-bottom: 12px;
+  font-weight: 900;
 }
 
 .field-value {
-  font-size: 14px;
-  font-weight: 700;
+  font-family: "Oswald", sans-serif;
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #000000;
 }
 
-/* ================= INPUTS ================= */
+/* INPUT STYLING */
 .profile-field input,
 .profile-field select {
-  padding: 14px 20px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
+  background: #f9f9f9;
+  border: 1px solid #eeeeee;
+  color: #000000;
+  padding: 18px 24px;
+  border-radius: 2px;
   font-size: 14px;
-  font-weight: 700;
-  background: #fff;
+  font-weight: 500;
+  transition: all 0.3s ease;
 }
 
 .profile-field input:focus,
 .profile-field select:focus {
   outline: none;
-  border-color: var(--primary);
+  border-color: #000000;
+  background: #ffffff;
 }
 
 .profile-field input:disabled {
-  background: #f5f5f5;
-  color: var(--text-muted);
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-/* ================= ACTIONS ================= */
+/* ACTIONS */
 .profile-actions {
-  margin-top: 40px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
+  margin-top: 60px;
+  padding-top: 40px;
+  border-top: 1px solid #f1f1f1;
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 40px;
 }
 
-/* Save Button */
 .profile-save-btn {
-  background: var(--primary);
-  color: #fff;
+  background: #000000;
+  color: #ffffff;
   border: none;
   padding: 16px 40px;
-  border-radius: 999px;
   font-size: 10px;
   font-weight: 900;
-  letter-spacing: 0.2em;
+  letter-spacing: 3px;
+  text-transform: uppercase;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .profile-save-btn:hover {
   background: #222;
 }
 
-/* Cancel */
 .profile-cancel-btn {
   background: transparent;
-  border: none;
+  border: 1px solid #eeeeee;
+  color: #000000;
+  padding: 16px 40px;
   font-size: 10px;
   font-weight: 900;
-  letter-spacing: 0.2em;
-  color: var(--text-muted);
-  cursor: pointer;
-}
-
-.profile-cancel-btn:hover {
-  color: var(--text-main);
-}
-
-/* Link Button */
-.profile-link-btn {
-  background: none;
-  border: none;
-  font-size: 11px;
-  font-weight: 900;
-  letter-spacing: 0.15em;
+  letter-spacing: 3px;
   text-transform: uppercase;
   cursor: pointer;
-  color: var(--text-main);
 }
 
-/* ================= OPTIONS ================= */
-.profile-options {
-  margin-top: 32px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-}
-
-@media (max-width: 768px) {
-  .profile-options {
-    grid-template-columns: 1fr;
-  }
-}
-
-.option-card {
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 32px;
-  transition: border-color 0.2s ease;
-  background: var(--bg);
-}
-
-.option-card:hover {
-  border-color: var(--primary);
-}
-
-.option-card h4 {
-  font-family: "Oswald", sans-serif;
-  font-size: 16px;
-  margin-bottom: 12px;
-}
-
-.option-card p {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-bottom: 16px;
-}
-
-.option-card a {
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-main);
-  text-decoration: none;
-}
-
-.option-card a:hover {
-  text-decoration: underline;
-}
-
-/* ================= VIEW MODE ACTIONS ================= */
-
+/* VIEW MODE ACTIONS */
 .profile-actions-view {
+  margin-top: 60px;
+  padding-top: 40px;
+  border-top: 1px solid #f1f1f1;
   display: flex;
-  align-items: center;
-  gap: 32px;
-  margin-top: 40px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
+  gap: 40px;
 }
 
 .profile-action-btn {
-  background: none;
+  background: transparent;
   border: none;
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 10px;
+  gap: 12px;
+  font-size: 9px;
   font-weight: 900;
-  letter-spacing: 0.2em;
+  letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--text-main);
+  color: #717171;
   cursor: pointer;
-  padding: 0;
-}
-
-.profile-action-btn .material-symbols-outlined {
-  font-size: 18px;
+  transition: color 0.3s ease;
 }
 
 .profile-action-btn:hover {
-  color: var(--accent);
+  color: #000000;
 }
 
-/* Right aligned danger button */
-.profile-action-btn.danger {
-  color: var(--text-muted);
+/* OPTIONS CARDS */
+.profile-options {
+  margin-top: 60px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
 }
 
-.profile-action-btn.danger:hover {
-  color: #dc2626;
+.option-card {
+  background: #ffffff;
+  border: 1px solid #f1f1f1;
+  padding: 40px;
+  transition: all 0.4s ease;
 }
 
-/* Utility */
-.ml-auto {
-  margin-left: auto;
+.option-card:hover {
+  border-color: #000;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
-
-
-/* ================= OPTION ICONS ================= */
 
 .option-head {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 16px;
+  gap: 20px;
+  margin-bottom: 24px;
 }
 
 .option-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #f5f5f5;
+  width: 44px;
+  height: 44px;
+  background: #f9f9f9;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
 }
 
-.option-icon .material-symbols-outlined {
-  font-size: 20px;
-  color: var(--text-main);
+.option-card h4 {
+  font-family: "Oswald", sans-serif;
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #000;
 }
 
-/* Hover effect same as HTML */
-.option-card:hover .option-icon {
-  background: var(--primary);
+.option-card p {
+  font-size: 11px;
+  color: #717171;
+  line-height: 1.6;
+  margin-bottom: 24px;
 }
 
-.option-card:hover .option-icon .material-symbols-outlined {
-  color: #fff;
+.option-card a {
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #000;
+  text-decoration: none;
 }

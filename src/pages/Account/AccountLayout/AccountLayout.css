@@ -1,80 +1,68 @@
-/* ===== ROOT VARIABLES ===== */
-:root {
-    --bg-light: #f9f9f9;
-    --text-main: #000000;
-}
-
 /* ===== MAIN WRAPPER ===== */
 .account-layout {
-    /* max-width: 1440px; */
+    width: 100%;
     margin: 0 auto;
-
-    padding: 48px 32px;
-
+    padding: 80px 48px;
     display: flex;
-    gap: 48px;
-
-    background: var(--bg-light);
-    color: var(--text-main);
+    gap: 80px;
+    background: #ffffff;
+    /* Clean White */
+    color: #000000;
+    /* Deep Black */
+    min-height: 100vh;
 }
 
 /* ===== CONTENT AREA ===== */
 .account-content {
     flex: 1;
     min-width: 0;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 1024px) {
-    .account-layout {
-        padding: 32px 20px;
-    }
-}
-
-
-/* ===== LAYOUT ===== */
-.account-layout {
-    display: flex;
-    gap: 64px;
-}
-
-/* CONTENT */
-.account-content {
-    flex: 1;
     position: relative;
 }
 
 /* ===== MOBILE MENU BUTTON ===== */
 .sidebar-toggle {
     display: none;
-    position: absolute;
-    top: -56px;
-    left: 0;
-
-    background: none;
-    border: none;
+    position: fixed;
+    top: 100px;
+    left: 20px;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #000000;
+    width: 44px;
+    height: 44px;
+    border-radius: 4px;
     cursor: pointer;
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
 }
 
 .sidebar-toggle span {
-    font-size: 28px;
+    font-size: 24px;
 }
 
 /* ===== OVERLAY ===== */
 .sidebar-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(4px);
     z-index: 999;
 }
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
     .account-layout {
+        padding: 40px 24px;
         gap: 0;
+        flex-direction: column;
     }
 
     .sidebar-toggle {
-        display: block;
+        display: flex;
+    }
+
+    .account-content {
+        margin-top: 40px;
     }
 }

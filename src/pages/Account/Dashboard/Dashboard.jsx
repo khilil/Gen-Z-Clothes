@@ -1,124 +1,125 @@
 import "./Dashboard.css";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import * as orderService from "../../../services/orderService";
 
 const Dashboard = () => {
-
-  // 🔥 Get current user from Redux
   const { user } = useSelector((state) => state.auth);
-
-  // 🔥 Dummy state (future real API mate ready)
   const [stats, setStats] = useState({
     totalOrders: 0,
     activeOrders: 0,
     wishlistItems: 0,
   });
+  const [recentOrder, setRecentOrder] = useState(null);
 
-  // 👉 Future ma ahiya real API call muki sako
   useEffect(() => {
-    if (user) {
-      // Example dummy values (replace with real API later)
-      setStats({
-        totalOrders: 12,
-        activeOrders: 1,
-        wishlistItems: 8,
-      });
-    }
+    fetchDashboardData();
   }, [user]);
+
+  const fetchDashboardData = async () => {
+    try {
+      const res = await orderService.getMyOrders();
+      const orders = res.data || [];
+
+      setStats({
+        totalOrders: orders.length,
+        activeOrders: orders.filter(o => o.orderStatus !== 'delivered' && o.orderStatus !== 'cancelled').length,
+        wishlistItems: 5, // Placeholder
+      });
+
+      if (orders.length > 0) {
+        setRecentOrder(orders[0]);
+      }
+    } catch (error) {
+      console.error("Dashboard data fetch failed:", error);
+    }
+  };
 
   return (
     <div className="dashboard">
-
-      {/* WELCOME HEADER */}
+      {/* 🏛️ WELCOME HEADER */}
       <header className="dashboard-header">
         <h1 className="dashboard-title">
-          Welcome back, {user?.name || "User"}!
+          Greeting, {user?.fullName?.split(" ")[0] || "Patron"}
         </h1>
         <p className="dashboard-subtitle">
-          Here's an overview of your recent activity and account status.
+          Account Status: Active // Protocol: Authorized
         </p>
       </header>
 
-      {/* STATS */}
+      {/* 📊 STATS GRID */}
       <section className="dashboard-stats">
         <div className="stat-card">
-          <span className="material-symbols-outlined stat-icon">package_2</span>
-          <span className="stat-meta">Lifetime</span>
+          <span className="stat-meta">Lifetime Activity</span>
+          <span className="material-symbols-outlined stat-icon">database</span>
           <h3 className="stat-value">{stats.totalOrders}</h3>
-          <p className="stat-label">Total Orders</p>
+          <p className="stat-label">Total Archives</p>
         </div>
 
         <div className="stat-card">
-          <span className="material-symbols-outlined stat-icon">
-            local_shipping
-          </span>
-          <span className="stat-dot" />
+          <span className="stat-meta">In-Transit</span>
+          <span className="material-symbols-outlined stat-icon">sensors</span>
           <h3 className="stat-value">{stats.activeOrders}</h3>
-          <p className="stat-label">Active Orders</p>
+          <p className="stat-label">Active Signals</p>
         </div>
 
         <div className="stat-card">
-          <span className="material-symbols-outlined stat-icon">
-            favorite_border
-          </span>
-          <span className="stat-meta">New</span>
+          <span className="stat-meta">Curation</span>
+          <span className="material-symbols-outlined stat-icon">token</span>
           <h3 className="stat-value">{stats.wishlistItems}</h3>
-          <p className="stat-label">Wishlist Items</p>
+          <p className="stat-label">Wishlist Nodes</p>
         </div>
       </section>
 
-      {/* RECENT ORDERS */}
+      {/* 📦 RECENT ORDER */}
       <section className="dashboard-section">
         <div className="section-head">
-          <h2>Recent Orders</h2>
-          <a href="/account/orders">View All Orders</a>
+          <h2>Latest Protocol</h2>
+          <Link to="/account/orders">Access All Archives</Link>
         </div>
 
-        <div className="order-row">
-          <div className="order-left">
-            <img
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwsZp-Pn1cf91xCfR0zKcdmcBt88piN2EqmVP9zCCl3Yx0ESZ63MgKxhyhxaFIQpCOEyIa15Iqm4aMMPB_8her15N4ANWbU2CPwY6ECoCf4-9Rfizxu3FWAeZIISVUbRgKZneU-UZhsbxixrWytLLNqlH7PDRkDdZjtTnkqSUAHbMRkc6Mfb1mfBVAxFYjhUaWAPwRZ0uDBiiVRdLxDrRpJy2pRAAM5QjzAgw1T5zZXk7S8Rc3BUrL9aLhcxVFv3Q9Krw26dUDkay1"
-              alt="product"
-            />
-            <div>
-              <p className="order-id">Order #MM-90214</p>
-              <h4>Premium Oxford Shirt &amp; 1 more</h4>
-              <p className="order-date">Placed on 18 Oct, 2024</p>
+        {recentOrder ? (
+          <div className="order-row">
+            <div className="order-left">
+              <img
+                src={recentOrder.items?.[0]?.imageURL || "https://placeholder.com/100"}
+                alt="Product"
+              />
+              <div className="order-content-main">
+                <p className="order-id-small">Archive #{recentOrder._id.slice(-8).toUpperCase()}</p>
+                <h4>{recentOrder.items?.[0]?.title} {recentOrder.items?.length > 1 && `& ${recentOrder.items.length - 1} More`}</h4>
+                <p className="order-date-small font-mono">Timestamp: {new Date(recentOrder.createdAt).toLocaleDateString()}</p>
+              </div>
             </div>
-          </div>
 
-          <div className="order-right">
-            <div>
-              <span className="badge shipped">Shipped</span>
-              <p className="small">Arrival by Thu, 24 Oct</p>
+            <div className="order-right">
+              <span className="badge-shipped">{recentOrder.orderStatus}</span>
+              <Link to="/account/orders" className="track-btn-premium">Trace Package</Link>
             </div>
-            <button className="btn-primary">Track Order</button>
           </div>
-        </div>
+        ) : (
+          <p className="text-white/20 text-[10px] uppercase tracking-widest font-black py-10">No recent protocol detected.</p>
+        )}
       </section>
 
-      {/* RECENTLY VIEWED */}
+      {/* 🖼️ CURATED GRID (Recently Viewed Placeholder) */}
       <section className="dashboard-section">
-        <h2>Recently Viewed</h2>
+        <div className="section-head">
+          <h2>Identity Context</h2>
+          <p className="text-white/10 text-[8px] uppercase tracking-widest font-black self-end mb-1">Recently Synchronized</p>
+        </div>
 
         <div className="recent-grid">
-          <div className="recent-card">
-            <img
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwsZp-Pn1cf91xCfR0zKcdmcBt88piN2EqmVP9zCCl3Yx0ESZ63MgKxhyhxaFIQpCOEyIa15Iqm4aMMPB_8her15N4ANWbU2CPwY6ECoCf4-9Rfizxu3FWAeZIISVUbRgKZneU-UZhsbxixrWytLLNqlH7PDRkDdZjtTnkqSUAHbMRkc6Mfb1mfBVAxFYjhUaWAPwRZ0uDBiiVRdLxDrRpJy2pRAAM5QjzAgw1T5zZXk7S8Rc3BUrL9aLhcxVFv3Q9Krw26dUDkay1"
-              alt=""
-            />
-            <p className="recent-name">Linen Blazer</p>
-            <p className="recent-price">₹8,990</p>
-          </div>
-
-          <div className="recent-card">
-            <img
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuANt1UV_27JxD0QhRvqnX5zP1F_g8Cxd5nKWvbq_eMzCTBPe74Z05DHTqm4ZAPp-_5tFfFAJw6Lrh8GJO5E549XCShDl3DslSyTEZPoZDPcRGWAlBowfgvRG3YDkO2eok1vMlgXmDSbCqSlJ38JDIYMQF06t_zYBRukNZCLnQ0CGuhVBJxQDxdYHC6aObPjqxX_6_PjzdP5yUBt7R7XrICDG9I-1U6wVe95Dd7WM0qnqTBIqwYCx2yQ8SXrH5F7qpNqS_o9IieXa0N2"
-              alt=""
-            />
-            <p className="recent-name">Slim Fit Chinos</p>
-            <p className="recent-price">₹3,490</p>
-          </div>
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="recent-card">
+              <div className="recent-image-wrapper">
+                <img src={`https://picsum.photos/seed/${i + 42}/400/600`} alt="Recent" />
+              </div>
+              <p className="recent-name">Item Node 00{i}</p>
+              <p className="recent-price">₹X,XXX</p>
+            </div>
+          ))}
         </div>
       </section>
     </div>

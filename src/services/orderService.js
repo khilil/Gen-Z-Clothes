@@ -71,3 +71,15 @@ export const updateOrderStatus = async (orderId, status) => {
         throw error.response?.data || error;
     }
 };
+
+/**
+ * 🔍 Get Order By ID
+ */
+export const getOrderById = async (orderId) => {
+    try {
+        const response = await api.get(`/orders/${orderId}`);
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || error;
+    }
+};

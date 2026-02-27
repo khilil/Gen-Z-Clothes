@@ -1,14 +1,17 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import "./Profile.css";
 
 const Profile = () => {
+  const { user } = useSelector((state) => state.auth);
+
   const initialProfile = {
-    fullName: "Vikram Sharma",
-    email: "vikram.sharma@domain.com",
-    mobile: "+91 98765 43210",
+    fullName: user?.fullName || "Not Provided",
+    email: user?.email || "Not Provided",
+    mobile: user?.phone || "+91 XXXXX XXXXX",
     password: "••••••••••••",
-    dob: "1992-10-12",
-    gender: "Male",
+    dob: "1998-05-24", // Placeholder
+    gender: "Not Specified",
   };
 
   const [isEditing, setIsEditing] = useState(false);
@@ -33,56 +36,56 @@ const Profile = () => {
 
   return (
     <section className="profile-page">
-      {/* HEADER */}
+      {/* 🏛️ HEADER */}
       <div className="profile-page-header">
-        <h2 className="profile-page-title">Profile Settings</h2>
+        <h2 className="profile-page-title">Identity Registry</h2>
         <p className="profile-page-subtitle">
           {isEditing
-            ? "Edit your personal details below."
-            : "Manage your personal information and account security."}
+            ? "Modification in progress. Ensure data integrity before synchronization."
+            : "Authorized access to personal parameters and security protocols."}
         </p>
       </div>
 
-      {/* CARD */}
+      {/* 📑 DATA CARD */}
       <div className="profile-card">
-        <h3 className="profile-card-title">Personal Details</h3>
+        <h3 className="profile-card-title">Principal Parameters</h3>
 
         {!isEditing ? (
           /* ================= VIEW MODE ================= */
           <>
             <div className="profile-grid">
-              <ViewField label="Full Name" value={profile.fullName} />
-              <ViewField label="Email Address" value={profile.email} />
-              <ViewField label="Mobile Number" value={profile.mobile} />
-              <ViewField label="Account Password" value={profile.password} />
+              <ViewField label="Identity Index" value={profile.fullName} />
+              <ViewField label="Communication Node" value={profile.email} />
+              <ViewField label="Mobile Signal" value={profile.mobile} />
+              <ViewField label="Access Protocol" value={profile.password} />
               <ViewField
-                label="Date of Birth"
+                label="Existence Timestamp"
                 value={new Date(profile.dob).toLocaleDateString("en-GB", {
                   day: "numeric",
                   month: "long",
                   year: "numeric",
                 })}
               />
-              <ViewField label="Gender" value={profile.gender} />
+              <ViewField label="Genetic Trait" value={profile.gender} />
             </div>
 
-            <div className="profile-actions profile-actions-view">
+            <div className="profile-actions-view">
               <button
                 className="profile-action-btn"
                 onClick={() => setIsEditing(true)}
               >
-                <span className="material-symbols-outlined">edit</span>
-                Edit Profile
+                <span className="material-symbols-outlined">edit_note</span>
+                Modify Registry
               </button>
 
               <button className="profile-action-btn">
-                <span className="material-symbols-outlined">lock_reset</span>
-                Update Password
+                <span className="material-symbols-outlined">shield_lock</span>
+                Reset Protocol
               </button>
 
               <button className="profile-action-btn danger ml-auto">
-                <span className="material-symbols-outlined">delete</span>
-                Deactivate Account
+                <span className="material-symbols-outlined">delete_forever</span>
+                Purge Account
               </button>
             </div>
 
@@ -92,34 +95,34 @@ const Profile = () => {
           <form onSubmit={handleSave}>
             <div className="profile-grid">
               <EditField
-                label="Full Name"
+                label="Identity Index"
                 name="fullName"
                 value={draft.fullName}
                 onChange={handleChange}
               />
 
               <EditField
-                label="Email Address"
+                label="Communication Node"
                 value={draft.email}
                 disabled
               />
 
               <EditField
-                label="Mobile Number"
+                label="Mobile Signal"
                 name="mobile"
                 value={draft.mobile}
                 onChange={handleChange}
               />
 
               <EditField
-                label="Account Password"
+                label="Access Protocol"
                 value={draft.password}
                 disabled
                 type="password"
               />
 
               <EditField
-                label="Date of Birth"
+                label="Existence Timestamp"
                 type="date"
                 name="dob"
                 value={draft.dob}
@@ -127,7 +130,7 @@ const Profile = () => {
               />
 
               <div className="profile-field">
-                <label>Gender</label>
+                <label>Genetic Trait</label>
                 <select
                   name="gender"
                   value={draft.gender}
@@ -135,62 +138,59 @@ const Profile = () => {
                 >
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
-                  <option value="Other">Other</option>
-                  <option value="Prefer not to say">
-                    Prefer not to say
-                  </option>
+                  <option value="Non-binary">Non-binary</option>
+                  <option value="Redacted">Redacted</option>
                 </select>
               </div>
             </div>
 
             <div className="profile-actions">
               <button type="submit" className="profile-save-btn">
-                SAVE CHANGES
+                SYNCHRONIZE
               </button>
               <button
                 type="button"
                 className="profile-cancel-btn"
                 onClick={handleCancel}
               >
-                CANCEL
+                ABORT
               </button>
             </div>
           </form>
         )}
       </div>
 
-      {/* OPTIONS */}
+      {/* 🔐 OPTIONS */}
       {!isEditing && (
         <div className="profile-options">
           <div className="option-card">
             <div className="option-head">
               <div className="option-icon">
-                <span className="material-symbols-outlined">news</span>
+                <span className="material-symbols-outlined">alternate_email</span>
               </div>
-              <h4>Email Preferences</h4>
+              <h4>Signal Preferences</h4>
             </div>
 
             <p>
-              Manage how you receive marketing updates and order notifications.
+              Control incoming data regarding marketing synchronizations and transaction alerts.
             </p>
-            <a href="#">Configure</a>
+            <a href="#">Configure Signals</a>
           </div>
 
           <div className="option-card">
             <div className="option-head">
               <div className="option-icon">
-                <span className="material-symbols-outlined">security</span>
+                <span className="material-symbols-outlined">fingerprint</span>
               </div>
-              <h4>Security Settings</h4>
+              <h4>Biometric Security</h4>
             </div>
 
             <p>
-              Manage two-factor authentication and active login sessions.
+              Multi-factor authentication and management of active session traces across nodes.
             </p>
-            <a href="#">Manage</a>
+            <a href="#">Verify Identity</a>
           </div>
         </div>
-
       )}
     </section>
   );
