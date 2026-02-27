@@ -22,7 +22,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     ];
 
     return (
-        <aside className={`sidebar lg:w-64 flex-shrink-0 ${isOpen ? "open" : ""}`}>
+        <aside className="sidebar hidden lg:block lg:w-64 flex-shrink-0">
             <div className="sidebar-inner space-y-1 mb-8">
                 {navLinks.map((link) => (
                     <NavLink
