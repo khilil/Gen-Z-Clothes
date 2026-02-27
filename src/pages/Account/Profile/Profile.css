@@ -240,3 +240,56 @@
   color: #000;
   text-decoration: none;
 }
+
+/* RESPONSIVE STYLES */
+@media (max-width: 1024px) {
+  .profile-grid {
+    column-gap: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-page-header {
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+  }
+
+  .profile-page-title {
+    font-size: 40px;
+    letter-spacing: -1px;
+  }
+
+  .profile-card {
+    padding: 40px 20px;
+  }
+
+  .profile-grid {
+    grid-template-columns: 1fr;
+    row-gap: 32px;
+  }
+
+  .profile-actions-view,
+  .profile-actions {
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .profile-action-btn.ml-auto {
+    margin-left: 0;
+  }
+
+  .profile-save-btn,
+  .profile-cancel-btn {
+    width: 100%;
+  }
+
+  .profile-options {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .option-card {
+    padding: 30px 20px;
+  }
+}

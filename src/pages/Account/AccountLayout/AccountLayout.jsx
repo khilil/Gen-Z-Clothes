@@ -18,15 +18,15 @@ const AccountLayout = () => {
   };
 
   const navLinks = [
-    { to: "/account/dashboard", label: "Dashboard", icon: "grid_view" },
-    { to: "/account/orders", label: "My Orders", icon: "shopping_cart" },
-    { to: "/account/wishlist", label: "Wishlist", icon: "favorite" },
-    { to: "/account/addresses", label: "Address Book", icon: "location_on" },
-    { to: "/account/profile", label: "Profile Settings", icon: "settings" },
+    { to: "/account/dashboard", label: "Dashboard", shortLabel: "Dashboard", icon: "grid_view" },
+    { to: "/account/orders", label: "My Orders", shortLabel: "Orders", icon: "shopping_cart" },
+    { to: "/account/wishlist", label: "Wishlist", shortLabel: "Wishlist", icon: "favorite" },
+    { to: "/account/addresses", label: "Address Book", shortLabel: "Address", icon: "location_on" },
+    { to: "/account/profile", label: "Profile Settings", shortLabel: "Profile", icon: "settings" },
   ];
 
   return (
-    <div className="min-h-screen bg-white text-black pt-20 lg:pt-0">
+    <div className="min-h-screen bg-white text-black pt-20 lg:pt-32">
       {/* MOBILE DRAWER OVERLAY */}
       <div
         className={`fixed inset-0 bg-black/60 z-[120] transition-opacity duration-300 ${isDrawerOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
@@ -99,15 +99,15 @@ const AccountLayout = () => {
                 }`
               }
             >
-              {link.label.split(' ')[0]} {/* Use first word for brevity on pills */}
+              {link.shortLabel}
             </NavLink>
           ))}
         </div>
       </div>
 
       {/* MAIN CONTENT AREA */}
-      <main className="max-w-7xl mx-auto px-4 md:px-8 py-8 lg:py-12">
-        <div className="flex flex-col lg:flex-row gap-12">
+      <main className="max-w-[1440px] mx-auto px-4 md:px-8 py-8 lg:py-0">
+        <div className="flex flex-col lg:flex-row gap-12 lg:gap-20">
           <Sidebar />
           <section className="flex-1">
             <Outlet />

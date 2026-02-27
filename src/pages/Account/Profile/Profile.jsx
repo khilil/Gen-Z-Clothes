@@ -1,9 +1,18 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../../../features/auth/authSlice";
 import "./Profile.css";
 
 const Profile = () => {
   const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await dispatch(logoutUser());
+    navigate("/");
+  };
 
   const initialProfile = {
     fullName: user?.fullName || "Not Provided",
@@ -83,9 +92,9 @@ const Profile = () => {
                 Reset Protocol
               </button>
 
-              <button className="profile-action-btn danger ml-auto">
-                <span className="material-symbols-outlined">delete_forever</span>
-                Purge Account
+              <button className="profile-action-btn danger ml-auto" onClick={handleLogout}>
+                <span className="material-symbols-outlined">logout</span>
+                Terminal Shutdown
               </button>
             </div>
 
