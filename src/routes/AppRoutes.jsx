@@ -12,6 +12,7 @@ import Dashboard from "../pages/Account/Dashboard/Dashboard";
 import Wishlist from "../pages/Account/Wishlist/Wishlist";
 import Addresses from "../pages/Account/Addresses/Addresses";
 import Profile from "../pages/Account/Profile/Profile";
+import OrderDetails from "../pages/Account/OrderDetails";
 import About from "../pages/About";
 import ProductDetailPage from "../pages/ProductDetail/ProductDetailPage/ProductDetailPage";
 import CustomizePage from "../pages/CustomizeShopPage/CustomizePage";
@@ -124,6 +125,7 @@ export default function AppRoutes() {
                     <Route index element={<Navigate to="orders" replace />} />
                     <Route path="dashboard" element={<Dashboard />} />
                     <Route path="orders" element={<Orders />} />
+                    <Route path="orders/:orderId" element={<OrderDetails />} />
                     <Route path="wishlist" element={<Wishlist />} />
                     <Route path="addresses" element={<Addresses />} />
                     <Route path="profile" element={<Profile />} />

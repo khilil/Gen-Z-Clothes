@@ -3,16 +3,19 @@ import "./Wishlist.css";
 const Wishlist = () => {
   return (
     <div className="wishlist">
-      {/* HEADER */}
-      <header className="wishlist-header">
-        <div>
-          <h1 className="wishlist-title">My Wishlist</h1>
-          <p className="wishlist-subtitle">
-            You have 8 items saved in your collection.
+      {/* 🏛️ ARCHIVES: SAVED PROTOCOLS */}
+      <header className="mb-20 border-b-2 border-black pb-8">
+        <h1 className="font-[Oswald] text-7xl font-bold uppercase tracking-tighter leading-[0.85]">
+          Wishlist
+        </h1>
+        <div className="flex justify-between items-end mt-4">
+          <p className="text-[10px] uppercase tracking-[0.4em] font-black text-black/40">
+            Saved Collection & Desired Assets
           </p>
+          <button className="text-[9px] font-black uppercase tracking-widest px-8 py-4 bg-black text-white hover:bg-gray-800 transition-all duration-500 shadow-lg">
+            Deploy All to Cart
+          </button>
         </div>
-
-        <button className="btn-outline">Add All to Cart</button>
       </header>
 
       {/* GRID */}

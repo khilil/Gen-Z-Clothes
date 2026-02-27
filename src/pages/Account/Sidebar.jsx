@@ -13,45 +13,45 @@ const Sidebar = ({ isOpen, onClose }) => {
         if (onClose) onClose();
     };
 
+    const navLinks = [
+        { to: "/account/dashboard", label: "Dashboard", icon: "grid_view" },
+        { to: "/account/orders", label: "My Orders", icon: "shopping_cart" },
+        { to: "/account/wishlist", label: "Wishlist", icon: "favorite" },
+        { to: "/account/addresses", label: "Address Book", icon: "location_on" },
+        { to: "/account/profile", label: "Profile Settings", icon: "settings" },
+    ];
+
     return (
-        <aside className={`sidebar ${isOpen ? "open" : ""}`}>
-            <div className="sidebar-inner">
-
-                <h1 className="sidebar-title">My Account</h1>
-
-                <nav className="sidebar-nav">
-                    <NavLink to="/account/dashboard" className="nav-item" onClick={onClose}>
-                        <span className="material-symbols-outlined">grid_view</span>
-                        Dashboard
+        <aside className={`sidebar lg:w-64 flex-shrink-0 ${isOpen ? "open" : ""}`}>
+            <div className="sidebar-inner space-y-1 mb-8">
+                {navLinks.map((link) => (
+                    <NavLink
+                        key={link.to}
+                        to={link.to}
+                        onClick={onClose}
+                        className={({ isActive }) =>
+                            `sidebar-link flex items-center gap-4 px-6 py-4 rounded-xl transition-all group ${isActive
+                                ? "active"
+                                : "text-muted hover:bg-gray-50 hover:text-black"
+                            }`
+                        }
+                    >
+                        <span className="material-symbols-outlined text-xl">
+                            {link.icon}
+                        </span>
+                        <span className="text-[11px] font-black uppercase tracking-widest">{link.label}</span>
                     </NavLink>
+                ))}
 
-                    <NavLink to="/account/orders" className="nav-item" onClick={onClose}>
-                        <span className="material-symbols-outlined">package_2</span>
-                        Order History
-                    </NavLink>
-
-                    <NavLink to="/account/wishlist" className="nav-item" onClick={onClose}>
-                        <span className="material-symbols-outlined">favorite</span>
-                        Wishlist
-                    </NavLink>
-
-                    <NavLink to="/account/addresses" className="nav-item" onClick={onClose}>
-                        <span className="material-symbols-outlined">location_on</span>
-                        Addresses
-                    </NavLink>
-
-                    <NavLink to="/account/profile" className="nav-item" onClick={onClose}>
-                        <span className="material-symbols-outlined">person</span>
-                        Profile Settings
-                    </NavLink>
-
-                    <div className="sidebar-divider" />
-
-                    <button className="nav-item logout" onClick={handleLogout}>
-                        <span className="material-symbols-outlined">logout</span>
-                        Sign Out
+                <div className="pt-8 border-t border-gray-100">
+                    <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-4 px-6 py-4 text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                    >
+                        <span className="material-symbols-outlined text-xl">logout</span>
+                        <span className="text-[11px] font-black uppercase tracking-widest">Logout</span>
                     </button>
-                </nav>
+                </div>
             </div>
         </aside>
     );

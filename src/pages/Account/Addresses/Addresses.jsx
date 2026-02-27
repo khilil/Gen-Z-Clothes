@@ -40,11 +40,20 @@ const Addresses = () => {
     return (
         <div className="addresses">
 
-            <header className="addresses-header">
-                <h1>Saved Addresses</h1>
-                <p>
-                    Manage your shipping addresses for a faster checkout experience.
-                </p>
+            {/* 📍 ARCHIVES: GEOLOCATION REGISTRY */}
+            <header className="mb-20 border-b-2 border-black pb-10 flex justify-between items-end">
+                <div>
+                    <h1 className="font-[Oswald] text-7xl font-bold uppercase tracking-tighter leading-[0.85]">
+                        Addresses
+                    </h1>
+                    <p className="text-[10px] uppercase tracking-[0.4em] font-black text-black/40 mt-4">
+                        Geolocation Registry & Shipping Protocols
+                    </p>
+                </div>
+
+                <div className="hidden md:block text-[8px] uppercase tracking-widest font-black text-black/20">
+                    Active Nodes: {addresses.length}
+                </div>
             </header>
 
             <div className="addresses-grid">
