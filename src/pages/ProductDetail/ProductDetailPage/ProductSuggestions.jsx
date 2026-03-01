@@ -42,14 +42,14 @@ export const ProductSuggestions = ({ product }) => {
 
           <div className="flex gap-2 md:gap-4">
             <button
-              onClick={() => scroll("right")}
+              onClick={() => scroll("left")}
               className="w-10 h-10 md:w-12 md:h-12 border border-white/10 flex items-center justify-center hover:border-white transition"
             >
               <span className="material-symbols-outlined !text-sm md:!text-base">west</span>
             </button>
 
             <button
-              onClick={() => scroll("left")}
+              onClick={() => scroll("right")}
               className="w-10 h-10 md:w-12 md:h-12 border border-white/10 flex items-center justify-center hover:border-white transition"
             >
               <span className="material-symbols-outlined !text-sm md:!text-base">east</span>

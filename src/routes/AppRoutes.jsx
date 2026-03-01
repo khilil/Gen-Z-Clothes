@@ -31,6 +31,7 @@ import AdminOrders from "../Admin/Pages/Orders/AdminOrders";
 import AdminOrderDetails from "../Admin/Pages/Orders/AdminOrderDetails";
 import AdminCustomers from "../Admin/Pages/Customer/AdminCustomers";
 import AdminCustomerDetail from "../Admin/Pages/Customer/AdminCustomerDetail";
+import AdminAnalytics from "../Admin/Pages/Analytics/AdminAnalytics";
 import AdminCategories from "../Admin/Pages/Category/AdminCategories";
 import LoginAuth from "../Auth/Login";
 import ProtectedRoute from "../components/ProtectedRoute";
@@ -38,6 +39,8 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import AddProductLayout from "../Admin/Pages/Product/AddProductLayout";
 import UpdateProductLayout from "../Admin/Pages/Product/UpdateProductLayout";
 import AttributeManagement from "../Admin/Pages/Attributes/AttributeManagement";
+import NewArrivals from "../pages/NewArrivals/NewArrivals";
+import SalePage from "../pages/Sale/SalePage";
 
 
 export default function AppRoutes() {
@@ -59,7 +62,8 @@ export default function AppRoutes() {
                 <Route path="orders" element={<AdminOrders />} />
                 <Route path="categories" element={<AdminCategories />} />
                 <Route path="attributes" element={<AttributeManagement />} />
-                <Route path="/admin/customers" element={<AdminCustomers />} />
+                <Route path="customers" element={<AdminCustomers />} />
+                <Route path="analytics" element={<AdminAnalytics />} />
             </Route>
 
             <Route path="/admin/orders/:orderId" element={
@@ -99,6 +103,8 @@ export default function AppRoutes() {
                 <Route path="/category/:slug" element={<CategoryPage />} />
                 <Route path="/shop/:category" element={<ProductListing />} />
                 <Route path="/product/:slug" element={<ProductDetailPage />} />
+                <Route path="/new-arrivals" element={<NewArrivals />} />
+                <Route path="/sale" element={<SalePage />} />
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/checkout/details" element={<CheckoutDetails />} />

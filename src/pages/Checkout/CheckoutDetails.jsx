@@ -148,10 +148,6 @@ export default function CheckoutDetails() {
                 </aside>
             </main>
 
-            {/* FOOTER */}
-            <footer className="checkout-footer">
-                © 2024 MODERN MEN. Crafted for the Modern Indian Gentleman.
-            </footer>
         </div>
     );
 }

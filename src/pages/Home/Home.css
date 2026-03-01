@@ -1,98 +1,32 @@
-/* SECTION */
-.urban {
-  position: relative;
-  height: 800px;
+.home-page {
+  background-color: #000;
+  color: #fff;
   width: 100%;
-  overflow: hidden;
-  background: #000;
+  overflow-x: hidden;
 }
 
-/* BACKGROUND IMAGE */
-.urban-bg {
-  position: absolute;
-  inset: 0;
-  background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAXZhniQdec2wzTN85Y96dKi87Yt4THSO9wcpzep3V3Eyqgcu9XeI7TwABaUW_nsgxJtHPLjxT3LbAbRQgXEPHR9IStKAt0JMY0DOJg024RSzXhpiqnVNU_BnoE1jeN-HFLWT8pf3k_lH02ATKFzZv3icouvyCKMlUq4xrfTOwu3oahebgmq3bGbwxBqBkFesSHp2fM5PALrh2TIAxM-SmqaNm2Xsoy8MCjSC8_GWEP4Dv5p52mbY1xhP9UQrIedL_qF72iHjD-eUYA");
-  background-size: cover;
-  background-position: center;
-  filter: grayscale(100%);
-  opacity: 0.55;
-}
-
-/* CONTENT WRAPPER */
-.urban-content {
+/* Global Section Spacing */
+section {
   position: relative;
-  z-index: 2;
-  height: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 40px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  text-align: center;
-  color: #ffffff;
 }
 
-/* TAG */
-.urban-tag {
-  font-size: 11px;
-  font-weight: 900;
-  letter-spacing: 0.6em;
-  color: #d4c4b1;
-  margin-bottom: 32px;
-  text-transform: uppercase;
-}
-
-/* TITLE */
-.urban-title {
-  font-family: "Oswald", sans-serif;
-  font-size: clamp(64px, 10vw, 140px);
-  line-height: 0.9;
-  letter-spacing: -2px;
-  margin-bottom: 36px;
-}
-
-/* PARAGRAPH */
-.urban-text {
-  max-width: 640px;
-  font-size: 18px;
-  line-height: 1.7;
-  opacity: 0.75;
-  margin-bottom: 48px;
-}
-
-/* BUTTON */
-.urban-btn {
-  display: inline-block;
-  padding: 22px 56px;
-  background: #ffffff;
+/* Custom Selection Color for Premium Feel */
+::selection {
+  background: rgba(255, 255, 255, 0.9);
   color: #000;
-  font-size: 11px;
-  font-weight: 900;
-  letter-spacing: 0.4em;
-  text-decoration: none;
-  text-transform: uppercase;
-  transition: all 0.3s ease;
 }
 
-.urban-btn:hover {
-  background: #d4c4b1;
+/* Smooth Fade-in for the whole page */
+.home-page {
+  animation: fadeIn 1s ease-out;
 }
 
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .urban {
-    height: 640px;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
 
-  .urban-title {
-    font-size: 64px;
-  }
-
-  .urban-text {
-    font-size: 16px;
+  to {
+    opacity: 1;
   }
 }

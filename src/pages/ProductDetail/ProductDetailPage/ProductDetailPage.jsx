@@ -1,22 +1,34 @@
 import { useEffect, useState, useMemo } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import { ProductSuggestions } from "./ProductSuggestions";
 import Reviews from "./Reviews";
 import CollectiveFooter from "../../../components/common/CollectiveFooter/CollectiveFooter";
 import { useCart } from "../../../context/CartContext";
 import CustomizationModal from "./CustomizationPop_popModel";
 import { getProductBySlug } from "../../../services/productService";
-import { Link } from "lucide-react";
+// Replacing toast dependency with local notification state
 
 export default function ProductDetailPage() {
     const { slug } = useParams();
     const [product, setProduct] = useState(null);
     const [activeImage, setActiveImage] = useState(0);
     const [selectedSize, setSelectedSize] = useState("");
+    const [selectedColor, setSelectedColor] = useState(null);
+    const [pincode, setPincode] = useState("");
+    const [pincodeStatus, setPincodeStatus] = useState(null);
     const [openAccordion, setOpenAccordion] = useState('fabric');
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [notification, setNotification] = useState(null); // Local notification state
+    const [isAdded, setIsAdded] = useState(false);
+    const [isQuickBuying, setIsQuickBuying] = useState(false);
+
+    const showNotification = (message, type = "error") => {
+        setNotification({ message, type });
+        setTimeout(() => setNotification(null), 3000);
+    };
 
     const { addToCart } = useCart();
 
@@ -42,14 +54,19 @@ export default function ProductDetailPage() {
         setIsLoading(true);
         getProductBySlug(slug)
             .then(res => {
+                if (!res || !res.data) {
+                    console.error("Invalid product response:", res);
+                    setIsLoading(false);
+                    return;
+                }
                 const fetchedProduct = res.data;
                 setProduct(fetchedProduct);
 
                 if (fetchedProduct.variants?.length > 0) {
                     const firstVariant = fetchedProduct.variants[0];
                     setSelectedVariant(firstVariant);
+                    setSelectedColor(firstVariant.color);
                     setSelectedSize(firstVariant.size?.name || "");
-                    console.log("Initial variant selected:", firstVariant._id || firstVariant.id);
                 }
                 setIsLoading(false);
             })
@@ -61,7 +78,7 @@ export default function ProductDetailPage() {
 
     const handleAddToBag = () => {
         if (!selectedVariant) {
-            toast.error("Please select a size first");
+            showNotification("Please select a size first");
             return;
         }
         // CRITICAL: We use SKU as the identifier because _ids can be unstable during product updates
@@ -70,43 +87,140 @@ export default function ProductDetailPage() {
             size: selectedSize,
             color: selectedVariant.color?.name
         });
+
+        // Trigger local success animation
+        setIsAdded(true);
+        setTimeout(() => setIsAdded(false), 2000);
     };
 
     const handleQuickBuy = () => {
-        if (!product || !selectedVariant) return;
-        navigate("/checkout", {
-            state: {
-                directBuy: {
-                    productId: product._id,
-                    variantId: selectedVariant.sku, // Use stable SKU
-                    quantity: 1,
-                    title: product.title,
-                    price: product.price,
-                    image: selectedVariant.images?.[0]?.url || product.images?.[0]?.url,
-                    size: selectedSize
+        if (!product || !selectedVariant) {
+            showNotification("Please select a size first");
+            return;
+        }
+
+        setIsQuickBuying(true);
+
+        // Minimal delay for visual feedback before navigation
+        setTimeout(() => {
+            navigate("/checkout", {
+                state: {
+                    directBuy: {
+                        productId: product._id,
+                        variantId: selectedVariant.sku, // Use stable SKU
+                        quantity: 1,
+                        title: product.title,
+                        price: product.price,
+                        image: selectedVariant.images?.[0]?.url || product.images?.[0]?.url,
+                        size: selectedSize
+                    }
                 }
-            }
-        });
+            });
+            setIsQuickBuying(false);
+        }, 800);
     };
 
     const handleSizeSelect = (v) => {
         setSelectedVariant(v);
         setSelectedSize(v.size?.name);
+
+        // SYNC IMAGE: If this variant has images, show the first one
+        if (v.images && v.images.length > 0) {
+            // Find the index of this image in the main 'images' array
+            const imgUrl = v.images[0].url;
+            const fullIndex = images.findIndex(url => url === imgUrl);
+            if (fullIndex !== -1) {
+                setActiveImage(fullIndex);
+            }
+        }
+    };
+
+    const handlePincodeCheck = () => {
+        if (!pincode || pincode.length !== 6 || isNaN(pincode)) {
+            showNotification("Please enter a valid 6-digit numeric pincode");
+            return;
+        }
+
+        setPincodeStatus("checking");
+
+        // Simulate API delay
+        setTimeout(() => {
+            // Mock logic: pincodes starting with '0' or '9' are non-serviceable
+            if (pincode.startsWith('0') || pincode.startsWith('9')) {
+                setPincodeStatus("unserviceable");
+                showNotification("Sorry, we do not ship to this pincode yet", "error");
+            } else {
+                setPincodeStatus("available");
+                showNotification("Delivery available to " + pincode, "success");
+            }
+        }, 1200);
     };
 
     // Extract all images from all variants
     const images = useMemo(() => {
-        if (!product) return [];
-        const allImgs = [];
-        product.variants?.forEach(v => {
-            v.images?.forEach(img => {
-                if (img.url && !allImgs.includes(img.url)) {
-                    allImgs.push(img.url);
-                }
+        if (!product || !selectedColor) {
+            if (!product) return ["https://placehold.co/600x800/121212/white?text=No+Image"];
+            // Fallback to all images if no color selected (though one should be selected by default)
+            const allImgs = [];
+            product.variants?.forEach(v => {
+                v.images?.forEach(img => {
+                    if (img.url && !allImgs.includes(img.url)) {
+                        allImgs.push(img.url);
+                    }
+                });
             });
+            return allImgs.length > 0 ? allImgs : ["https://placehold.co/600x800/121212/white?text=No+Image"];
+        }
+
+        const colorImgs = [];
+        product.variants?.forEach(v => {
+            if ((v.color?._id || v.color?.name) === (selectedColor._id || selectedColor.name)) {
+                v.images?.forEach(img => {
+                    if (img.url && !colorImgs.includes(img.url)) {
+                        colorImgs.push(img.url);
+                    }
+                });
+            }
         });
-        return allImgs.length > 0 ? allImgs : ["https://placehold.co/600x800/121212/white?text=No+Image"];
+
+        return colorImgs.length > 0 ? colorImgs : ["https://placehold.co/600x800/121212/white?text=No+Image"];
+    }, [product, selectedColor]);
+
+    // Unique colors from variants
+    const uniqueColors = useMemo(() => {
+        if (!product || !product.variants) return [];
+        const colors = [];
+        const seen = new Set();
+        product.variants.forEach(v => {
+            // Support both populated objects and ID strings
+            const col = v.color;
+            if (!col) return;
+
+            const colorId = typeof col === 'object' ? (col._id || col.name) : col;
+            if (colorId && !seen.has(colorId)) {
+                seen.add(colorId);
+                colors.push(typeof col === 'object' ? col : { _id: col, name: 'Standard', hexCode: '#000000' });
+            }
+        });
+        return colors;
     }, [product]);
+
+    // Filtered variants based on selected color
+    const filteredVariants = useMemo(() => {
+        if (!product || !product.variants || !selectedColor) return [];
+        return product.variants.filter(v => (v.color?._id || v.color?.name) === (selectedColor._id || selectedColor.name));
+    }, [product, selectedColor]);
+
+    const handleColorSelect = (color) => {
+        setSelectedColor(color);
+        setActiveImage(0); // Reset gallery
+        // Automatically select the first available size for this color
+        const firstAvailable = product.variants.find(v => (v.color?._id || v.color?.name) === (color._id || color.name));
+        if (firstAvailable) {
+            setSelectedVariant(firstAvailable);
+            setSelectedSize(firstAvailable.size?.name);
+        }
+    };
 
     // Format sizes specifically from variants
     const variants = product?.variants || [];
@@ -135,11 +249,11 @@ export default function ProductDetailPage() {
 
     return (
         <main className="pt-20 bg-[#0a0a0a] text-white selection:bg-[#d4c4b1] selection:text-black overflow-x-hidden">
-            <div className="max-w-[1920px] mx-auto px-4 sm:px-8 md:px-12 py-6 md:py-12">
-                <div className="flex flex-col lg:flex-row gap-10 lg:gap-16">
-                    <section className="w-full lg:w-[60%] xl:w-[45%] space-y-4 md:space-y-6">
+            <div className="max-w-[1440px] mx-auto px-4 sm:px-8 md:px-12 py-6 md:py-12">
+                <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-start">
+                    <section className="w-full lg:w-[45%] xl:w-[40%] space-y-4 md:space-y-6 lg:sticky lg:top-24">
                         <div className="relative group">
-                            <div className="zoom-container relative aspect-[3/4] overflow-hidden bg-[#121212] border border-white/5 rounded-sm">
+                            <div className="zoom-container relative aspect-[4/5] overflow-hidden bg-[#121212] border border-white/5 rounded-sm">
                                 <img
                                     src={images[activeImage]}
                                     alt={product.title}
@@ -161,12 +275,12 @@ export default function ProductDetailPage() {
                                 </button>
                             </div>
                         </div>
-                        <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2 snap-x snap-mandatory">
+                        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2 snap-x snap-mandatory">
                             {images.map((img, i) => (
                                 <button
                                     key={i}
                                     onClick={() => setActiveImage(i)}
-                                    className={`flex-shrink-0 w-20 sm:w-24 md:w-32 aspect-[4/5] overflow-hidden cursor-pointer transition-all snap-start
+                                    className={`flex-shrink-0 w-16 sm:w-20 md:w-24 aspect-[4/5] overflow-hidden cursor-pointer transition-all snap-start
                                         ${i === activeImage ? "ring-2 ring-white ring-offset-2 ring-offset-black" : "opacity-50 hover:opacity-100 border border-white/10"}
                                     `}
                                 >
@@ -175,11 +289,11 @@ export default function ProductDetailPage() {
                             ))}
                         </div>
                     </section>
-                    <aside className="w-full lg:w-[40%]">
+                    <aside className="w-full lg:w-[55%] xl:w-[60%]">
                         <div className="lg:sticky lg:top-24 space-y-8">
                             <div className="space-y-4">
                                 <nav className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">
-                                    <Link to="/">Home</Link>
+                                    <Link to="/" className="hover:text-white transition-colors">Home</Link>
                                     <span className="material-symbols-outlined text-[12px]">chevron_right</span>
                                     <span className="text-white/60">COLLECTION</span>
                                 </nav>
@@ -195,31 +309,59 @@ export default function ProductDetailPage() {
                                     </div>
                                     <div className="h-4 w-px bg-white/10 hidden sm:block"></div>
                                     <div className="flex items-center gap-2">
-                                        <div className="flex text-[#d4c4b1]">
-                                            {[1, 2, 3, 4, 5].map(n => (
-                                                <span key={n} className="material-symbols-outlined text-xs fill-star">star</span>
+                                        <div className="flex text-[#d4c4b1] items-center">
+                                            {[1, 2, 3, 4].map(n => (
+                                                <span key={n} className="material-symbols-outlined text-sm fill-star">star</span>
                                             ))}
+                                            <span className="material-symbols-outlined text-sm">star_half</span>
                                         </div>
-                                        <span className="text-[10px] font-bold tracking-widest text-white/40">(48)</span>
+                                        <span className="text-[10px] font-bold tracking-widest text-white/40">(1240)</span>
                                     </div>
                                 </div>
                             </div>
+
+                            {/* Color Palette */}
+                            {uniqueColors.length > 0 && (
+                                <div className="space-y-4">
+                                    <div className="flex justify-between items-center">
+                                        <h4 className="text-[11px] font-black uppercase tracking-[0.3em]">Select Color</h4>
+                                        <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">{selectedColor?.name}</span>
+                                    </div>
+                                    <div className="flex gap-4">
+                                        {uniqueColors.map((color) => (
+                                            <button
+                                                key={color._id || color.name}
+                                                onClick={() => handleColorSelect(color)}
+                                                className={`w-10 h-10 rounded-full border border-white/10 transition-all ${(selectedColor?._id || selectedColor?.name) === (color._id || color.name) ? "ring-2 ring-white ring-offset-2 ring-offset-black scale-110" : "hover:scale-105"} ${color.name?.toLowerCase() === 'white' ? 'border-white/40' : ''}`}
+                                                style={{
+                                                    backgroundColor: color.hexCode
+                                                        ? (color.hexCode.startsWith('#') ? color.hexCode : `#${color.hexCode}`)
+                                                        : (color.name?.toLowerCase() || 'transparent')
+                                                }}
+                                                title={color.name}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
                             <div className="space-y-4">
                                 <div className="flex justify-between items-center">
                                     <h4 className="text-[11px] font-black uppercase tracking-[0.3em]">Select Size</h4>
                                     <button className="text-[10px] font-bold uppercase tracking-widest text-[#d4c4b1] border-b border-[#d4c4b1]/30">Size Guide</button>
                                 </div>
                                 <div className="grid grid-cols-5 gap-2">
-                                    {variants.map(v => (
+                                    {filteredVariants.map(v => (
                                         <button
                                             key={v._id}
                                             onClick={() => handleSizeSelect(v)}
                                             className={`h-12 flex items-center justify-center text-[11px] font-bold tracking-widest transition-all border ${selectedVariant?._id === v._id ? "bg-white text-black border-white" : "border-white/10 hover:border-white/40"} ${v.stock <= 0 ? "opacity-30 cursor-not-allowed" : ""}`}
+                                            disabled={v.stock <= 0}
                                         >
                                             {v.size?.name}
                                         </button>
                                     ))}
-                                    {variants.length === 0 && <p className="col-span-5 text-[10px] text-white/30 uppercase italic">No sizes available</p>}
+                                    {filteredVariants.length === 0 && <p className="col-span-5 text-[10px] text-white/30 uppercase italic">No sizes available for this color</p>}
                                 </div>
                                 {selectedVariant && (
                                     <p className="text-[10px] font-black tracking-widest uppercase">
@@ -231,20 +373,68 @@ export default function ProductDetailPage() {
                                 )}
                             </div>
                             <div className="space-y-3 pt-4">
-                                <button
+                                <motion.button
                                     onClick={handleAddToBag}
                                     disabled={isOutOfStock}
-                                    className="w-full h-16 bg-white text-black text-[11px] font-black uppercase tracking-[0.3em] hover:bg-[#d4c4b1] transition-colors flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    whileTap={{ scale: 0.98 }}
+                                    whileHover={{ scale: 1.01 }}
+                                    className={`w-full h-16 text-[11px] font-black uppercase tracking-[0.3em] transition-colors flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed ${isAdded ? 'bg-green-500 text-white' : 'bg-white text-black hover:bg-[#d4c4b1]'}`}
                                 >
-                                    {isOutOfStock ? "Out of Stock" : "Add to Bag"} <span className="material-symbols-outlined">shopping_bag</span>
-                                </button>
-                                <button
+                                    <AnimatePresence mode="wait">
+                                        {isAdded ? (
+                                            <motion.div
+                                                key="added"
+                                                initial={{ y: 10, opacity: 0 }}
+                                                animate={{ y: 0, opacity: 1 }}
+                                                exit={{ y: -10, opacity: 0 }}
+                                                className="flex items-center justify-center gap-2"
+                                            >
+                                                Added to Bag <span className="material-symbols-outlined text-sm">check_circle</span>
+                                            </motion.div>
+                                        ) : (
+                                            <motion.div
+                                                key="add"
+                                                initial={{ y: 10, opacity: 0 }}
+                                                animate={{ y: 0, opacity: 1 }}
+                                                exit={{ y: -10, opacity: 0 }}
+                                                className="flex items-center justify-center gap-2"
+                                            >
+                                                {isOutOfStock ? "Out of Stock" : "Add to Bag"} <span className="material-symbols-outlined text-sm">shopping_bag</span>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </motion.button>
+                                <motion.button
                                     onClick={() => handleQuickBuy()}
                                     disabled={isOutOfStock}
-                                    className="w-full h-16 border border-white/10 bg-zinc-950 text-white text-[11px] font-black uppercase tracking-[0.3em] hover:border-white/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                    whileTap={{ scale: 0.98 }}
+                                    whileHover={{ scale: 1.01 }}
+                                    className={`w-full h-16 border text-[11px] font-black uppercase tracking-[0.3em] transition-all flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed ${isQuickBuying ? 'bg-accent text-black border-accent' : 'border-white/10 bg-zinc-950 text-white hover:border-white/40'}`}
                                 >
-                                    Quick Buy
-                                </button>
+                                    <AnimatePresence mode="wait">
+                                        {isQuickBuying ? (
+                                            <motion.div
+                                                key="buying"
+                                                initial={{ y: 10, opacity: 0 }}
+                                                animate={{ y: 0, opacity: 1 }}
+                                                exit={{ y: -10, opacity: 0 }}
+                                                className="flex items-center justify-center gap-2"
+                                            >
+                                                Processing... <span className="material-symbols-outlined animate-spin text-sm">sync</span>
+                                            </motion.div>
+                                        ) : (
+                                            <motion.div
+                                                key="buy"
+                                                initial={{ y: 10, opacity: 0 }}
+                                                animate={{ y: 0, opacity: 1 }}
+                                                exit={{ y: -10, opacity: 0 }}
+                                                className="flex items-center justify-center gap-2"
+                                            >
+                                                Quick Buy
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </motion.button>
 
 
                                 {isCustomizable && (
@@ -265,10 +455,31 @@ export default function ProductDetailPage() {
                                     <input
                                         type="text"
                                         placeholder="CHECK DELIVERY PINCODE"
+                                        value={pincode}
+                                        onChange={(e) => setPincode(e.target.value)}
                                         className="bg-transparent border-none text-[10px] font-bold tracking-[0.2em] w-full py-4 px-0 focus:ring-0 placeholder:text-white/20"
                                     />
-                                    <button className="text-[10px] font-black uppercase text-[#d4c4b1] px-4">Check</button>
+                                    <button
+                                        onClick={handlePincodeCheck}
+                                        className="text-[10px] font-black uppercase text-[#d4c4b1] px-4"
+                                    >
+                                        {pincodeStatus === "checking" ? "Checking..." : "Check"}
+                                    </button>
                                 </div>
+
+                                {pincodeStatus === "available" && (
+                                    <p className="text-[10px] text-green-500 font-bold uppercase tracking-widest flex items-center gap-1 mt-3 animate-fadeIn">
+                                        <span className="material-symbols-outlined text-[14px]">local_shipping</span>
+                                        Delivery available in 3-5 days
+                                    </p>
+                                )}
+
+                                {pincodeStatus === "unserviceable" && (
+                                    <p className="text-[10px] text-red-500 font-bold uppercase tracking-widest flex items-center gap-1 mt-3 animate-fadeIn">
+                                        <span className="material-symbols-outlined text-[14px]">block</span>
+                                        Non-serviceable location
+                                    </p>
+                                )}
 
                                 {/* Accordions */}
                                 <div className="divide-y divide-white/5">
@@ -281,17 +492,19 @@ export default function ProductDetailPage() {
                                                 <span className="text-[11px] font-black uppercase tracking-[0.3em] group-hover:text-[#d4c4b1] transition-colors">
                                                     {tab === 'fabric' ? 'Composition & Care' : 'Global Shipping'}
                                                 </span>
-                                                <span className="material-symbols-outlined text-white/20 group-hover:text-white">
-                                                    {openAccordion === tab ? "remove" : "add"}
+                                                <span className="material-symbols-outlined text-white/20 group-hover:text-white transition-transform duration-300" style={{ transform: openAccordion === tab ? 'rotate(180deg)' : 'rotate(0)' }}>
+                                                    expand_more
                                                 </span>
                                             </button>
-                                            {openAccordion === tab && (
-                                                <div className="mt-4 text-[11px] text-white/50 leading-relaxed tracking-wide animate-fadeIn">
-                                                    {tab === 'fabric'
-                                                        ? "100% Organic Egyptian Cotton. Cold wash only. Do not tumble dry."
-                                                        : "Ships within 24-48 hours. Express 3-day delivery available worldwide."}
+                                            <div className="accordion-content overflow-hidden transition-all duration-300 ease-in-out" style={{ maxHeight: openAccordion === tab ? '500px' : '0' }}>
+                                                <div className="pb-5 pr-10">
+                                                    <p className="text-[10px] md:text-[11px] leading-relaxed text-white/60 font-medium tracking-wide">
+                                                        {tab === 'fabric'
+                                                            ? (product.composition || product.material || "Premium quality fabric. Cold wash only. Do not tumble dry.")
+                                                            : (product.shippingInfo || "Ships within 24-48 hours. Express 3-day delivery available worldwide.")}
+                                                    </p>
                                                 </div>
-                                            )}
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
@@ -313,6 +526,18 @@ export default function ProductDetailPage() {
                 onClose={handleCloseModal}
                 onContinue={handleContinueCustomization}
             />
+
+            {/* Notification UI */}
+            {notification && (
+                <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 px-8 py-4 rounded-xl font-bold uppercase tracking-widest text-[10px] z-[100] animate-fadeIn ${notification.type === 'error' ? 'bg-red-500 text-white' : 'bg-green-500 text-white shadow-2xl shadow-green-500/20'}`}>
+                    <div className="flex items-center gap-3">
+                        <span className="material-symbols-outlined text-sm">
+                            {notification.type === 'error' ? 'error' : 'check_circle'}
+                        </span>
+                        {notification.message}
+                    </div>
+                </div>
+            )}
         </main>
     );
 }

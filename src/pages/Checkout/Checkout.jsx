@@ -4,7 +4,6 @@ import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCurrentUser, addUserAddress } from "../../features/auth/authSlice";
 import * as orderService from "../../services/orderService";
-import CollectiveFooter from "../../components/common/CollectiveFooter/CollectiveFooter";
 
 import * as paymentService from "../../services/paymentService";
 
@@ -646,11 +645,6 @@ export default function Checkout() {
         </form>
       </main>
 
-      <footer className="bg-black text-white mt-auto">
-        <div className="max-w-7xl mx-auto py-12 px-4 md:px-8">
-          <CollectiveFooter />
-        </div>
-      </footer>
     </div>
   );
 }

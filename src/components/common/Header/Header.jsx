@@ -157,8 +157,6 @@ export default function Header() {
                 </div>
               </div>
 
-              <Link className="nav-link text-[10px] font-black uppercase tracking-[0.3em]" to="/shoes">Shoes</Link>
-              <Link className="nav-link text-[10px] font-black uppercase tracking-[0.3em]" to="/accessories">Accessories</Link>
               <Link className="nav-link text-[10px] font-black uppercase tracking-[0.3em]" to="/collections">Collections</Link>
               <Link className="nav-link text-[10px] font-black uppercase tracking-[0.3em] text-accent" to="/sale">Sale</Link>
             </nav>
@@ -237,7 +235,7 @@ export default function Header() {
 
                 {/* NAV LINKS */}
                 <nav className="flex flex-col gap-6">
-                  {['New Arrivals', 'Shoes', 'Accessories', 'Collections', 'Sale'].map((item, i) => (
+                  {['New Arrivals', 'Collections', 'Sale'].map((item, i) => (
                     <motion.div
                       key={item}
                       initial={{ opacity: 0, x: -20 }}

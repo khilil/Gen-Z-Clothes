@@ -11,27 +11,19 @@
 .hero-bg {
   position: absolute;
   inset: 0;
-  background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDxCDaHXAgfnZZMJ5PJyJlJu2htQPWM6diBOxWwEZCVgRqK2NioQJtdBpkA898DJ8jaVUX8zXqiqMulmIS-p9A6Vvw60YVvk7uOoV_7doTOJ1sNlbE0RcmuvhwJ2LrbI9PBFadnFpLV-RUa4tq9StHqLjSSOJHeeWnbhzilO_f0RDPVlLJFH-Gjgj2ltfyvxQ9Enril9a9C-hcpECVdFnYR7c4QcBOmkqdxTf4IDpIVmtgWbA9rPF_OT7g9mJuNlKudYCzeL9_ieJpz");
+  background-image: url("https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop");
   background-size: cover;
   background-position: center;
-  transform: scale(1.1);
-  transition: transform 10s ease;
-}
-
-.hero:hover .hero-bg {
-  transform: scale(1);
 }
 
 /* CINEMATIC OVERLAY */
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.85) 0%,
-    rgba(0, 0, 0, 0.25) 50%,
-    rgba(0, 0, 0, 0.7) 100%
-  );
+  background: linear-gradient(to bottom,
+      rgba(0, 0, 0, 0.4) 0%,
+      rgba(0, 0, 0, 0.2) 50%,
+      rgba(0, 0, 0, 0.7) 100%);
 }
 
 /* CONTENT */
@@ -50,78 +42,117 @@
 
 /* SUBTITLE */
 .hero-subtitle {
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.6em;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.8em;
   text-transform: uppercase;
-  color: #d4c4b1;
-  margin-bottom: 32px;
-  opacity: 0.85;
+  color: #fff;
+  margin-bottom: 24px;
+  opacity: 0.8;
 }
 
 /* TITLE */
 .hero-title {
   font-family: "Oswald", sans-serif;
-  font-size: clamp(64px, 12vw, 160px);
-  line-height: 0.85;
-  letter-spacing: -2px;
+  font-size: clamp(64px, 15vw, 180px);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
   margin-bottom: 48px;
+  font-weight: 700;
 }
 
 /* BUTTONS */
 .hero-actions {
   display: flex;
-  gap: 16px;
+  gap: 20px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
 .btn-primary,
 .btn-secondary {
-  min-width: 240px;
-  height: 64px;
+  padding: 20px 48px;
   font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.25em;
+  font-weight: 700;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 0;
 }
 
 /* PRIMARY */
 .btn-primary {
-  background: #ffffff;
+  background: #fff;
   color: #000;
-  border: none;
+  border: 1px solid #fff;
 }
 
 .btn-primary:hover {
-  background: #d4c4b1;
+  background: transparent;
+  color: #fff;
 }
 
 /* SECONDARY */
 .btn-secondary {
   background: transparent;
   color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .btn-secondary:hover {
   background: #fff;
   color: #000;
+  border-color: #fff;
 }
 
 /* FOOTER TEXT */
 .hero-footer {
   position: absolute;
-  bottom: 40px;
-  left: 48px;
+  bottom: 80px;
+  left: 60px;
   font-size: 10px;
-  letter-spacing: 0.2em;
-  font-weight: 700;
+  letter-spacing: 0.3em;
+  font-weight: 600;
   text-transform: uppercase;
-  opacity: 0.4;
   color: #fff;
+}
+
+/* SCROLL INDICATOR */
+.scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  font-weight: 600;
+  opacity: 0.6;
+}
+
+.mouse {
+  width: 22px;
+  height: 36px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 20px;
+  position: relative;
+}
+
+.wheel {
+  width: 3px;
+  height: 6px;
+  background: #fff;
+  border-radius: 2px;
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 /* RESPONSIVE */
@@ -131,6 +162,41 @@
   }
 
   .hero-title {
-    font-size: 72px;
+    font-size: 80px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .hero-actions {
+    width: 100%;
+    padding: 0 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 56px;
+    margin-bottom: 32px;
+  }
+
+  .hero-actions {
+    padding: 0 20px;
+    gap: 12px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    padding: 16px 20px;
+    font-size: 10px;
+  }
+
+  .hero-subtitle {
+    font-size: 10px;
+    letter-spacing: 0.5em;
+    margin-bottom: 16px;
   }
 }

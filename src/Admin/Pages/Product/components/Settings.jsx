@@ -59,6 +59,7 @@ export const ProductFlags = ({ data, onChange }) => {
                     { label: 'Featured Product', field: 'isFeatured', color: 'bg-amber-500' },
                     { label: 'New Arrival', field: 'isNewArrival', color: 'bg-blue-500' },
                     { label: 'Best Seller', field: 'isBestSeller', color: 'bg-purple-500' },
+                    { label: 'On Sale', field: 'isOnSale', color: 'bg-rose-500' },
                     { label: 'Customizable Product', field: 'isCustomizable', color: 'bg-emerald-500' }
                 ].map((flag) => (
                     <div key={flag.field} className="flex items-center justify-between">

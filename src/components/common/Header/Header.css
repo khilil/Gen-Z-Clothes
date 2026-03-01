@@ -212,9 +212,56 @@ a:hover .material-symbols-outlined {
   padding-left: 10px;
 }
 
+/* Mobile Menu Drawer Refinements */
 .drawer-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   scrollbar-width: thin;
   scrollbar-color: var(--accent) transparent;
+}
+
+.drawer-inner input {
+  font-family: inherit;
+  font-size: 11px;
+}
+
+.mobile-menu-drawer .Link,
+.mobile-menu-drawer a {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mobile-menu-drawer a:active {
+  transform: scale(0.98);
+}
+
+/* RESPONSIVE HEADINGS */
+@media (max-width: 640px) {
+  header {
+    height: 70px !important;
+  }
+
+  .mega-menu {
+    display: none;
+    /* Never show on mobile */
+  }
+
+  .nav-link {
+    display: none;
+  }
+}
+
+/* CUSTOM SCROLLBAR FOR DRAWER */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 2px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(197, 160, 89, 0.2);
 }
 
 @media (min-width: 1024px) {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getAllCategories } from '../../../../services/categoryService';
-import { Loader2 } from 'lucide-react';
+import { Loader2, X, Search, CheckCircle2 } from 'lucide-react';
 
 const ProductInfo = ({ data, onChange }) => {
     const [categories, setCategories] = useState([]);
@@ -21,11 +21,39 @@ const ProductInfo = ({ data, onChange }) => {
         fetchCategories();
     }, []);
 
-    // Helper to handle multiple categories if needed in future
-    // For now keeping it compatible with singular "category" prop but sending as array
-    const handleCategoryChange = (e) => {
-        const value = e.target.value;
-        onChange('category', value); // Maintain compatibility for now
+    const [searchTerm, setSearchTerm] = useState('');
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = React.useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsDropdownOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const filteredCategories = categories.filter(cat =>
+        cat.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const handleCategoryToggle = (categoryName) => {
+        const currentCategories = Array.isArray(data.categories) ? data.categories : [];
+        let newCategories;
+        if (currentCategories.includes(categoryName)) {
+            newCategories = currentCategories.filter(c => c !== categoryName);
+        } else {
+            newCategories = [...currentCategories, categoryName];
+        }
+        onChange('categories', newCategories);
+    };
+
+    const removeCategory = (categoryName) => {
+        const currentCategories = Array.isArray(data.categories) ? data.categories : [];
+        const newCategories = currentCategories.filter(c => c !== categoryName);
+        onChange('categories', newCategories);
     };
 
     return (
@@ -75,6 +103,14 @@ const ProductInfo = ({ data, onChange }) => {
                             <option value="hoodie" className="bg-slate-900">Hoodie</option>
                             <option value="shirt" className="bg-slate-900">Shirt</option>
                             <option value="jacket" className="bg-slate-900">Jacket</option>
+                            <option value="trousers" className="bg-slate-900">Trousers</option>
+                            <option value="cargo" className="bg-slate-900">Cargo</option>
+                            <option value="blazer" className="bg-slate-900">Blazer</option>
+                            <option value="shorts" className="bg-slate-900">Shorts</option>
+                            <option value="sweater" className="bg-slate-900">Sweater</option>
+                            <option value="joggers" className="bg-slate-900">Joggers</option>
+                            <option value="shoes" className="bg-slate-900">Shoes</option>
+                            <option value="accessory" className="bg-slate-900">Accessory</option>
                             <option value="other" className="bg-slate-900">Other</option>
                         </select>
                     </div>
@@ -95,28 +131,89 @@ const ProductInfo = ({ data, onChange }) => {
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                         <div className="flex items-center justify-between">
-                            <label htmlFor="category" className="text-sm font-semibold text-slate-400">Category</label>
+                            <label className="text-sm font-semibold text-slate-400">Categories</label>
                             {loadingCategories && <Loader2 size={14} className="animate-spin text-indigo-500" />}
                         </div>
-                        <select
-                            id="category"
-                            className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 outline-none transition-all focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%2364748b%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-[right_0.5rem_center] bg-no-repeat disabled:opacity-50"
-                            value={data.category || (data.categories?.[0] || '')}
-                            onChange={handleCategoryChange}
-                            disabled={loadingCategories}
-                        >
-                            <option value="" className="bg-slate-900">Select Category</option>
-                            {categories.map(cat => (
-                                <option key={cat._id} value={cat.name} className="bg-slate-900">
-                                    {cat.name}
-                                </option>
-                            ))}
-                            {!loadingCategories && categories.length === 0 && (
-                                <option disabled className="bg-slate-900">No categories found</option>
+
+                        {/* Searchable Multi-select Input */}
+                        <div className="relative" ref={dropdownRef}>
+                            <div
+                                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                className={`flex min-h-[46px] w-full flex-wrap gap-2 rounded-xl border border-slate-800 bg-slate-950 px-4 py-2 text-sm transition-all cursor-pointer ${isDropdownOpen ? 'border-indigo-500 ring-4 ring-indigo-500/10' : 'hover:border-slate-700'}`}
+                            >
+                                {data.categories && data.categories.length > 0 ? (
+                                    data.categories.map((catName) => (
+                                        <span
+                                            key={catName}
+                                            className="inline-flex items-center gap-1 rounded-lg bg-indigo-500/10 border border-indigo-500/20 px-2.5 py-1 text-xs font-bold text-indigo-400 shadow-sm"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            {catName}
+                                            <button
+                                                type="button"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    removeCategory(catName);
+                                                }}
+                                                className="hover:text-white transition-colors"
+                                            >
+                                                <X size={12} />
+                                            </button>
+                                        </span>
+                                    ))
+                                ) : (
+                                    <span className="text-slate-600 self-center">Select categories...</span>
+                                )}
+                            </div>
+
+                            {/* Dropdown Menu */}
+                            {isDropdownOpen && (
+                                <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 overflow-hidden rounded-xl border border-slate-800 bg-slate-900 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200">
+                                    <div className="p-2">
+                                        <div className="relative mb-2">
+                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={14} />
+                                            <input
+                                                autoFocus
+                                                type="text"
+                                                placeholder="Search categories..."
+                                                className="w-full rounded-lg border border-slate-800 bg-slate-950 pl-9 pr-4 py-2 text-xs text-slate-200 outline-none focus:border-indigo-500/50"
+                                                value={searchTerm}
+                                                onChange={(e) => setSearchTerm(e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="max-h-60 overflow-y-auto custom-scrollbar p-1">
+                                            {filteredCategories.length === 0 ? (
+                                                <div className="py-8 text-center text-xs text-slate-500">
+                                                    No results found for "{searchTerm}"
+                                                </div>
+                                            ) : (
+                                                <div className="grid grid-cols-1 gap-1">
+                                                    {filteredCategories.map((cat) => {
+                                                        const isSelected = data.categories?.includes(cat.name);
+                                                        return (
+                                                            <button
+                                                                key={cat._id}
+                                                                type="button"
+                                                                onClick={() => handleCategoryToggle(cat.name)}
+                                                                className={`flex items-center justify-between rounded-lg px-3 py-2 text-left text-xs transition-all ${isSelected
+                                                                    ? 'bg-indigo-600/20 text-indigo-400 font-bold'
+                                                                    : 'hover:bg-slate-800 text-slate-400 hover:text-slate-200'
+                                                                    }`}
+                                                            >
+                                                                <span>{cat.name}</span>
+                                                                {isSelected && <CheckCircle2 size={14} />}
+                                                            </button>
+                                                        );
+                                                    })}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
                             )}
-                        </select>
+                        </div>
                     </div>
                     <div className="space-y-2">
                         <label htmlFor="gender" className="text-sm font-semibold text-slate-400">Gender</label>
@@ -159,6 +256,29 @@ const ProductInfo = ({ data, onChange }) => {
                     ></textarea>
                 </div>
 
+                <div className="space-y-2">
+                    <label htmlFor="composition" className="text-sm font-semibold text-slate-400">Composition & Care</label>
+                    <textarea
+                        id="composition"
+                        rows="2"
+                        placeholder="e.g. 100% Organic Cotton. Cold wash only..."
+                        className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 outline-none transition-all focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 resize-none placeholder:text-slate-600"
+                        value={data.composition || ''}
+                        onChange={(e) => onChange('composition', e.target.value)}
+                    ></textarea>
+                </div>
+
+                <div className="space-y-2">
+                    <label htmlFor="shippingInfo" className="text-sm font-semibold text-slate-400">Global Shipping Info</label>
+                    <textarea
+                        id="shippingInfo"
+                        rows="2"
+                        placeholder="e.g. Ships within 24-48 hours..."
+                        className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 outline-none transition-all focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 resize-none placeholder:text-slate-600"
+                        value={data.shippingInfo || ''}
+                        onChange={(e) => onChange('shippingInfo', e.target.value)}
+                    ></textarea>
+                </div>
                 <div className="space-y-2">
                     <label className="text-sm font-semibold text-slate-400">Full Description (Rich Text)</label>
                     <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-950">

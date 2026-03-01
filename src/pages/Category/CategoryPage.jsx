@@ -213,7 +213,7 @@ export default function CategoryPage() {
           {/* --- INTEGRATED FILTER & SORT BAR (Sticky with Framer Motion) --- */}
           <motion.div
             layout
-            className={`sticky top-0 z-40 border-b transition-colors duration-500 ${isSticky
+            className={`lg:hidden sticky top-0 z-40 border-b transition-colors duration-500 ${isSticky
               ? "bg-black/95 backdrop-blur-xl border-white/10 py-3 shadow-[0_10px_30px_rgba(0,0,0,0.5)] translate-y-0"
               : "bg-transparent border-transparent py-5 opacity-90"
               } px-6 md:px-12 flex items-center justify-between`}

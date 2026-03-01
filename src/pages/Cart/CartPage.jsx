@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
-import CollectiveFooter from "../../components/common/CollectiveFooter/CollectiveFooter";
 
 export default function CartPage() {
     const { cart, updateQty, removeItem, isLoading } = useCart();
@@ -202,11 +201,6 @@ export default function CartPage() {
                 </div>
             )}
 
-            <footer className="bg-black text-white mt-auto">
-                <div className="max-w-7xl mx-auto py-12 px-4 md:px-8">
-                    <CollectiveFooter />
-                </div>
-            </footer>
         </div>
     );
 }

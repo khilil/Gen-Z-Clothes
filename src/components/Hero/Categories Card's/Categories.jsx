@@ -1,36 +1,85 @@
+import { motion } from "framer-motion"; // eslint-disable-line no-unused-vars
+import { useNavigate } from "react-router-dom";
 import "./Categories.css";
 
+const categoryItems = [
+  {
+    title: "SHIRTS",
+    slug: "shirts",
+    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=1976&auto=format&fit=crop",
+    size: "large"
+  },
+  {
+    title: "T-SHIRTS",
+    slug: "t-shirt",
+    image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=1974&auto=format&fit=crop",
+    size: "small"
+  },
+  {
+    title: "JEANS",
+    slug: "jeans",
+    image: "https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=1926&auto=format&fit=crop",
+    size: "small"
+  },
+  {
+    title: "JACKETS",
+    slug: "jacket",
+    image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=1935&auto=format&fit=crop",
+    size: "medium"
+  },
+  {
+    title: "HOODIES",
+    slug: "hoodie",
+    image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=1974&auto=format&fit=crop",
+    size: "medium"
+  }
+];
+
 function Categories() {
+  const navigate = useNavigate();
+
   return (
-    <section className="categories">
-      
-      <div className="category-card">
-        <img
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuDs9WQldQT9ZGJbWJ68InNhiV1oLDbI575rx8p-Z3rSJLJCka7bEeyAyw20NtNVH0YZ2EKc40JMwu2hPyFnE_PoY4LKC1fknLVHsNXS-kL2X8KuKRiReiHDJTUq2CRL9JTAQqLCy3Plh53TyYYObKjlHeuE90nCcFCim1r_EGrOq-LVd3DckR1gCo5E5VmJuPSWFa0we3DjNIifh58JepO45b3urTlhy7vRLzZAcXg611xlcC1d4U4rQCxLiIW8Zy1Yp6n82cKXC9hf"
-          alt="Denim"
-        />
-        <div className="category-overlay"></div>
-        <h3>SHIRTS</h3>
+    <section className="categories-section">
+      <div className="section-header">
+        <motion.span
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="section-tag"
+        >
+          COLLECTIONS
+        </motion.span>
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="section-title"
+        >
+          SHOP BY CATEGORY
+        </motion.h2>
       </div>
 
-      <div className="category-card">
-        <img
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCG5grYfiRd6Pr_epZfGVr6vP75nCUx5d3faRYuRLP_QunjgzUMUK55QJ78B63LG652tX5dBllWrLbllu5OoN85VcJDOkNsZYN4LdLYSqEx1k72KEiAbED4MBtvfDPGcniFvoqSscotaKqk1BzYqdVndGwMnKqlUg8lJYgOmxqN5ZiWYvJC7w0Bmt6uK5feGSkZfkwwNluuieN3iIafv_r69BxlFC9JdNhKrkOOcdzohyl9CBdwUP4Cnou6qVDbCyzmjrm1UQJvlDIv"
-          alt="Jersey"
-        />
-        <div className="category-overlay"></div>
-        <h3>T-SHIRTS</h3>
+      <div className="categories-grid">
+        {categoryItems.map((item, index) => (
+          <motion.div
+            key={index}
+            className={`category-card ${item.size}`}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: index * 0.1, duration: 0.6 }}
+            onClick={() => navigate(`/category/${item.slug}`)}
+          >
+            <img src={item.image} alt={item.title} />
+            <div className="category-overlay"></div>
+            <div className="category-content">
+              <h3>{item.title}</h3>
+              <span className="shop-link">EXPLORE NOW</span>
+            </div>
+          </motion.div>
+        ))}
       </div>
-
-      <div className="category-card">
-        <img
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwsZp-Pn1cf91xCfR0zKcdmcBt88piN2EqmVP9zCCl3Yx0ESZ63MgKxhyhxaFIQpCOEyIa15Iqm4aMMPB_8her15N4ANWbU2CPwY6ECoCf4-9Rfizxu3FWAeZIISVUbRgKZneU-UZhsbxixrWytLLNqlH7PDRkDdZjtTnkqSUAHbMRkc6Mfb1mfBVAxFYjhUaWAPwRZ0uDBiiVRdLxDrRpJy2pRAAM5QjzAgw1T5zZXk7S8Rc3BUrL9aLhcxVFv3Q9Krw26dUDkay1"
-          alt="Oxford"
-        />
-        <div className="category-overlay"></div>
-        <h3>JENSE</h3>
-      </div>
-
     </section>
   );
 }

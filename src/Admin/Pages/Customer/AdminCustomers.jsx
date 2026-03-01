@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getAllCustomers } from '../../../services/customerService';
 
 /**
  * AdminCustomers Component
@@ -12,28 +13,51 @@ const AdminCustomers = () => {
     // --- STATE ---
     const [searchQuery, setSearchQuery] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
+    const [customers, setCustomers] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    // --- STATIC DATA ---
-    const [customers] = useState([
-        { id: '1', name: 'Alex Rivera', email: 'alex@example.com', location: 'New York, NY', orders: 12, spent: 1200.00, lastOrder: 'Oct 24, 2023', status: 'Active', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop' },
-        { id: '2', name: 'Jordan Smith', email: 'j.smith@web.com', location: 'Austin, TX', orders: 5, spent: 450.00, lastOrder: 'Oct 20, 2023', status: 'Active', img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop' },
-        { id: '3', name: 'Taylor Wong', email: 'taylorw@mail.com', location: 'Seattle, WA', orders: 1, spent: 85.00, lastOrder: 'Sep 15, 2023', status: 'Inactive', img: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&h=100&fit=crop' },
-        { id: '4', name: 'Morgan Lee', email: 'mlee@design.io', location: 'Chicago, IL', orders: 8, spent: 920.00, lastOrder: 'Oct 22, 2023', status: 'Active', img: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop' },
-        { id: '5', name: 'Casey Brown', email: 'casey.b@firm.com', location: 'Miami, FL', orders: 3, spent: 310.00, lastOrder: 'Aug 30, 2023', status: 'Inactive', img: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&h=100&fit=crop' },
-    ]);
+    // --- FETCH DATA ---
+    useEffect(() => {
+        const fetchCustomers = async () => {
+            try {
+                setLoading(true);
+                const response = await getAllCustomers();
+                setCustomers(response.data);
+                setError(null);
+            } catch (err) {
+                console.error("Error fetching customers:", err);
+                setError("Failed to load customers. Please try again.");
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    const kpis = [
-        { label: 'Total Customers', value: '1,248', trend: '+12%', icon: 'group', color: 'emerald' },
-        { label: 'New Customers (30d)', value: '156', trend: '+8%', icon: 'person_add', color: 'emerald' },
-        { label: 'Avg. Lifetime Value', value: '$842.50', trend: '-2%', icon: 'payments', color: 'rose' },
-    ];
+        fetchCustomers();
+    }, []);
+
+    const kpis = useMemo(() => {
+        const totalCustomers = customers.length;
+        const totalSpent = customers.reduce((acc, curr) => acc + curr.totalSpent, 0);
+        const avgSpent = totalCustomers > 0 ? totalSpent / totalCustomers : 0;
+
+        // Mocking trends for visual effect as backend doesn't provide them yet
+        return [
+            { label: 'Total Customers', value: totalCustomers.toLocaleString(), trend: '+0%', icon: 'group', color: 'emerald' },
+            { label: 'Total Revenue', value: `$${totalSpent.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, trend: '+0%', icon: 'payments', color: 'emerald' },
+            { label: 'Avg. Customer Value', value: `$${avgSpent.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, trend: '+0%', icon: 'analytics', color: 'rose' },
+        ];
+    }, [customers]);
 
     // --- LOGIC ---
     const filteredCustomers = useMemo(() => {
-        return customers.filter(customer => 
-            customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            customer.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            customer.location.toLowerCase().includes(searchQuery.toLowerCase())
+        return customers.filter(customer =>
+            customer.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            customer.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (customer.addresses && customer.addresses.some(addr =>
+                addr.city?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                addr.state?.toLowerCase().includes(searchQuery.toLowerCase())
+            ))
         );
     }, [searchQuery, customers]);
 
@@ -41,9 +65,10 @@ const AdminCustomers = () => {
         navigate(`/admin/customers/${id}`);
     };
 
+
     return (
         <div className="flex-1 flex flex-col min-h-screen bg-slate-50 dark:bg-[#101622] font-sans">
-            
+
             {/* --- HEADER SECTION --- */}
             {/* <header className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between px-4 md:px-8 sticky top-0 z-10">
                 <div className="max-w-md w-full relative group">
@@ -75,10 +100,10 @@ const AdminCustomers = () => {
                         />
                     </div>
                 </div>
-            </header> */}   
+            </header> */}
 
             <div className="p-4 md:p-8 space-y-8 max-w-[1600px] mx-auto w-full">
-                
+
                 {/* --- PAGE TITLE --- */}
                 <div>
                     <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">Customers</h2>
@@ -93,12 +118,11 @@ const AdminCustomers = () => {
                                 <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-800 group-hover:bg-[#1152d4]/10 transition-colors">
                                     <span className="material-icons text-[#1152d4]">{kpi.icon}</span>
                                 </div>
-                                <span className={`flex items-center px-2 py-1 rounded-lg text-xs font-bold ${
-                                    kpi.trend.startsWith('+') 
-                                    ? 'text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10' 
+                                <span className={`flex items-center px-2 py-1 rounded-lg text-xs font-bold ${kpi.trend.startsWith('+')
+                                    ? 'text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10'
                                     : 'text-rose-600 bg-rose-50 dark:bg-rose-500/10'
-                                }`}>
-                                    {kpi.trend} 
+                                    }`}>
+                                    {kpi.trend}
                                     <span className="material-icons text-[14px] ml-1">
                                         {kpi.trend.startsWith('+') ? 'trending_up' : 'trending_down'}
                                     </span>
@@ -126,40 +150,66 @@ const AdminCustomers = () => {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
-                                {filteredCustomers.map((customer) => (
-                                    <tr key={customer.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors group">
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <img className="size-10 rounded-full object-cover ring-2 ring-slate-100 dark:ring-slate-800" src={customer.img} alt={customer.name} />
-                                                <div>
-                                                    <p className="text-sm font-bold text-slate-900 dark:text-white">{customer.name}</p>
-                                                    <p className="text-xs text-slate-500 font-medium">{customer.email}</p>
-                                                </div>
+                                {loading ? (
+                                    <tr>
+                                        <td colSpan="7" className="px-6 py-12 text-center text-slate-500 font-medium">
+                                            <div className="flex flex-col items-center gap-2">
+                                                <div className="size-8 border-4 border-[#1152d4] border-t-transparent rounded-full animate-spin"></div>
+                                                <p>Loading customers...</p>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-medium">{customer.location}</td>
-                                        <td className="px-6 py-4 text-sm font-bold text-slate-700 dark:text-slate-300">{customer.orders}</td>
-                                        <td className="px-6 py-4 text-sm font-black text-slate-900 dark:text-white">${customer.spent.toFixed(2)}</td>
-                                        <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">{customer.lastOrder}</td>
-                                        <td className="px-6 py-4">
-                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${
-                                                customer.status === 'Active' 
-                                                ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400' 
-                                                : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-500'
-                                            }`}>
-                                                {customer.status}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 text-right">
-                                            <button 
-                                                onClick={() => handleViewProfile(customer.id)}
-                                                className="px-4 py-1.5 text-xs font-bold text-[#1152d4] border border-[#1152d4]/30 rounded-lg hover:bg-[#1152d4] hover:text-white transition-all transform active:scale-95"
-                                            >
-                                                View Profile
-                                            </button>
+                                    </tr>
+                                ) : error ? (
+                                    <tr>
+                                        <td colSpan="7" className="px-6 py-12 text-center text-rose-500 font-medium">
+                                            {error}
                                         </td>
                                     </tr>
-                                ))}
+                                ) : filteredCustomers.length === 0 ? (
+                                    <tr>
+                                        <td colSpan="7" className="px-6 py-12 text-center text-slate-500 font-medium">
+                                            No customers found matching your search.
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    filteredCustomers.map((customer) => (
+                                        <tr key={customer._id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors group">
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center gap-3">
+                                                    <img className="size-10 rounded-full object-cover ring-2 ring-slate-100 dark:ring-slate-800" src={customer.avatar || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'} alt={customer.name} />
+                                                    <div>
+                                                        <p className="text-sm font-bold text-slate-900 dark:text-white">{customer.name}</p>
+                                                        <p className="text-xs text-slate-500 font-medium">{customer.email}</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-medium">
+                                                {customer.addresses?.[0] ? `${customer.addresses[0].city}, ${customer.addresses[0].state}` : 'N/A'}
+                                            </td>
+                                            <td className="px-6 py-4 text-sm font-bold text-slate-700 dark:text-slate-300">{customer.totalOrders || 0}</td>
+                                            <td className="px-6 py-4 text-sm font-black text-slate-900 dark:text-white">${(customer.totalSpent || 0).toFixed(2)}</td>
+                                            <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
+                                                {customer.lastOrder ? new Date(customer.lastOrder).toLocaleDateString() : 'Never'}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${customer.isVerified
+                                                        ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400'
+                                                        : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-500'
+                                                    }`}>
+                                                    {customer.isVerified ? 'Verified' : 'Pending'}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 text-right">
+                                                <button
+                                                    onClick={() => handleViewProfile(customer._id)}
+                                                    className="px-4 py-1.5 text-xs font-bold text-[#1152d4] border border-[#1152d4]/30 rounded-lg hover:bg-[#1152d4] hover:text-white transition-all transform active:scale-95"
+                                                >
+                                                    View Profile
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
                             </tbody>
                         </table>
                     </div>
@@ -167,7 +217,7 @@ const AdminCustomers = () => {
                     {/* --- PAGINATION FOOTER --- */}
                     <div className="px-6 py-4 bg-slate-50/50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
                         <p className="text-xs text-slate-500 font-bold uppercase tracking-tight">
-                            Showing <span className="text-slate-900 dark:text-white">1</span> to <span className="text-slate-900 dark:text-white">{filteredCustomers.length}</span> of <span className="text-slate-900 dark:text-white">1,248</span> customers
+                            Showing <span className="text-slate-900 dark:text-white">1</span> to <span className="text-slate-900 dark:text-white">{filteredCustomers.length}</span> of <span className="text-slate-900 dark:text-white">{customers.length}</span> customers
                         </p>
                         <div className="flex items-center gap-1.5">
                             <button className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-800 text-slate-400 transition-all disabled:opacity-30" disabled>

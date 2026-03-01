@@ -44,11 +44,13 @@ function AddProductLayout() {
         productType: 'tshirt',
         garmentType: 'top',
         brand: '',
-        category: '',
+        categories: [],
         gender: 'unisex',
         material: '',
         shortDescription: '',
         fullDescription: '',
+        composition: '',
+        shippingInfo: '',
         price: '',
         compareAtPrice: '',
         trackInventory: true,
@@ -57,6 +59,7 @@ function AddProductLayout() {
         isFeatured: false,
         isNewArrival: true,
         isBestSeller: false,
+        isOnSale: false,
         isCustomizable: false,
         metaTitle: '',
         metaDescription: '',
@@ -282,6 +285,8 @@ function AddProductLayout() {
                 if (productData[key] !== undefined && productData[key] !== null) {
                     if (Array.isArray(productData[key])) {
                         formData.append(key, JSON.stringify(productData[key]));
+                    } else if (key === 'categories') {
+                        formData.append('categories', JSON.stringify(productData.categories || []));
                     } else {
                         formData.append(key, productData[key]);
                     }

@@ -44,11 +44,13 @@ function UpdateProductLayout() {
         productType: 'tshirt',
         garmentType: 'top',
         brand: '',
-        category: '',
+        categories: [],
         gender: 'unisex',
         material: '',
         shortDescription: '',
         fullDescription: '',
+        composition: '',
+        shippingInfo: '',
         price: '',
         compareAtPrice: '',
         trackInventory: true,
@@ -57,6 +59,7 @@ function UpdateProductLayout() {
         isFeatured: false,
         isNewArrival: true,
         isBestSeller: false,
+        isOnSale: false,
         isCustomizable: false,
         metaTitle: '',
         metaDescription: '',
@@ -107,11 +110,13 @@ function UpdateProductLayout() {
                     slug: product.slug || '',
                     productType: product.productType || 'tshirt',
                     brand: product.brand || '',
-                    category: product.category || (Array.isArray(product.categories) ? product.categories[0] : ''),
+                    categories: Array.isArray(product.categories) ? product.categories : (product.category ? [product.category] : []),
                     gender: product.gender || 'unisex',
                     material: product.material || '',
                     shortDescription: product.shortDescription || '',
                     fullDescription: product.fullDescription || '',
+                    composition: product.composition || '',
+                    shippingInfo: product.shippingInfo || '',
                     price: product.price || '',
                     compareAtPrice: product.compareAtPrice || '',
                     trackInventory: product.trackInventory ?? true,
@@ -120,6 +125,7 @@ function UpdateProductLayout() {
                     isFeatured: product.isFeatured ?? false,
                     isNewArrival: product.isNewArrival ?? true,
                     isBestSeller: product.isBestSeller ?? false,
+                    isOnSale: product.isOnSale ?? false,
                     isCustomizable: product.isCustomizable ?? false,
                     metaTitle: product.metaTitle || '',
                     metaDescription: product.metaDescription || '',
@@ -343,6 +349,8 @@ function UpdateProductLayout() {
                 if (productData[key] !== undefined && productData[key] !== null) {
                     if (Array.isArray(productData[key])) {
                         formData.append(key, JSON.stringify(productData[key]));
+                    } else if (key === 'categories') {
+                        formData.append('categories', JSON.stringify(productData.categories || []));
                     } else {
                         formData.append(key, productData[key]);
                     }

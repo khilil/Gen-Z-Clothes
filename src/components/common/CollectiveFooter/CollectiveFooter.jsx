@@ -1,96 +1,106 @@
+import { motion } from "framer-motion"; // eslint-disable-line no-unused-vars
+import { useNavigate } from "react-router-dom";
+import { Facebook, Instagram, Twitter, Youtube, Globe, Share2 } from "lucide-react";
 import "./CollectiveFooter.css";
 
 function CollectiveFooter() {
+  const navigate = useNavigate();
+
   return (
-    <>
-      {/* JOIN THE COLLECTIVE */}
-      <section className="collective">
-        <div className="collective-inner">
-          <div className="collective-text">
-            <h2>
-              JOIN THE <br /> COLLECTIVE
-            </h2>
-            <p>
-              Priority access to drops and member-only pricing.
-            </p>
+    <footer className="footer-main">
+      <div className="footer-inner">
+        {/* BRAND */}
+        <motion.div
+          className="footer-brand"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <h3 className="brand-title">GENZ <br /> <span>CLOTHES</span></h3>
+          <p className="brand-mission">
+            WE ENGINEER ARMOR FOR THE MODERN ICON. <br />
+            HIGH-STREET UTILITY / RAW CHARACTER.
+          </p>
+
+          <div className="footer-social-premium">
+            <a href="#" aria-label="Instagram"><Instagram size={18} /></a>
+            <a href="#" aria-label="Twitter"><Twitter size={18} /></a>
+            <a href="#" aria-label="Facebook"><Facebook size={18} /></a>
+            <a href="#" aria-label="YouTube"><Youtube size={18} /></a>
           </div>
+        </motion.div>
 
-          <form className="collective-form">
-            <input
-              type="email"
-              placeholder="ENTER EMAIL ADDRESS"
-              required
-            />
-            <button type="submit">
-              SUBSCRIBE
-              <span className="material-symbols-outlined">east</span>
-            </button>
-          </form>
-        </div>
-      </section>
+        {/* ASSISTANCE */}
+        <motion.div
+          className="footer-col"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+        >
+          <h4>ASSISTANCE</h4>
+          <ul className="footer-links">
+            <li><button onClick={() => navigate("/shipping")}>Shipping & Delivery</button></li>
+            <li><button onClick={() => navigate("/returns")}>Return Archive</button></li>
+            <li><button onClick={() => navigate("/care")}>Atelier Care</button></li>
+            <li><button onClick={() => navigate("/faq")}>FAQ</button></li>
+          </ul>
+        </motion.div>
 
-      {/* FOOTER */}
-      <footer className="footer">
-        <div className="footer-inner">
+        {/* COLLECTION */}
+        <motion.div
+          className="footer-col"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+        >
+          <h4>COLLECTIONS</h4>
+          <ul className="footer-links">
+            <li><button onClick={() => navigate("/category/shirts")}>Shirts & Polo</button></li>
+            <li><button onClick={() => navigate("/category/jeans")}>Denim Series</button></li>
+            <li><button onClick={() => navigate("/category/jacket")}>Outerwear</button></li>
+            <li><button onClick={() => navigate("/category/all")}>View All</button></li>
+          </ul>
+        </motion.div>
 
-          {/* BRAND */}
-          <div className="footer-brand">
-            <h3>MODERN MEN</h3>
-            <p>
-              Uncompromising aesthetics for the urban professional.<br />
-              Based in New York City.
-            </p>
+        {/* STUDIO */}
+        <motion.div
+          className="footer-col"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3 }}
+        >
+          <h4>STUDIO</h4>
+          <p className="footer-studio-info">
+            VISIT OUR ATELIER <br />
+            EST. 2024 / LONDON <br />
+            UNITED KINGDOM <br /><br />
+            CONTACT: HELLO@GENZCLOTHES.COM
+          </p>
+        </motion.div>
+      </div>
 
-            <div className="footer-social">
-              <span className="material-symbols-outlined">public</span>
-              <span className="material-symbols-outlined">share</span>
-              <span className="material-symbols-outlined">language</span>
-            </div>
-          </div>
-
-          {/* ASSISTANCE */}
-          <div className="footer-col">
-            <h4>ASSISTANCE</h4>
-            <a href="#">Shipping Matrix</a>
-            <a href="#">Returns Archive</a>
-            <a href="#">Atelier Care</a>
-            <a href="#">Privilege Policy</a>
-          </div>
-
-          {/* DEPARTMENT */}
-          <div className="footer-col">
-            <h4>DEPARTMENT</h4>
-            <a href="#">New Archives</a>
-            <a href="#">Denim Series</a>
-            <a href="#">Formal Tailoring</a>
-            <a href="#">Essential Tech</a>
-          </div>
-
-          {/* FLAGSHIP */}
-          <div className="footer-col">
-            <h4>FLAGSHIP</h4>
-            <p className="footer-address">
-              245 Fifth Avenue <br />
-              NoMad District, New York <br />
-              NY 10016 <br /><br />
-              Mon–Sat: 10:00 – 20:00
-            </p>
-          </div>
-
-        </div>
-
-        {/* BOTTOM BAR */}
-        <div className="footer-bottom">
-          <p>© 2024 MODERN MEN LTD. ALL ARCHIVES PROTECTED.</p>
-
-          <div className="footer-payments">
-            <span className="material-symbols-outlined">credit_card</span>
-            <span className="material-symbols-outlined">payments</span>
-            <span className="material-symbols-outlined">wallet</span>
+      {/* BOTTOM BAR */}
+      <div className="footer-bottom-premium">
+        <div className="bottom-left">
+          <span>© 2024 GENZ CLOTHES. ALL RIGHTS RESERVED.</span>
+          <div className="bottom-links">
+            <button onClick={() => navigate("/privacy")}>Privacy</button>
+            <button onClick={() => navigate("/terms")}>Terms</button>
           </div>
         </div>
-      </footer>
-    </>
+
+        <div className="payment-methods">
+          <span className="payment-label">SECURE PAYMENTS</span>
+          <div className="payment-icons">
+            <Globe size={16} />
+            <Share2 size={16} />
+          </div>
+        </div>
+      </div>
+    </footer>
   );
 }
 
