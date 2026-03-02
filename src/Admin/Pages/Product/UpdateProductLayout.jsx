@@ -16,7 +16,7 @@ import Variants from './components/Variants';
 import VariantImages from './components/VariantImages';
 import { InventorySettings, ProductFlags, SEOSettings } from './components/Settings';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getProductBySlug, updateProduct } from '../../../services/productService';
 
@@ -79,8 +79,8 @@ function UpdateProductLayout() {
         const fetchAttributes = async () => {
             try {
                 const [sizesRes, colorsRes] = await Promise.all([
-                    axios.get('http://localhost:5000/api/v1/sizes'),
-                    axios.get('http://localhost:5000/api/v1/colors')
+                    api.get(`/sizes`),
+                    api.get(`/colors`)
                 ]);
                 setAvailableSizes(sizesRes.data.data || []);
                 setAvailableColors(colorsRes.data.data || []);

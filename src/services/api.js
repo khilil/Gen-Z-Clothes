@@ -1,7 +1,9 @@
 import axios from "axios";
 
+export const API_BASE_URL = `http://localhost:5000/api/v1`;
+
 const api = axios.create({
-    baseURL: "http://localhost:5000/api/v1",
+    baseURL: API_BASE_URL,
     withCredentials: true, // IMPORTANT (cookies mate)
 });
 
@@ -44,7 +46,7 @@ api.interceptors.response.use(
             return new Promise(function (resolve, reject) {
                 axios
                     .post(
-                        "http://localhost:5000/api/v1/users/refresh-token",
+                        `${API_BASE_URL}/users/refresh-token`,
                         {},
                         { withCredentials: true }
                     )

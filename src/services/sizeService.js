@@ -1,10 +1,10 @@
-import axios from 'axios';
+import api, { API_BASE_URL } from './api';
 
-const API_URL = 'http://localhost:5000/api/v1/sizes';
+const API_URL = `${API_BASE_URL}/sizes`;
 
 export const getAllSizes = async () => {
     try {
-        const response = await axios.get(API_URL);
+        const response = await api.get(API_URL);
         return response.data;
     } catch (error) {
         throw error.response?.data || error.message;
@@ -13,7 +13,7 @@ export const getAllSizes = async () => {
 
 export const createSize = async (sizeData) => {
     try {
-        const response = await axios.post(API_URL, sizeData);
+        const response = await api.post(API_URL, sizeData);
         return response.data;
     } catch (error) {
         throw error.response?.data || error.message;
@@ -22,7 +22,7 @@ export const createSize = async (sizeData) => {
 
 export const deleteSize = async (id) => {
     try {
-        const response = await axios.delete(`${API_URL}/${id}`);
+        const response = await api.delete(`${API_URL}/${id}`);
         return response.data;
     } catch (error) {
         throw error.response?.data || error.message;

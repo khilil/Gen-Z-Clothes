@@ -1,10 +1,10 @@
-import axios from 'axios';
+import api, { API_BASE_URL } from './api';
 
-const API_URL = 'http://localhost:5000/api/v1/colors';
+const API_URL = `${API_BASE_URL}/colors`;
 
 export const getAllColors = async () => {
     try {
-        const response = await axios.get(API_URL);
+        const response = await api.get(API_URL);
         return response.data;
     } catch (error) {
         throw error.response?.data || error.message;
@@ -13,7 +13,7 @@ export const getAllColors = async () => {
 
 export const createColor = async (colorData) => {
     try {
-        const response = await axios.post(API_URL, colorData);
+        const response = await api.post(API_URL, colorData);
         return response.data;
     } catch (error) {
         throw error.response?.data || error.message;
@@ -22,7 +22,7 @@ export const createColor = async (colorData) => {
 
 export const deleteColor = async (id) => {
     try {
-        const response = await axios.delete(`${API_URL}/${id}`);
+        const response = await api.delete(`${API_URL}/${id}`);
         return response.data;
     } catch (error) {
         throw error.response?.data || error.message;

@@ -19,7 +19,7 @@ import Variants from './components/Variants';
 import VariantImages from './components/VariantImages';
 import { InventorySettings, ProductFlags, SEOSettings } from './components/Settings';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, AlertCircle, Loader2, X } from 'lucide-react';
 
@@ -78,8 +78,8 @@ function AddProductLayout() {
         const fetchData = async () => {
             try {
                 const [sizesRes, colorsRes] = await Promise.all([
-                    axios.get('http://localhost:5000/api/v1/sizes'),
-                    axios.get('http://localhost:5000/api/v1/colors')
+                    api.get(`/sizes`),
+                    api.get(`/colors`)
                 ]);
                 setAvailableSizes(sizesRes.data.data || []);
                 setAvailableColors(colorsRes.data.data || []);
@@ -323,7 +323,7 @@ function AddProductLayout() {
                 console.log(`📤 FormData [${key}]:`, value instanceof File ? `File: ${value.name}` : value);
             }
 
-            const response = await axios.post('http://localhost:5000/api/v1/products', formData, {
+            const response = await api.post('/products', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
