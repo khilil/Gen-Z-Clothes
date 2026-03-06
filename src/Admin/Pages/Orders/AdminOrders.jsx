@@ -45,8 +45,12 @@ const AdminOrders = () => {
             matchesTab = hasCustomItems;
         }
 
-        const matchesSearch = order._id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            order.user?.fullName?.toLowerCase().includes(searchQuery.toLowerCase());
+        const id = order._id || '';
+        const userName = order.user?.fullName || '';
+        const q = searchQuery.toLowerCase();
+
+        const matchesSearch = id.toLowerCase().includes(q) ||
+            userName.toLowerCase().includes(q);
         return matchesTab && matchesSearch;
     });
 

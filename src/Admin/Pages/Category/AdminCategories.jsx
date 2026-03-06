@@ -56,10 +56,12 @@ export default function AdminCategories() {
     }, []);
 
     const filteredCategories = useMemo(() => {
-        return categories.filter(c =>
-            c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            (c.description && c.description.toLowerCase().includes(searchTerm.toLowerCase()))
-        );
+        const q = searchTerm.toLowerCase();
+        return categories.filter(c => {
+            const name = c?.name || '';
+            const desc = c?.description || ''; // Added optional chaining here too
+            return name.toLowerCase().includes(q) || desc.toLowerCase().includes(q);
+        });
     }, [categories, searchTerm]);
 
     const handleFormChange = (e) => {

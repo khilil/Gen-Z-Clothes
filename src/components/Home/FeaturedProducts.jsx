@@ -27,12 +27,13 @@ function FeaturedProducts() {
         fetchProductsData();
     }, []);
 
-    const filteredProducts = products.filter(product => {
+    const filteredProducts = (products || []).filter(product => {
+        if (!product) return false; // Safety check
         if (activeTab === "NEW ARRIVALS") return product.isNewArrival;
         if (activeTab === "BEST SELLERS") return product.isBestSeller;
         if (activeTab === "TRENDING") return product.isTrending;
         return true;
-    }).slice(0, 8); // Limits to 8 products for the home page
+    }).slice(0, 8);
 
     return (
         <section className="featured-premium">

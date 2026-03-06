@@ -69,7 +69,7 @@ export function checkout(baseUrl, token) {
     };
     const body = JSON.stringify({
         shippingAddress: {
-            fullName: "Test User",
+            fullName: "K6 Load Test User",
             phone: "9876543210",
             addressLine: "123 Test Street",
             city: "Surat",
@@ -79,4 +79,13 @@ export function checkout(baseUrl, token) {
         paymentMethod: "COD"
     });
     return http.post(`${baseUrl}/orders/checkout`, body, params);
+}
+export function directBuy(baseUrl, token, payload) {
+    const params = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+    };
+    return http.post(`${baseUrl}/orders/direct`, JSON.stringify(payload), params);
 }

@@ -8,9 +8,9 @@
 export const ECOMMERCE_LOAD = {
     stages: [
         { duration: '30s', target: 50 },
-        { duration: '1m', target: 150 },
-        { duration: '1m', target: 300 },
-        { duration: '2m', target: 300 },
+        { duration: '1m', target: 400 },
+        { duration: '1m', target: 800 }, // 🚀 Bumping to 800 VUs per user request
+        { duration: '2m', target: 800 },
         { duration: '30s', target: 0 },
     ],
 };

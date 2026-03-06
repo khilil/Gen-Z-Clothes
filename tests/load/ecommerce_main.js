@@ -154,9 +154,20 @@ function placeOrder() {
             } catch (e) { }
 
             if (productId && variantId) {
-                api.addToCart(BASE_URL, token, productId, variantId);
-                sleep(1);
-                const res = api.checkout(BASE_URL, token);
+                const res = api.directBuy(BASE_URL, token, {
+                    productId,
+                    variantId,
+                    quantity: 1,
+                    shippingAddress: {
+                        fullName: "K6 Load Test User",
+                        phone: "9876543210",
+                        addressLine: "123 Test Street",
+                        city: "Surat",
+                        state: "Gujarat",
+                        pincode: "395001"
+                    },
+                    paymentMethod: "COD"
+                });
                 check(res, {
                     'checkout status is 200/201': (r) => r.status === 200 || r.status === 201,
                 });
