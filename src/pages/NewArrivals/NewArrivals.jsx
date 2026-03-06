@@ -31,7 +31,6 @@ function NewArrivals() {
 
     return (
         <div className="new-arrivals-page">
-            <Header />
 
             <section className="new-arrivals-hero">
                 <motion.div

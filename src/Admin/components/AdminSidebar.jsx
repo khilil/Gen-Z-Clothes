@@ -134,7 +134,7 @@ const Sidebar = () => {
                     </div>
                     <button
                         onClick={handleLogout}
-                        title="Logout"
+                        title="Sign Out"
                         className="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg transition-all"
                     >
                         <LogOut size={18} />

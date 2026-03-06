@@ -22,3 +22,14 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# k6 Load Test Results
+tests/load/results.json
+tests/load/results.html
+tests/load/summary.json

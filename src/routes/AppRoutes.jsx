@@ -34,6 +34,8 @@ import AdminCustomerDetail from "../Admin/Pages/Customer/AdminCustomerDetail";
 import AdminAnalytics from "../Admin/Pages/Analytics/AdminAnalytics";
 import AdminCategories from "../Admin/Pages/Category/AdminCategories";
 import LoginAuth from "../Auth/Login";
+import ForgotPassword from "../Auth/ForgotPassword";
+import ResetPassword from "../Auth/ResetPassword";
 import ProtectedRoute from "../components/ProtectedRoute";
 // import AddProductPage from "../Admin/Pages/Product/ProductDetailsPage";
 import AddProductLayout from "../Admin/Pages/Product/AddProductLayout";
@@ -100,6 +102,8 @@ export default function AppRoutes() {
             } />
 
             <Route path="/login" element={<LoginAuth />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
 
             <Route element={<MainLayout />}>
                 {/* NORMAL ROUTES */}

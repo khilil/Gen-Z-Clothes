@@ -12,8 +12,7 @@ import './Home.css'
 
 function Home() {
   return (
-    <main className="home-page">
-      <Header />
+    <main className="home-page pt-16 md:pt-24">
       <Hero />
       <Benefits />
       <Categories />

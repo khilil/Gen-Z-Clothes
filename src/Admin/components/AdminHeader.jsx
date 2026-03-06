@@ -1,9 +1,18 @@
 import React from 'react';
-import { useSelector } from "react-redux";
-import { Search, Bell, Plus, Command, Sun, Moon, ChevronDown } from 'lucide-react';
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { Search, Bell, Plus, Command, Sun, Moon, ChevronDown, LogOut } from 'lucide-react';
+import { logoutUser } from "../../features/auth/authSlice";
 
 const Header = ({ title = "Dashboard Overview", subtitle }) => {
     const { user } = useSelector((state) => state.auth);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        await dispatch(logoutUser());
+        navigate("/login");
+    };
 
     return (
         <header className="h-20 sticky top-0 bg-white/70 dark:bg-[#0f172a]/70 backdrop-blur-xl border-b border-slate-200/60 dark:border-slate-800/60 z-40 px-8 flex items-center justify-between transition-all">
@@ -50,6 +59,15 @@ const Header = ({ title = "Dashboard Overview", subtitle }) => {
                     <button className="p-2.5 text-slate-500 hover:text-indigo-600 hover:bg-white dark:hover:bg-slate-800 rounded-xl transition-all relative hover:shadow-sm active:scale-90">
                         <Bell size={19} />
                         <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-white dark:border-[#0f172a]"></span>
+                    </button>
+
+                    {/* Logout Button */}
+                    <button
+                        onClick={handleLogout}
+                        className="p-2.5 text-slate-500 hover:text-rose-600 hover:bg-white dark:hover:bg-slate-800 rounded-xl transition-all hover:shadow-sm active:scale-90"
+                        title="Sign Out"
+                    >
+                        <LogOut size={19} />
                     </button>
                 </div>
 

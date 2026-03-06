@@ -35,7 +35,7 @@ export default function AdminCategories() {
 
     const showNotification = (type, message) => {
         setNotification({ type, message });
-        setTimeout(() => setNotification(null), 5000);
+        setTimeout(() => setNotification(null), 3000);
     };
 
     const fetchCategories = async () => {
@@ -186,15 +186,15 @@ export default function AdminCategories() {
                                             <tr
                                                 key={category._id}
                                                 className={`group transition-all duration-200 ${isSubCategory
-                                                        ? 'bg-slate-900/40 hover:bg-slate-800/40'
-                                                        : 'bg-indigo-500/5 hover:bg-indigo-500/10 border-l-2 border-indigo-500/30'
+                                                    ? 'bg-slate-900/40 hover:bg-slate-800/40'
+                                                    : 'bg-indigo-500/5 hover:bg-indigo-500/10 border-l-2 border-indigo-500/30'
                                                     }`}
                                             >
                                                 <td className="px-6 py-5">
                                                     <div className="flex items-center gap-3">
                                                         <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${isSubCategory
-                                                                ? 'bg-slate-800 text-slate-400'
-                                                                : 'bg-indigo-500/20 text-indigo-400 ring-1 ring-indigo-500/30'
+                                                            ? 'bg-slate-800 text-slate-400'
+                                                            : 'bg-indigo-500/20 text-indigo-400 ring-1 ring-indigo-500/30'
                                                             }`}>
                                                             {isSubCategory ? <ChevronRight size={18} /> : <Layers size={20} />}
                                                         </div>

@@ -3,10 +3,6 @@ import ElementLibrary from "./components/ElementLibrary";
 import { useFabric } from "../../context/FabricContext";
 import { addGraphicToCanvas } from "./fabric/Graphic/components/addGraphic";
 
-import api from "../../../public/assets/graphics/api.svg";
-import calling from "../../../public/assets/graphics/calling.svg";
-import cloud from "../../../public/assets/graphics/cloud.svg";
-import jksAura from "../../../public/assets/graphics/JK Aura.svg";
 import { addSVGToCanvas } from "./fabric/Graphic/addSVGGraphic";
 import LayersPanel from "./components/LayersPanel";
 import PreviewButton from "./components/Preview/PreviewButton";
@@ -17,13 +13,7 @@ export default function GraphicsEditorPage() {
     const [fetchedGraphics, setFetchedGraphics] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    const svgGraphics = [
-        { name: "Api", file: api },
-        { name: "Calling", file: calling },
-        { name: "Cloud", file: cloud },
-        { name: "JK Aura", file: jksAura },
-        ...fetchedGraphics.map(g => ({ name: g.name, file: g.url, isFetched: true }))
-    ];
+    const svgGraphics = fetchedGraphics.map(g => ({ name: g.name, file: g.url, isFetched: true }));
 
     useEffect(() => {
         const fetchRemoteGraphics = async () => {

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useFabric } from "../../../context/FabricContext";
 import { useCart } from "../../../context/CartContext";
 import { FiX, FiCheck, FiDownload, FiShoppingCart, FiLoader } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Canvas } from "fabric";
 
@@ -12,6 +13,7 @@ export default function DesignPreviewModal() {
     const [loading, setLoading] = useState(false);
     const [addingToCart, setAddingToCart] = useState(false);
     const [success, setSuccess] = useState(false);
+    const navigate = useNavigate();
 
     const {
         fabricCanvas,
@@ -80,12 +82,12 @@ export default function DesignPreviewModal() {
 
         // A. Capture Mockup (with shirt, no stroke)
         if (activePrintArea) activePrintArea.set({ stroke: 'transparent' });
-        results[activeSide] = mainCanvas.toDataURL({ format: 'png', quality: 1, multiplier: 2.5 });
+        results[activeSide] = mainCanvas.toDataURL({ format: 'png', quality: 1, multiplier: 4.5 });
         thumbnails[activeSide] = mainCanvas.toDataURL({ format: 'jpeg', quality: 0.8, multiplier: 0.6 });
 
         // B. Capture Print File (no shirt, high-res)
         if (activeBaseImg) activeBaseImg.set({ visible: false });
-        printFiles[activeSide] = mainCanvas.toDataURL({ format: 'png', multiplier: 2.5 });
+        printFiles[activeSide] = mainCanvas.toDataURL({ format: 'png', multiplier: 4.5 });
         if (activeBaseImg) activeBaseImg.set({ visible: true });
 
         if (activePrintArea) activePrintArea.set({ stroke: 'rgba(0,0,0,0.3)' });
@@ -105,7 +107,7 @@ export default function DesignPreviewModal() {
                 await hiddenCanvas.loadFromJSON(sideDesignJSON);
 
                 // Capture Print File first (Design only)
-                printFiles[side] = hiddenCanvas.toDataURL({ format: 'png', multiplier: 2.5 });
+                printFiles[side] = hiddenCanvas.toDataURL({ format: 'png', multiplier: 4.5 });
 
                 // Add Base Image for Mockup
                 const baseURL = side === 'front' ? productDataRef.current.frontImage : productDataRef.current.backImage;
@@ -117,7 +119,7 @@ export default function DesignPreviewModal() {
                 const sPrintArea = hiddenCanvas.getObjects().find(o => o.excludeFromExport && o.type === 'rect');
                 if (sPrintArea) sPrintArea.set({ stroke: 'transparent' });
 
-                results[side] = hiddenCanvas.toDataURL({ format: 'png', quality: 1, multiplier: 2.5 });
+                results[side] = hiddenCanvas.toDataURL({ format: 'png', quality: 1, multiplier: 4.5 });
                 thumbnails[side] = hiddenCanvas.toDataURL({ format: 'jpeg', quality: 0.8, multiplier: 0.6 });
 
                 hiddenCanvas.dispose();
@@ -216,6 +218,7 @@ export default function DesignPreviewModal() {
             setTimeout(() => {
                 setSuccess(false);
                 setIsOpen(false);
+                navigate("/"); // Redirect to home page
             }, 2000);
         } catch (err) {
             console.error("Failed to add to bag:", err);

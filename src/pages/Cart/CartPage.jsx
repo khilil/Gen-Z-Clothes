@@ -23,18 +23,7 @@ export default function CartPage() {
     return (
         <div className="bg-white min-h-screen font-sans text-black selection:bg-[#d4c4b1] selection:text-black">
             {/* Header Area - Since the main layout might have its own header, we match the style */}
-            <header className="bg-black text-white h-20 flex items-center border-b border-white/10 sticky top-0 z-50">
-                <div className="max-w-7xl mx-auto w-full px-4 md:px-8 flex justify-between items-center text-white">
-                    <Link to="/" className="text-xl md:text-3xl font-[Oswald] tracking-tighter uppercase no-underline text-white">MODERN MEN</Link>
-                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] opacity-80">
-                        <span className="material-symbols-outlined text-[#d4c4b1] text-lg">shopping_bag</span>
-                        <span className="hidden sm:inline">Shopping Cart ({cart.length})</span>
-                        <span className="sm:hidden">Cart ({cart.length})</span>
-                    </div>
-                </div>
-            </header>
-
-            <main className="max-w-7xl mx-auto px-4 md:px-8 py-12">
+            <main className="max-w-7xl mx-auto px-4 md:px-8 py-24 md:py-32">
                 {/* Progress Stepper */}
                 <div className="hidden md:flex items-center justify-center mb-16 max-w-2xl mx-auto">
                     <div className="flex items-center gap-4 group">
@@ -66,7 +55,7 @@ export default function CartPage() {
                     <div className="flex flex-col lg:flex-row gap-16">
                         {/* Cart Items List */}
                         <div className="flex-1 space-y-8">
-                            <h1 className="text-2xl md:text-3xl font-[Oswald] uppercase tracking-tight mb-8">Your Bag ({cart.length} Items)</h1>
+                            <h1 className="text-2xl md:text-3xl font-[Oswald] uppercase tracking-tight mb-8">Your Bag ({cart.length} {cart.length === 1 ? 'Item' : 'Items'})</h1>
 
                             {cart.map((item) => (
                                 <div key={item.cartItemId} className="flex flex-col sm:flex-row gap-4 md:gap-8 py-8 border-b border-gray-100 last:border-0 hover:bg-gray-50/30 transition-colors p-4 rounded-3xl group">

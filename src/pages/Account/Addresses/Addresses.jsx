@@ -41,88 +41,92 @@ const Addresses = () => {
         <div className="addresses">
 
             {/* 📍 ARCHIVES: GEOLOCATION REGISTRY */}
-            <header className="mb-20 border-b-2 border-black pb-10 flex justify-between items-end">
+            <header className="mb-16 border-b border-black/[0.03] pb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                    <h1 className="font-[Oswald] text-7xl font-bold uppercase tracking-tighter leading-[0.85]">
-                        Addresses
+                    <h1 className="font-impact text-5xl md:text-6xl uppercase tracking-tight text-black">
+                        Shipping Archive
                     </h1>
-                    <p className="text-[10px] uppercase tracking-[0.4em] font-black text-black/40 mt-4">
-                        Geolocation Registry & Shipping Protocols
+                    <p className="text-[10px] uppercase tracking-[0.4em] font-black text-black/30 mt-4">
+                        Geolocation Registry // Logistics Routing Protocols
                     </p>
                 </div>
 
-                <div className="hidden md:block text-[8px] uppercase tracking-widest font-black text-black/20">
-                    Active Nodes: {addresses.length}
+                <div className="text-[10px] uppercase tracking-[0.4em] font-black text-black/20">
+                    Active Delivery Nodes: {addresses.length.toString().padStart(2, '0')}
                 </div>
             </header>
 
-            <div className="addresses-grid">
+            <div className="addresses-grid grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
 
                 {/* ADD NEW */}
                 <button
-                    className="address-add"
+                    className="address-add bg-black/[0.01] border border-dashed border-black/10 rounded-[2.5rem] flex flex-col items-center justify-center gap-8 group hover:border-[#8b7e6d] hover:bg-black/[0.03] transition-all duration-700 min-h-[350px] shadow-[0_10px_30px_rgba(0,0,0,0.01)]"
                     onClick={() => {
                         setEditingAddress(null); // 🔥 important
                         setOpen(true);
                     }}
                 >
-                    <div className="add-icon">
-                        <span className="material-symbols-outlined">add</span>
+                    <div className="add-icon w-20 h-20 bg-black/5 rounded-full flex items-center justify-center text-black/30 group-hover:bg-black group-hover:text-white group-hover:scale-110 transition-all duration-700 shadow-[0_10px_20px_rgba(0,0,0,0.03)]">
+                        <span className="material-symbols-outlined text-4xl">add</span>
                     </div>
-                    <span>Add New Address</span>
+                    <span className="text-[11px] font-black uppercase tracking-[0.4em] text-black/30 group-hover:text-black transition-colors">Initialize New Node</span>
                 </button>
 
                 {/* ADDRESS CARDS */}
                 {addresses.map((addr) => (
                     <div
                         key={addr._id}
-                        className={`address-card ${addr.isDefault ? "default" : ""}`}
+                        className={`address-card bg-white border rounded-3xl p-10 relative overflow-hidden group hover:bg-white/[0.08] transition-all duration-700 ${addr.isDefault ? "border-[#d4c4b1] shadow-[0_0_30px_rgba(212,196,177,0.1)]" : "border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.05)]"}`}
                     >
                         {addr.isDefault && (
-                            <span className="default-badge">Default</span>
+                            <span className="absolute top-6 right-6 bg-[#d4c4b1] text-black text-[8px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full shadow-lg">Primary Node</span>
                         )}
 
-                        <div className="address-content">
-                            <h3>Address</h3>
+                        <div className="address-content mb-10">
+                            <h3 className="text-xl font-impact tracking-tight text-black mb-8 uppercase opacity-60">Protocol Index</h3>
 
-                            <div className="address-field">
-                                <label>Name</label>
-                                <p>{addr.fullName}</p>
+                            <div className="address-field mb-6">
+                                <label className="text-[8px] font-black uppercase tracking-[0.3em] text-black/30 mb-2 block">Identity Index</label>
+                                <p className="text-base font-impact tracking-tight text-black uppercase">{addr.fullName}</p>
                             </div>
 
                             <div className="address-field">
-                                <label>Address</label>
-                                <p className="muted">
+                                <label className="text-[8px] font-black uppercase tracking-[0.3em] text-black/30 mb-2 block">Routing Coordinates</label>
+                                <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-black/60 leading-relaxed">
                                     {addr.streetAddress} <br />
-                                    {addr.city} - {addr.pinCode}
+                                    {addr.city} // {addr.pinCode}
                                 </p>
                             </div>
                         </div>
 
-                        <div className="address-actions">
+                        <div className="address-actions mt-auto pt-10 border-t border-black/[0.03] flex flex-wrap gap-8">
                             <button
+                                className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-black/30 hover:text-black transition-all group/btn"
                                 onClick={() => {
                                     setEditingAddress(addr);
                                     setOpen(true);
                                 }}
                             >
-                                <span className="material-symbols-outlined">edit</span>
-                                Edit
+                                <span className="material-symbols-outlined text-lg group-hover/btn:rotate-12 transition-transform text-[#8b7e6d]">edit</span>
+                                Modify
                             </button>
 
                             {!addr.isDefault && (
-                                <button onClick={() => handleSetDefault(addr._id)}>
-                                    <span className="material-symbols-outlined">star</span>
-                                    Set Default
+                                <button
+                                    className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-black/30 hover:text-black transition-all group/btn"
+                                    onClick={() => handleSetDefault(addr._id)}
+                                >
+                                    <span className="material-symbols-outlined text-lg group-hover/btn:scale-125 transition-transform text-[#8b7e6d]">star</span>
+                                    Set Primary
                                 </button>
                             )}
 
                             <button
-                                className="danger"
+                                className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-rose-500/60 hover:text-rose-600 transition-all group/btn ml-auto"
                                 onClick={() => handleDelete(addr._id)}
                             >
-                                <span className="material-symbols-outlined">delete</span>
-                                Delete
+                                <span className="material-symbols-outlined text-lg group-hover/btn:scale-110 transition-transform">delete</span>
+                                Purge
                             </button>
                         </div>
                     </div>

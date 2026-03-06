@@ -7,7 +7,18 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "playwright test",
+    "test:e2e": "playwright test --project=chromium -j 1",
+    "test:load": "k6 run tests/load/run-all.js",
+    "test:load:products": "k6 run tests/load/scenarios/products.load.js",
+    "test:load:auth": "k6 run tests/load/scenarios/auth.load.js",
+    "test:load:cart": "k6 run tests/load/scenarios/cart.load.js",
+    "test:load:stress": "k6 run tests/load/scenarios/stress-1000.js",
+    "test:load:checkout": "k6 run tests/load/scenarios/checkout.load.js",
+    "test:load:db": "k6 run tests/load/scenarios/db-bottleneck.js",
+    "test:load:pro": "k6 run tests/load/ecommerce_main.js",
+    "test:load:report": "node tests/load/generate-report.js"
   },
   "dependencies": {
     "@react-oauth/google": "^0.13.4",
@@ -27,17 +38,24 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4.1.18",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
+    "@vitejs/plugin-react-swc": "^4.2.3",
     "autoprefixer": "^10.4.24",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "jsdom": "^28.1.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.18",
-    "vite": "^7.2.4"
+    "vite": "^7.2.4",
+    "vitest": "^4.0.18"
   }
 }

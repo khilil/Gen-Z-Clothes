@@ -46,23 +46,24 @@ const Profile = () => {
   return (
     <section className="profile-page">
       {/* 🏛️ HEADER */}
-      <div className="profile-page-header">
-        <h2 className="profile-page-title">Identity Registry</h2>
-        <p className="profile-page-subtitle">
+      <div className="profile-page-header border-b border-black/[0.03] pb-10 mb-16">
+        <h2 className="text-5xl font-impact tracking-tight mb-3 text-black">Identity Registry</h2>
+        <p className="text-black/30 text-[10px] uppercase tracking-[0.4em] font-black">
           {isEditing
-            ? "Modification in progress. Ensure data integrity before synchronization."
-            : "Authorized access to personal parameters and security protocols."}
+            ? "Modification in progress // Synchronizing personal parameters"
+            : "Authorized access // Personal security protocols active"}
         </p>
       </div>
 
       {/* 📑 DATA CARD */}
-      <div className="profile-card">
-        <h3 className="profile-card-title">Principal Parameters</h3>
+      <div className="profile-card rounded-[2.5rem] p-10 md:p-14 relative overflow-hidden group/card">
+        <div className="absolute top-0 right-0 p-5 opacity-10 uppercase text-[8px] font-black tracking-widest text-black">Registry Level 01</div>
+        <h3 className="text-2xl font-impact tracking-tight text-black mb-12 uppercase">Principal Parameters</h3>
 
         {!isEditing ? (
           /* ================= VIEW MODE ================= */
           <>
-            <div className="profile-grid">
+            <div className="profile-grid grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-10">
               <ViewField label="Identity Index" value={profile.fullName} />
               <ViewField label="Communication Node" value={profile.email} />
               <ViewField label="Mobile Signal" value={profile.mobile} />
@@ -78,22 +79,22 @@ const Profile = () => {
               <ViewField label="Genetic Trait" value={profile.gender} />
             </div>
 
-            <div className="profile-actions-view">
+            <div className="profile-actions-view mt-14 pt-10 border-t border-black/[0.03] flex flex-wrap gap-10">
               <button
-                className="profile-action-btn"
+                className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] text-[#8b7e6d] hover:text-black transition-all group/btn"
                 onClick={() => setIsEditing(true)}
               >
-                <span className="material-symbols-outlined">edit_note</span>
+                <span className="material-symbols-outlined text-xl group-hover/btn:rotate-12 transition-transform">edit_note</span>
                 Modify Registry
               </button>
 
-              <button className="profile-action-btn">
-                <span className="material-symbols-outlined">shield_lock</span>
-                Reset Protocol
+              <button className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] text-black/30 hover:text-black transition-all group/btn">
+                <span className="material-symbols-outlined text-xl group-hover/btn:scale-110 transition-transform">shield_lock</span>
+                Security Reset
               </button>
 
-              <button className="profile-action-btn danger ml-auto" onClick={handleLogout}>
-                <span className="material-symbols-outlined">logout</span>
+              <button className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] text-rose-500/60 hover:text-rose-600 transition-all group/btn ml-auto" onClick={handleLogout}>
+                <span className="material-symbols-outlined text-xl group-hover/btn:translate-x-1 transition-transform">logout</span>
                 Terminal Shutdown
               </button>
             </div>
@@ -208,16 +209,16 @@ const Profile = () => {
 /* ================= HELPERS ================= */
 
 const ViewField = ({ label, value }) => (
-  <div className="profile-field view">
-    <span className="field-label">{label}</span>
-    <span className="field-value">{value}</span>
+  <div className="profile-field flex flex-col gap-3">
+    <span className="text-[9px] font-black uppercase tracking-[0.4em] text-black/20">{label}</span>
+    <span className="text-xl font-impact tracking-tight text-black uppercase leading-none">{value}</span>
   </div>
 );
 
 const EditField = ({ label, ...props }) => (
-  <div className="profile-field">
-    <label>{label}</label>
-    <input {...props} />
+  <div className="profile-field flex flex-col gap-4">
+    <label className="text-[9px] font-black uppercase tracking-[0.4em] text-[#8b7e6d]">{label}</label>
+    <input {...props} className="bg-black/[0.02] border border-black/10 rounded-2xl px-8 py-5 text-black text-[12px] font-bold tracking-[0.1em] focus:border-[#8b7e6d] focus:bg-black/[0.04] transition-all outline-none" />
   </div>
 );
 

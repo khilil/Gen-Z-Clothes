@@ -39,113 +39,110 @@ const Dashboard = () => {
   return (
     <div className="flex-1 space-y-12 pb-20">
       <header>
-        <h1 className="text-4xl font-impact tracking-tight mb-2">Welcome back, {user?.name?.split(" ")[0] || "Friend"}!</h1>
-        <p className="text-sm text-muted">Here's an overview of your recent activity and account status.</p>
+        <h1 className="text-4xl md:text-5xl font-impact tracking-tight mb-3 text-black">Welcome back, {user?.name?.split(" ")[0] || "Friend"}!</h1>
+        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-black/40">Operational Status: Optimal // Core Member</p>
       </header>
 
       {/* STATS GRID */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white border border-gray-100 p-8 rounded-3xl shadow-sm hover:shadow-md transition-shadow">
-          <div className="flex justify-between items-start mb-4">
-            <span className="material-symbols-outlined text-3xl text-accent">package_2</span>
-            <span className="text-[10px] font-black uppercase tracking-widest text-muted">Lifetime</span>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="bg-white border border-black/[0.03] p-10 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.02)] hover:shadow-[0_30px_70px_rgba(0,0,0,0.05)] transition-all duration-700 group">
+          <div className="flex justify-between items-start mb-6">
+            <span className="material-symbols-outlined text-4xl text-[#8b7e6d] group-hover:scale-110 transition-transform">package_2</span>
+            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-black/20">Lifetime</span>
           </div>
-          <p className="text-3xl font-impact tracking-tight">{stats.totalOrders.toString().padStart(2, '0')}</p>
-          <p className="text-[10px] font-black uppercase tracking-widest text-muted mt-1">Total Orders</p>
+          <p className="text-4xl font-impact tracking-tight text-black">{stats.totalOrders.toString().padStart(2, '0')}</p>
+          <p className="text-[9px] font-black uppercase tracking-[0.3em] text-black/30 mt-2">Total Orders</p>
         </div>
 
-        <div className="bg-white border border-gray-100 p-8 rounded-3xl shadow-sm hover:shadow-md transition-shadow">
-          <div className="flex justify-between items-start mb-4">
-            <span className="material-symbols-outlined text-3xl text-accent">local_shipping</span>
-            <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></div>
+        <div className="bg-white border border-black/[0.03] p-10 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.02)] hover:shadow-[0_30px_70px_rgba(0,0,0,0.05)] transition-all duration-700 group">
+          <div className="flex justify-between items-start mb-6">
+            <span className="material-symbols-outlined text-4xl text-[#8b7e6d] group-hover:scale-110 transition-transform">local_shipping</span>
+            <div className="h-2 w-2 rounded-full bg-[#8b7e6d] animate-pulse shadow-[0_0_15px_rgba(139,126,109,0.5)]"></div>
           </div>
-          <p className="text-3xl font-impact tracking-tight">{stats.activeOrders.toString().padStart(2, '0')}</p>
-          <p className="text-[10px] font-black uppercase tracking-widest text-muted mt-1">Active Orders</p>
+          <p className="text-4xl font-impact tracking-tight text-black">{stats.activeOrders.toString().padStart(2, '0')}</p>
+          <p className="text-[9px] font-black uppercase tracking-[0.3em] text-black/30 mt-2">Active Orders</p>
         </div>
 
-        <div className="bg-white border border-gray-100 p-8 rounded-3xl shadow-sm hover:shadow-md transition-shadow">
-          <div className="flex justify-between items-start mb-4">
-            <span className="material-symbols-outlined text-3xl text-accent">favorite_border</span>
-            <span className="text-[10px] font-black uppercase tracking-widest text-muted">New</span>
+        <div className="bg-white border border-black/[0.03] p-10 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.02)] hover:shadow-[0_30px_70px_rgba(0,0,0,0.05)] transition-all duration-700 group">
+          <div className="flex justify-between items-start mb-6">
+            <span className="material-symbols-outlined text-4xl text-[#8b7e6d] group-hover:scale-110 transition-transform">favorite_border</span>
+            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-[#8b7e6d]">Archive</span>
           </div>
-          <p className="text-3xl font-impact tracking-tight">{(wishlist?.length || 0).toString().padStart(2, '0')}</p>
-          <p className="text-[10px] font-black uppercase tracking-widest text-muted mt-1">Wishlist Items</p>
+          <p className="text-4xl font-impact tracking-tight text-black">{(wishlist?.length || 0).toString().padStart(2, '0')}</p>
+          <p className="text-[9px] font-black uppercase tracking-[0.3em] text-black/30 mt-2">Wishlist Items</p>
         </div>
       </div>
 
       {/* RECENT ORDERS */}
       <section>
-        <div className="flex justify-between items-end mb-8">
-          <h2 className="text-2xl font-impact tracking-tight">Recent Orders</h2>
+        <div className="flex justify-between items-end mb-10">
+          <h2 className="text-3xl font-impact tracking-tight text-black uppercase">Recent Orders</h2>
           <Link
             to="/account/orders"
-            className="text-[10px] font-black uppercase tracking-widest hover:text-accent transition-colors"
+            className="text-[10px] font-black uppercase tracking-[0.3em] text-black/30 hover:text-black transition-colors"
           >
-            View All Orders
+            Access Full Logs
           </Link>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
           {recentOrder ? (
-            <div className="bg-white border border-gray-100 p-6 rounded-3xl flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-black/10 transition-colors">
-              <div className="flex items-center gap-6">
-                <div className="w-20 h-24 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0 border border-gray-100">
+            <div className="bg-white border border-black/[0.03] p-10 rounded-[2.5rem] flex flex-col md:flex-row md:items-center justify-between gap-10 shadow-[0_20px_50px_rgba(0,0,0,0.02)] transition-all duration-700 hover:shadow-[0_40px_80px_rgba(0,0,0,0.06)]">
+              <div className="flex items-center gap-10">
+                <div className="w-24 h-32 bg-black/[0.02] rounded-3xl overflow-hidden flex-shrink-0 border border-black/5 p-2">
                   <img
                     src={recentOrder.items?.[0]?.customizations?.previews?.front || recentOrder.items?.[0]?.imageURL || "https://placeholder.com/100"}
                     alt="Product"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover rounded-2xl"
                   />
                 </div>
-                <div className="space-y-1">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted">Order #{recentOrder._id.slice(-8).toUpperCase()}</p>
-                  <p className="text-sm font-bold uppercase tracking-tight">
-                    {recentOrder.items?.[0]?.title} {recentOrder.items?.length > 1 && `& ${recentOrder.items.length - 1} more`}
+                <div className="space-y-3">
+                  <p className="text-[9px] font-black uppercase tracking-[0.4em] text-black/20">Protocol #{recentOrder._id.slice(-8).toUpperCase()}</p>
+                  <p className="text-[15px] font-black uppercase tracking-tight text-black">
+                    {recentOrder.items?.[0]?.title} {recentOrder.items?.length > 1 && `+${recentOrder.items.length - 1} Units`}
                   </p>
-                  <p className="text-[11px] text-muted">Placed on {new Date(recentOrder.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
+                  <p className="text-[10px] text-black/40 uppercase tracking-[0.2em] font-black">Logged: {new Date(recentOrder.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
                 </div>
               </div>
-              <div className="flex items-center justify-between md:justify-end gap-12 w-full md:w-auto">
+              <div className="flex items-center justify-between md:justify-end gap-16 w-full md:w-auto">
                 <div className="text-right">
-                  <span className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full ${recentOrder.orderStatus === 'delivered' ? 'bg-gray-100 text-gray-500' : 'bg-blue-50 text-blue-600'
+                  <span className={`px-6 py-2 text-[9px] font-black uppercase tracking-[0.3em] rounded-full border transition-all ${recentOrder.orderStatus === 'delivered' ? 'bg-black/5 text-black/40 border-black/5' : 'bg-[#8b7e6d]/10 text-[#8b7e6d] border-[#8b7e6d]/20 shadow-[0_10px_30px_rgba(139,126,109,0.1)]'
                     }`}>
                     {recentOrder.orderStatus}
                   </span>
-                  {recentOrder.orderStatus !== 'delivered' && (
-                    <p className="text-[10px] text-muted mt-1">Status Update: {recentOrder.orderStatus}</p>
-                  )}
-                  {recentOrder.orderStatus === 'delivered' && (
-                    <p className="text-[10px] text-muted mt-1">on {new Date(recentOrder.updatedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
-                  )}
                 </div>
                 <Link
                   to="/account/orders"
-                  className={`${recentOrder.orderStatus === 'delivered' ? 'border border-black text-black' : 'bg-black text-white'} px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-accent hover:text-black transition-all`}
+                  className={`px-10 py-5 rounded-2xl text-[9px] font-black uppercase tracking-[0.3em] transition-all hover:scale-105 active:scale-95 ${recentOrder.orderStatus === 'delivered' ? 'border border-black/10 text-black hover:bg-black hover:text-white' : 'bg-black text-white hover:bg-[#8b7e6d]'}`}
                 >
-                  {recentOrder.orderStatus === 'delivered' ? 'View Details' : 'Track Order'}
+                  {recentOrder.orderStatus === 'delivered' ? 'Review Log' : 'Trace Order'}
                 </Link>
               </div>
             </div>
           ) : (
-            <p className="text-sm text-muted py-8 text-center bg-gray-50 rounded-3xl border border-dashed border-gray-200">No recent orders found.</p>
+            <p className="text-[11px] text-black/20 uppercase tracking-[0.5em] py-20 text-center bg-white border border-dashed border-black/10 rounded-[3rem]">No transactions detected in primary archive.</p>
           )}
         </div>
       </section>
 
       {/* RECENTLY VIEWED */}
-      <section className="pt-8">
-        <h2 className="text-2xl font-impact tracking-tight mb-8">Recently Viewed</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <section className="pt-16">
+        <h2 className="text-3xl font-impact tracking-tight mb-10 text-black uppercase">Recent Discoveries</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {[1, 2].map((i) => (
             <div key={i} className="group cursor-pointer">
-              <div className="aspect-[3/4] rounded-2xl bg-gray-50 mb-3 overflow-hidden border border-gray-100">
+              <div className="aspect-[3/4] rounded-[2rem] bg-black/[0.02] mb-6 overflow-hidden border border-black/[0.03] relative shadow-[0_10px_30px_rgba(0,0,0,0.02)]">
                 <img
                   src={`https://picsum.photos/seed/${i + 10}/400/600`}
                   alt="Product"
-                  className="w-full h-full object-cover grayscale group-hover:scale-110 transition-transform duration-500"
+                  className="w-full h-full object-cover grayscale opacity-80 group-hover:scale-110 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000"
                 />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <span className="material-symbols-outlined text-white text-3xl">visibility</span>
+                </div>
               </div>
-              <p className="text-[10px] font-black uppercase tracking-widest">Premium Item 00{i}</p>
-              <p className="text-xs font-impact mt-1">₹4,990</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-black/20">Discovery Protocol 00{i}</p>
+              <p className="text-[15px] font-impact mt-2 text-black tracking-tight">₹4,990</p>
             </div>
           ))}
         </div>

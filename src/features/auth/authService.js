@@ -15,8 +15,8 @@ export const getCurrentUserAPI = async () => {
     return response.data;
 };
 
-export const logoutAPI = async () => {
-    const response = await api.post("/users/logout");
+export const logoutAPI = async (data) => {
+    const response = await api.post("/users/logout", data);
     return response.data;
 };
 
@@ -37,5 +37,15 @@ export const updateAddressAPI = async (addressId, data) => {
 
 export const deleteAddressAPI = async (addressId) => {
     const response = await api.delete(`/users/address/${addressId}`);
+    return response.data;
+};
+
+export const forgotPasswordAPI = async (email) => {
+    const response = await api.post("/users/forgot-password", { email });
+    return response.data;
+};
+
+export const resetPasswordAPI = async (token, password) => {
+    const response = await api.post(`/users/reset-password/${token}`, { password });
     return response.data;
 };

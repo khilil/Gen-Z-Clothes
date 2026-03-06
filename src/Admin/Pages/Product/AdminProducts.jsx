@@ -55,7 +55,7 @@ export default function AdminProducts() {
 
     const showNotification = (type, message) => {
         setNotification({ type, message });
-        setTimeout(() => setNotification(null), 5000);
+        setTimeout(() => setNotification(null), 3000);
     };
 
     useEffect(() => {

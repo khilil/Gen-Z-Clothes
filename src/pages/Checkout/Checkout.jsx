@@ -586,7 +586,7 @@ export default function Checkout() {
                 className="lg:w-[450px]"
               >
                 <div className="sticky top-32 bg-gray-50 border border-gray-100 p-8 md:p-10 rounded-3xl space-y-10 shadow-sm">
-                  <h3 className="text-2xl font-[Oswald] uppercase tracking-tight">Order Synopsis</h3>
+                  <h3 className="text-2xl font-[Oswald] uppercase tracking-tight">Your Bag ({checkoutItems.length} {checkoutItems.length === 1 ? 'Item' : 'Items'})</h3>
 
                   <div className="space-y-6 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                     {checkoutItems.map((item, idx) => (

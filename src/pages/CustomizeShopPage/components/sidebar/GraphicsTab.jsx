@@ -1,22 +1,10 @@
-import { useFabric } from "../../../../context/FabricContext";
-import { addSVGToCanvas } from "../../fabric/Graphic/addSVGGraphic";
-
-// SVG Imports (Same as GraphicsEditorPage)
-import api from "../../../../../public/assets/graphics/api.svg";
-import calling from "../../../../../public/assets/graphics/calling.svg";
-import cloud from "../../../../../public/assets/graphics/cloud.svg";
-import jksAura from "../../../../../public/assets/graphics/JK Aura.svg";
+// SVG Imports removed as per requirement to use database-only graphics
 
 import { useEffect, useState, useRef } from "react";
 import { getGraphics } from "../../../../services/customizationService";
 import { addImageToCanvas } from "../../fabric/Graphic/addImageGraphic";
-
-const GRAPHICS_FALLBACK = [
-    { name: "Api", file: api },
-    { name: "Calling", file: calling },
-    { name: "Cloud", file: cloud },
-    { name: "JK Aura", file: jksAura },
-];
+import { addSVGToCanvas } from "../../fabric/Graphic/addSVGGraphic";
+import { useFabric } from "../../../../context/FabricContext";
 
 export default function GraphicsTab() {
     const { fabricCanvas, printAreaRef, uploadedAssetsMetadataRef } = useFabric();
@@ -41,12 +29,9 @@ export default function GraphicsTab() {
         fetchRemoteGraphics();
     }, []);
 
-    const allGraphics = [
-        ...GRAPHICS_FALLBACK.map(g => ({ ...g, price: 0 })),
-        ...fetchedGraphics.map(g => ({ name: g.name, file: g.url, price: g.price }))
-    ];
+    const allGraphics = fetchedGraphics.map(g => ({ name: g.name, file: g.url, price: g.price }));
 
-    const handleGraphicAdd = (graphic) => {
+    const handleGraphicAdd = async (graphic) => {
         const { file, price, name } = graphic;
 
         // Store metadata for production audit
@@ -62,9 +47,9 @@ export default function GraphicsTab() {
 
         const isSVG = typeof file === 'string' && file.toLowerCase().endsWith('.svg');
         if (isSVG) {
-            addSVGToCanvas(fabricCanvas.current, file, printAreaRef.current, price);
+            await addSVGToCanvas(fabricCanvas.current, file, printAreaRef.current, price);
         } else {
-            addImageToCanvas(fabricCanvas.current, file, printAreaRef.current, price);
+            await addImageToCanvas(fabricCanvas.current, file, printAreaRef.current, price);
         }
     };
 

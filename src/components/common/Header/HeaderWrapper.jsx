@@ -16,8 +16,12 @@ export default function HeaderWrapper() {
     location.pathname
   );
 
+  const isLightPage = matchPath({ path: "/cart" }, location.pathname) ||
+    matchPath({ path: "/account/*" }, location.pathname) ||
+    matchPath({ path: "/about" }, location.pathname);
+
   if (isCheckout) return <CheckoutHeader />;
   if (isStudio) return <StudioHeader />;
 
-  return <Header />;
+  return <Header forceSolid={!!isLightPage} />;
 }

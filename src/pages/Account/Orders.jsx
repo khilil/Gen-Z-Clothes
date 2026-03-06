@@ -41,39 +41,39 @@ const Orders = () => {
     switch (status?.toLowerCase()) {
       case 'delivered':
         return {
-          bg: 'bg-emerald-50',
-          text: 'text-emerald-700',
-          dot: 'bg-emerald-500',
-          border: 'border-emerald-100'
+          bg: 'bg-black/5',
+          text: 'text-black/40',
+          dot: 'bg-black/20',
+          border: 'border-black/5'
         };
       case 'shipped':
         return {
-          bg: 'bg-blue-50',
-          text: 'text-blue-700',
-          dot: 'bg-blue-500',
-          border: 'border-blue-100'
+          bg: 'bg-[#8b7e6d]/10',
+          text: 'text-[#8b7e6d]',
+          dot: 'bg-[#8b7e6d]',
+          border: 'border-[#8b7e6d]/20'
         };
       case 'processing':
       case 'placed':
         return {
-          bg: 'bg-amber-50',
-          text: 'text-amber-700',
-          dot: 'bg-amber-500',
-          border: 'border-amber-100'
+          bg: 'bg-indigo-500/10',
+          text: 'text-indigo-600',
+          dot: 'bg-indigo-500',
+          border: 'border-indigo-500/20'
         };
       case 'cancelled':
         return {
-          bg: 'bg-red-50',
-          text: 'text-red-700',
-          dot: 'bg-red-500',
-          border: 'border-red-100'
+          bg: 'bg-rose-500/10',
+          text: 'text-rose-600',
+          dot: 'bg-rose-500',
+          border: 'border-rose-500/20'
         };
       default:
         return {
-          bg: 'bg-gray-50',
-          text: 'text-gray-700',
-          dot: 'bg-gray-500',
-          border: 'border-gray-100'
+          bg: 'bg-black/5',
+          text: 'text-black/40',
+          dot: 'bg-black/20',
+          border: 'border-black/5'
         };
     }
   };
@@ -94,28 +94,28 @@ const Orders = () => {
   return (
     <div className="flex-1 pb-20">
       {/* HEADER & FILTERS */}
-      <header className="flex flex-col xl:flex-row xl:items-end justify-between gap-6 mb-12">
+      <header className="flex flex-col xl:flex-row xl:items-end justify-between gap-8 mb-16">
         <div>
-          <h2 className="text-3xl md:text-4xl font-impact tracking-tight mb-2">My Orders History</h2>
-          <p className="text-muted text-xs md:text-sm uppercase tracking-widest font-medium">Review and track your recent purchases</p>
+          <h2 className="text-4xl md:text-5xl font-impact tracking-tight mb-3 text-black">Order History</h2>
+          <p className="text-black/30 text-[10px] uppercase tracking-[0.4em] font-black">Archive Trace: Tracking your luxury acquisitions</p>
         </div>
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="relative group flex-1">
-            <select className="w-full appearance-none bg-white border border-gray-200 rounded-xl py-3 pl-5 pr-12 text-[10px] font-black uppercase tracking-widest focus:ring-0 focus:border-black cursor-pointer">
-              <option>Sort by: Last 6 Months</option>
-              <option>2024</option>
-              <option>2023</option>
+        <div className="flex flex-col sm:flex-row gap-6">
+          <div className="relative group flex-1 min-w-[200px]">
+            <select className="w-full appearance-none bg-white border border-black/[0.03] rounded-2xl py-5 pl-8 pr-14 text-[10px] font-black uppercase tracking-[0.2em] text-black/60 focus:ring-0 focus:border-black/20 transition-all cursor-pointer shadow-[0_10px_30px_rgba(0,0,0,0.02)]">
+              <option className="bg-white">Last 6 Months</option>
+              <option className="bg-white">Current Era (2024)</option>
+              <option className="bg-white">Past Cycle (2023)</option>
             </select>
-            <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted text-sm">expand_more</span>
+            <span className="material-symbols-outlined absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-black/20 text-sm">expand_more</span>
           </div>
-          <div className="relative group flex-1">
-            <select className="w-full appearance-none bg-white border border-gray-200 rounded-xl py-3 pl-5 pr-12 text-[10px] font-black uppercase tracking-widest focus:ring-0 focus:border-black cursor-pointer">
-              <option>Status: All Orders</option>
-              <option>Delivered</option>
-              <option>Shipped</option>
-              <option>Processing</option>
+          <div className="relative group flex-1 min-w-[200px]">
+            <select className="w-full appearance-none bg-white border border-black/[0.03] rounded-2xl py-5 pl-8 pr-14 text-[10px] font-black uppercase tracking-[0.2em] text-black/60 focus:ring-0 focus:border-black/20 transition-all cursor-pointer shadow-[0_10px_30px_rgba(0,0,0,0.02)]">
+              <option className="bg-white">Status: All Protocols</option>
+              <option className="bg-white">Delivered</option>
+              <option className="bg-white">Active Shipments</option>
+              <option className="bg-white">Processing</option>
             </select>
-            <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted text-sm">filter_list</span>
+            <span className="material-symbols-outlined absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-black/20 text-sm">filter_list</span>
           </div>
         </div>
       </header>
@@ -134,73 +134,73 @@ const Orders = () => {
           {currentOrders.map((order) => {
             const status = getStatusStyles(order.orderStatus);
             return (
-              <div key={order._id} className="bg-white border border-gray-100 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-black/5">
+              <div key={order._id} className="bg-white border border-black/[0.03] rounded-[2.5rem] overflow-hidden transition-all duration-700 shadow-[0_20px_50px_rgba(0,0,0,0.02)] hover:shadow-[0_40px_80px_rgba(0,0,0,0.06)] group">
                 {/* CARD HEADER */}
-                <div className="p-5 md:p-8 bg-gray-50/50 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-12">
+                <div className="p-8 md:p-12 bg-black/[0.01] border-b border-black/[0.03] flex flex-col md:flex-row md:items-center justify-between gap-10">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-10 md:gap-20">
                     <div>
-                      <p className="text-[9px] font-black uppercase tracking-widest text-muted mb-1">Order Date</p>
-                      <p className="text-[11px] md:text-[12px] font-bold uppercase">{new Date(order.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                      <p className="text-[9px] font-black uppercase tracking-[0.3em] text-black/20 mb-2">Cycle Log</p>
+                      <p className="text-[13px] font-black uppercase text-black">{new Date(order.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
                     </div>
                     <div>
-                      <p className="text-[9px] font-black uppercase tracking-widest text-muted mb-1">Order ID</p>
-                      <p className="text-[11px] md:text-[12px] font-bold uppercase">#MM-{order._id.slice(-8).toUpperCase()}</p>
+                      <p className="text-[9px] font-black uppercase tracking-[0.3em] text-black/20 mb-2">Protocol ID</p>
+                      <p className="text-[13px] font-black uppercase text-black">#MM-{order._id.slice(-8).toUpperCase()}</p>
                     </div>
                     <div className="col-span-2 md:col-span-1">
-                      <p className="text-[9px] font-black uppercase tracking-widest text-muted mb-1">Total Amount</p>
-                      <p className="text-[11px] md:text-[12px] font-impact tracking-tight">₹{order.totalAmount.toLocaleString()}</p>
+                      <p className="text-[9px] font-black uppercase tracking-[0.3em] text-black/20 mb-2">Investment</p>
+                      <p className="text-[16px] font-impact tracking-tight text-black">₹{order.totalAmount.toLocaleString()}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <span className={`flex items-center gap-1.5 px-3 py-1 ${status.bg} ${status.text} rounded-full text-[10px] font-black uppercase tracking-widest border ${status.border}`}>
-                      <span className={`w-1.5 h-1.5 rounded-full ${status.dot} ${order.orderStatus !== 'delivered' && order.orderStatus !== 'cancelled' ? 'animate-pulse' : ''}`}></span>
+                  <div className="flex items-center gap-4">
+                    <span className={`flex items-center gap-3 px-6 py-2.5 ${status.bg} ${status.text} rounded-full text-[10px] font-black uppercase tracking-[0.3em] border ${status.border} shadow-[0_10px_30px_rgba(0,0,0,0.02)]`}>
+                      <span className={`w-2 h-2 rounded-full ${status.dot} ${order.orderStatus !== 'delivered' && order.orderStatus !== 'cancelled' ? 'animate-pulse shadow-[0_0_10px_currentColor]' : ''}`}></span>
                       {order.orderStatus}
                     </span>
                   </div>
                 </div>
 
                 {/* CARD BODY */}
-                <div className="p-5 md:p-8 flex flex-col lg:flex-row gap-8 items-center">
-                  <div className="flex gap-3 flex-shrink-0 w-full lg:w-auto justify-center lg:justify-start">
+                <div className="p-8 md:p-12 flex flex-col lg:flex-row gap-12 items-center">
+                  <div className="flex gap-6 flex-shrink-0 w-full lg:w-auto justify-center lg:justify-start">
                     {order.items.slice(0, 2).map((item, idx) => (
-                      <div key={idx} className="w-20 h-28 sm:w-24 sm:h-32 bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
+                      <div key={idx} className="w-24 h-32 sm:w-32 sm:h-44 bg-black/[0.02] rounded-[2rem] overflow-hidden border border-black/5 group-hover:border-black/10 transition-all duration-700 p-2">
                         <img
                           alt="Item"
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover rounded-3xl grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000"
                           src={item.customizations?.previews?.front || item.imageURL || "https://placeholder.com/100"}
                         />
                       </div>
                     ))}
                     {order.items.length > 2 && (
-                      <div className="w-20 h-28 sm:w-24 sm:h-32 bg-white rounded-lg border border-dashed border-gray-300 flex items-center justify-center">
-                        <p className="text-[10px] font-black text-muted uppercase tracking-widest">+{order.items.length - 2} Item</p>
+                      <div className="w-24 h-32 sm:w-32 sm:h-44 bg-black/[0.01] rounded-[2rem] border border-dashed border-black/5 flex items-center justify-center">
+                        <p className="text-[10px] font-black text-black/20 uppercase tracking-[0.3em]">+{order.items.length - 2} Units</p>
                       </div>
                     )}
                   </div>
-                  <div className="flex-1 text-center lg:text-left">
-                    <p className="text-sm md:text-base font-medium text-gray-900 line-clamp-1 uppercase tracking-tight">
-                      {order.items[0]?.title} {order.items.length > 1 && `and ${order.items.length - 1} more`}
+                  <div className="flex-1 text-center lg:text-left space-y-4">
+                    <p className="text-xl md:text-3xl font-impact tracking-tight text-black uppercase group-hover:text-[#8b7e6d] transition-colors leading-none">
+                      {order.items[0]?.title} {order.items.length > 1 && `[ +${order.items.length - 1} MORE ]`}
                     </p>
-                    <p className="text-[10px] md:text-[11px] text-muted mt-2 uppercase tracking-widest">
-                      {order.orderStatus === 'delivered' ? `Delivered on ${new Date(order.updatedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}` : `Current Status: ${order.orderStatus}`}
+                    <p className="text-[11px] text-black/30 md:max-w-md uppercase tracking-[0.3em] font-black leading-relaxed">
+                      {order.orderStatus === 'delivered' ? `Transaction finalized on ${new Date(order.updatedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}` : `Active logistics protocol: ${order.orderStatus} state detected.`}
                     </p>
                   </div>
-                  <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+                  <div className="flex flex-col sm:flex-row gap-5 w-full lg:w-auto">
                     {order.orderStatus === 'processing' || order.orderStatus === 'placed' ? (
                       <button
                         onClick={() => handleCancelOrder(order._id)}
-                        className="flex-1 lg:flex-none px-6 py-3.5 border border-red-200 text-red-600 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all"
+                        className="flex-1 lg:flex-none px-10 py-5 border border-rose-500/20 text-rose-500/60 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-rose-500/10 hover:text-rose-600 transition-all"
                       >
-                        Cancel Order
+                        Abort Transaction
                       </button>
                     ) : (
-                      <button className="flex-1 lg:flex-none px-6 py-3.5 border border-gray-200 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black hover:text-white transition-all">Track Order</button>
+                      <button className="flex-1 lg:flex-none px-10 py-5 border border-black/10 text-black/60 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-black/5 hover:text-black transition-all">Track Trace</button>
                     )}
                     <Link
                       to={`/account/orders/${order._id}`}
-                      className="flex-1 lg:flex-none px-6 py-3.5 bg-black text-white text-center rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-accent hover:text-black transition-all"
+                      className="flex-1 lg:flex-none px-12 py-5 bg-black text-white text-center rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-[#8b7e6d] transition-all hover:scale-105 active:scale-95 shadow-[0_20px_40px_rgba(0,0,0,0.1)]"
                     >
-                      View Details
+                      View Protocol
                     </Link>
                   </div>
                 </div>

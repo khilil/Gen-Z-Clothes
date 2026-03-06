@@ -22,34 +22,41 @@ const Sidebar = ({ isOpen, onClose }) => {
     ];
 
     return (
-        <aside className="sidebar hidden lg:block lg:w-64 flex-shrink-0">
-            <div className="sidebar-inner space-y-1 mb-8">
+        <aside className="sidebar hidden lg:block w-72 flex-shrink-0 sticky top-40">
+            <div className="sidebar-inner space-y-2">
+                <div className="px-6 mb-8">
+                    <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-black/30">Management Protocol</h3>
+                </div>
+
                 {navLinks.map((link) => (
                     <NavLink
                         key={link.to}
                         to={link.to}
                         onClick={onClose}
                         className={({ isActive }) =>
-                            `sidebar-link flex items-center gap-4 px-6 py-4 rounded-xl transition-all group ${isActive
-                                ? "active"
-                                : "text-muted hover:bg-gray-50 hover:text-black"
+                            `sidebar-link group flex items-center justify-between px-8 py-4 rounded-2xl transition-all duration-500 ${isActive
+                                ? "bg-[#8b7e6d]/10 text-[#8b7e6d] active-link shadow-[0_10px_30px_rgba(0,0,0,0.05)]"
+                                : "text-black/40 hover:text-black hover:bg-black/5"
                             }`
                         }
                     >
-                        <span className="material-symbols-outlined text-xl">
-                            {link.icon}
-                        </span>
-                        <span className="text-[11px] font-black uppercase tracking-widest">{link.label}</span>
+                        <div className="flex items-center gap-5">
+                            <span className="material-symbols-outlined text-[22px] transition-all duration-500 group-hover:scale-110 group-hover:text-[#8b7e6d]">
+                                {link.icon}
+                            </span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em]">{link.label}</span>
+                        </div>
+                        <span className="material-symbols-outlined text-[16px] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all">chevron_right</span>
                     </NavLink>
                 ))}
 
-                <div className="pt-8 border-t border-gray-100">
+                <div className="pt-10 mt-10 border-t border-black/[0.03]">
                     <button
                         onClick={handleLogout}
-                        className="w-full flex items-center gap-4 px-6 py-4 text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                        className="w-full flex items-center gap-5 px-8 py-5 rounded-2xl text-rose-500/60 hover:text-rose-600 hover:bg-rose-500/5 transition-all group"
                     >
-                        <span className="material-symbols-outlined text-xl">logout</span>
-                        <span className="text-[11px] font-black uppercase tracking-widest">Logout</span>
+                        <span className="material-symbols-outlined text-[22px] group-hover:rotate-12 transition-transform">logout</span>
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em]">Deactivate Session</span>
                     </button>
                 </div>
             </div>

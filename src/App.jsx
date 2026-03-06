@@ -13,7 +13,12 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchCurrentUser());
+    const publicPaths = ["/login", "/forgot-password", "/reset-password"];
+    const isPublicPath = publicPaths.some(path => window.location.pathname.startsWith(path));
+
+    if (!isPublicPath) {
+      dispatch(fetchCurrentUser());
+    }
   }, [dispatch]);
 
   return (

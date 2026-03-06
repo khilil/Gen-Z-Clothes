@@ -30,7 +30,6 @@ function SalePage() {
 
     return (
         <div className="sale-page bg-black min-h-screen text-white">
-            <Header />
 
             <section className="sale-hero relative h-[90vh] flex items-center justify-center overflow-hidden">
                 <motion.div

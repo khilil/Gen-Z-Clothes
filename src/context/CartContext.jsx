@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import * as cartService from "../services/cartService";
+import { ensureAbsoluteUrl } from "../utils/urlUtils";
 
 const CartContext = createContext();
 
@@ -33,13 +34,15 @@ export function CartProvider({ children }) {
             }
           }
 
+          const rawImage = item.customizations?.previews?.front || variant?.images?.[0]?.url || product.images?.[0]?.url;
+
           return {
             cartItemId: item._id,
             id: product._id,
             title: product.title,
             basePrice: basePrice,
             price: basePrice + customizationCost, // The final price shown to user
-            image: item.customizations?.previews?.front || variant?.images?.[0]?.url || product.images?.[0]?.url,
+            image: ensureAbsoluteUrl(rawImage),
             qty: item.quantity,
             variantId: item.variantId,
             size: variant?.size?.name || product.size?.name || "N/A",
@@ -92,6 +95,7 @@ export function CartProvider({ children }) {
 
         // CRITICAL: Only use options.size if this specific item is the one we just added
         const isNewItem = item.variantId === variantId;
+        const rawImage = item.customizations?.previews?.front || variant?.images?.[0]?.url || prod.images?.[0]?.url;
 
         return {
           cartItemId: item._id,
@@ -99,7 +103,7 @@ export function CartProvider({ children }) {
           title: prod.title,
           basePrice: basePrice,
           price: basePrice + customizationCost,
-          image: item.customizations?.previews?.front || variant?.images?.[0]?.url || prod.images?.[0]?.url,
+          image: ensureAbsoluteUrl(rawImage),
           qty: item.quantity,
           variantId: item.variantId,
           size: variant?.size?.name || (isNewItem ? (options.size || prod.size?.name || "N/A") : prod.size?.name || "N/A"),

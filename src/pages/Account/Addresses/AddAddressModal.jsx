@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../../../services/api";
+import { motion, AnimatePresence } from "framer-motion";
 import "./AddAddressModal.css";
 
 const AddAddressModal = ({
@@ -62,8 +63,6 @@ const AddAddressModal = ({
         return () => (document.body.style.overflow = "");
     }, [open]);
 
-    if (!open) return null;
-
     const validate = () => {
         const newErrors = {};
 
@@ -97,9 +96,6 @@ const AddAddressModal = ({
         try {
             setLoading(true);
 
-            const [firstName, ...rest] = form.name.trim().split(" ");
-            const lastName = rest.length ? rest.join(" ") : "NA";
-
             const payload = {
                 fullName: form.name.trim(),
                 phone: form.phone,
@@ -108,7 +104,6 @@ const AddAddressModal = ({
                 state: form.state,
                 pinCode: form.pincode,
             };
-            
 
             let savedAddressId = addressId;
 
@@ -139,132 +134,160 @@ const AddAddressModal = ({
     };
 
     return (
-        <div className="address-modal-overlay" onClick={onClose}>
-            <div
-                className="address-modal"
-                onClick={(e) => e.stopPropagation()}
-            >
-                <header className="address-modal-header">
-                    <h2>{addressId ? "Edit Address" : "Add New Address"}</h2>
-                    <button className="close-btn" onClick={onClose}>
-                        <span className="material-symbols-outlined">close</span>
-                    </button>
-                </header>
+        <AnimatePresence>
+            {open && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={onClose}
+                        className="absolute inset-0 bg-black/60 backdrop-blur-md"
+                    />
+                    <motion.div
+                        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                        animate={{ scale: 1, opacity: 1, y: 0 }}
+                        exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                        transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                        className="address-modal relative bg-white border border-black/5 rounded-[3rem] w-full max-w-2xl overflow-hidden shadow-[0_50px_100px_rgba(0,0,0,0.15)] z-10"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <header className="address-modal-header px-10 py-10 border-b border-black/[0.03] flex justify-between items-center bg-black/[0.01]">
+                            <div>
+                                <h2 className="text-3xl font-impact tracking-tight text-black uppercase">{addressId ? "Modify Shipping Node" : "Add Shipping Node"}</h2>
+                                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-black/20 mt-1">Global Routing & Identity Protocol</p>
+                            </div>
+                            <button className="w-12 h-12 rounded-full bg-black/5 flex items-center justify-center text-black/40 hover:bg-black hover:text-white hover:scale-110 active:scale-95 transition-all shadow-[0_5px_15px_rgba(0,0,0,0.02)]" onClick={onClose}>
+                                <span className="material-symbols-outlined text-xl transition-transform hover:rotate-90">close</span>
+                            </button>
+                        </header>
 
-                <form className="address-modal-body" onSubmit={handleSubmit}>
-                    <div className="grid-2">
-                        <div className="field">
-                            <label>Full Name</label>
-                            <input
-                                name="name"
-                                value={form.name}
-                                onChange={handleChange}
-                            />
-                            {errors.name && <span className="error-text">{errors.name}</span>}
-                        </div>
+                        <form className="address-modal-body p-10 md:p-14 space-y-10 max-h-[75vh] overflow-y-auto custom-scrollbar" onSubmit={handleSubmit}>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                <div className="field flex flex-col gap-4">
+                                    <label className="text-[9px] font-black uppercase tracking-[0.4em] text-[#8b7e6d]">Full Name</label>
+                                    <input
+                                        name="name"
+                                        value={form.name}
+                                        onChange={handleChange}
+                                        className="bg-black/[0.02] border border-black/10 rounded-2xl px-8 py-5 text-black text-[12px] font-bold tracking-[0.1em] focus:border-[#8b7e6d] focus:bg-black/[0.04] transition-all outline-none"
+                                    />
+                                    {errors.name && <span className="text-[9px] font-bold text-rose-500 uppercase tracking-widest">{errors.name}</span>}
+                                </div>
 
-                        <div className="field">
-                            <label>Mobile Number</label>
-                            <input
-                                name="phone"
-                                value={form.phone}
-                                onChange={handleChange}
-                                className={errors.phone ? "error" : ""}
-                            />
-                            {errors.phone && <span className="error-text">{errors.phone}</span>}
-                        </div>
-                    </div>
+                                <div className="field flex flex-col gap-4">
+                                    <label className="text-[9px] font-black uppercase tracking-[0.4em] text-[#8b7e6d]">Mobile Number</label>
+                                    <input
+                                        name="phone"
+                                        value={form.phone}
+                                        onChange={handleChange}
+                                        className={`bg-black/[0.02] border rounded-2xl px-8 py-5 text-black text-[12px] font-bold tracking-[0.1em] focus:border-[#8b7e6d] focus:bg-black/[0.04] transition-all outline-none ${errors.phone ? "border-rose-500/50" : "border-black/10"}`}
+                                    />
+                                    {errors.phone && <span className="text-[9px] font-bold text-rose-500 uppercase tracking-widest">{errors.phone}</span>}
+                                </div>
+                            </div>
 
-                    <div className="field">
-                        <label>House / Flat No.</label>
-                        <input
-                            name="house"
-                            value={form.house}
-                            onChange={handleChange}
-                        />
-                        {errors.house && <span className="error-text">{errors.house}</span>}
-                    </div>
+                            <div className="field flex flex-col gap-4">
+                                <label className="text-[9px] font-black uppercase tracking-[0.4em] text-[#8b7e6d]">House / Flat No.</label>
+                                <input
+                                    name="house"
+                                    value={form.house}
+                                    onChange={handleChange}
+                                    className="bg-black/[0.02] border border-black/10 rounded-2xl px-8 py-5 text-black text-[12px] font-bold tracking-[0.1em] focus:border-[#8b7e6d] focus:bg-black/[0.04] transition-all outline-none"
+                                />
+                                {errors.house && <span className="text-[9px] font-bold text-rose-500 uppercase tracking-widest">{errors.house}</span>}
+                            </div>
 
-                    <div className="field">
-                        <label>Area / Street / Locality</label>
-                        <input
-                            name="area"
-                            value={form.area}
-                            onChange={handleChange}
-                        />
-                        {errors.area && <span className="error-text">{errors.area}</span>}
-                    </div>
+                            <div className="field flex flex-col gap-4">
+                                <label className="text-[9px] font-black uppercase tracking-[0.4em] text-[#8b7e6d]">Area / Street / Locality</label>
+                                <input
+                                    name="area"
+                                    value={form.area}
+                                    onChange={handleChange}
+                                    className="bg-black/[0.02] border border-black/10 rounded-2xl px-8 py-5 text-black text-[12px] font-bold tracking-[0.1em] focus:border-[#8b7e6d] focus:bg-black/[0.04] transition-all outline-none"
+                                />
+                                {errors.area && <span className="text-[9px] font-bold text-rose-500 uppercase tracking-widest">{errors.area}</span>}
+                            </div>
 
-                    <div className="field">
-                        <label>Landmark (Optional)</label>
-                        <input
-                            name="landmark"
-                            value={form.landmark}
-                            onChange={handleChange}
-                        />
-                    </div>
+                            <div className="field flex flex-col gap-4">
+                                <label className="text-[9px] font-black uppercase tracking-[0.4em] text-[#8b7e6d]">Landmark (Optional)</label>
+                                <input
+                                    name="landmark"
+                                    value={form.landmark}
+                                    onChange={handleChange}
+                                    className="bg-black/[0.02] border border-black/10 rounded-2xl px-8 py-5 text-black text-[12px] font-bold tracking-[0.1em] focus:border-[#8b7e6d] focus:bg-black/[0.04] transition-all outline-none"
+                                />
+                            </div>
 
-                    <div className="grid-3">
-                        <div className="field">
-                            <label>City</label>
-                            <input
-                                name="city"
-                                value={form.city}
-                                onChange={handleChange}
-                            />
-                            {errors.city && <span className="error-text">{errors.city}</span>}
-                        </div>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                                <div className="field flex flex-col gap-4">
+                                    <label className="text-[9px] font-black uppercase tracking-[0.4em] text-[#8b7e6d]">City</label>
+                                    <input
+                                        name="city"
+                                        value={form.city}
+                                        onChange={handleChange}
+                                        className="bg-black/[0.02] border border-black/10 rounded-2xl px-8 py-5 text-black text-[12px] font-bold tracking-[0.1em] focus:border-[#8b7e6d] focus:bg-black/[0.04] transition-all outline-none"
+                                    />
+                                    {errors.city && <span className="text-[9px] font-bold text-rose-500 uppercase tracking-widest">{errors.city}</span>}
+                                </div>
 
-                        <div className="field">
-                            <label>State</label>
-                            <input
-                                name="state"
-                                value={form.state}
-                                onChange={handleChange}
-                            />
-                            {errors.state && <span className="error-text">{errors.state}</span>}
-                        </div>
+                                <div className="field flex flex-col gap-4">
+                                    <label className="text-[9px] font-black uppercase tracking-[0.4em] text-[#8b7e6d]">State</label>
+                                    <input
+                                        name="state"
+                                        value={form.state}
+                                        onChange={handleChange}
+                                        className="bg-black/[0.02] border border-black/10 rounded-2xl px-8 py-5 text-black text-[12px] font-bold tracking-[0.1em] focus:border-[#8b7e6d] focus:bg-black/[0.04] transition-all outline-none"
+                                    />
+                                    {errors.state && <span className="text-[9px] font-bold text-rose-500 uppercase tracking-widest">{errors.state}</span>}
+                                </div>
 
-                        <div className="field">
-                            <label>Pincode</label>
-                            <input
-                                name="pincode"
-                                value={form.pincode}
-                                onChange={handleChange}
-                                className={errors.pincode ? "error" : ""}
-                            />
-                            {errors.pincode && <span className="error-text">{errors.pincode}</span>}
-                        </div>
-                    </div>
+                                <div className="field flex flex-col gap-4">
+                                    <label className="text-[9px] font-black uppercase tracking-[0.4em] text-[#8b7e6d]">Pincode</label>
+                                    <input
+                                        name="pincode"
+                                        value={form.pincode}
+                                        onChange={handleChange}
+                                        className={`bg-black/[0.02] border rounded-2xl px-8 py-5 text-black text-[12px] font-bold tracking-[0.1em] focus:border-[#8b7e6d] focus:bg-black/[0.04] transition-all outline-none ${errors.pincode ? "border-rose-500/50" : "border-black/10"}`}
+                                    />
+                                    {errors.pincode && <span className="text-[9px] font-bold text-rose-500 uppercase tracking-widest">{errors.pincode}</span>}
+                                </div>
+                            </div>
 
-                    <div className="default-toggle">
-                        <label className="switch">
-                            <input
-                                type="checkbox"
-                                name="isDefault"
-                                checked={form.isDefault}
-                                onChange={handleChange}
-                            />
-                            <span className="slider" />
-                        </label>
-                        <span>Set as Default Address</span>
-                    </div>
+                            <div className="default-toggle flex items-center justify-between p-8 bg-black/[0.02] border border-black/[0.03] rounded-3xl group transition-all hover:bg-black/[0.04]">
+                                <div>
+                                    <p className="text-[11px] font-black uppercase tracking-[0.4em] text-black">Default Address</p>
+                                    <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-black/20 mt-1">Set as primary node for all logistics</p>
+                                </div>
+                                <label className="switch relative inline-block w-14 h-7">
+                                    <input
+                                        type="checkbox"
+                                        name="isDefault"
+                                        checked={form.isDefault}
+                                        onChange={handleChange}
+                                        className="opacity-0 w-0 h-0 peer"
+                                    />
+                                    <span className="slider absolute inset-0 bg-black/10 rounded-full transition-all peer-checked:bg-[#8b7e6d] before:content-[''] before:absolute before:h-5 before:w-5 before:left-1 before:bottom-1 before:bg-white before:rounded-full before:transition-all peer-checked:before:translate-x-7 peer-checked:before:bg-white shadow-inner" />
+                                </label>
+                            </div>
 
-                    <div className="modal-actions">
-                        <button type="submit" className="btn-primary" disabled={loading}>
-                            {loading ? "Saving..." : addressId ? "Update Address" : "Save Address"}
-                        </button>
-                        <button
-                            type="button"
-                            className="btn-secondary"
-                            onClick={onClose}
-                        >
-                            Cancel
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+                            <div className="modal-actions flex gap-6 pt-10 uppercase font-black tracking-[0.3em] text-[10px]">
+                                <button type="submit" className="flex-1 bg-black text-white py-6 rounded-2xl hover:bg-[#8b7e6d] transition-all hover:shadow-[0_20px_40px_rgba(0,0,0,0.1)] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed" disabled={loading}>
+                                    {loading ? "Processing..." : addressId ? "Update Protocol" : "Initialize Archive"}
+                                </button>
+                                <button
+                                    type="button"
+                                    className="px-12 border border-black/10 text-black/40 hover:text-black hover:bg-black/5 hover:border-black/20 rounded-2xl transition-all"
+                                    onClick={onClose}
+                                >
+                                    Abort
+                                </button>
+                            </div>
+                        </form>
+                    </motion.div>
+                </div>
+            )}
+        </AnimatePresence>
     );
 };
 
