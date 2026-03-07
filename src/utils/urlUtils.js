@@ -1,3 +1,5 @@
+import { BASE_URL } from '../services/api';
+
 export const ensureAbsoluteUrl = (url) => {
     if (!url) return "";
 
@@ -6,8 +8,8 @@ export const ensureAbsoluteUrl = (url) => {
         return url;
     }
 
-    // If it's a Cloudinary public ID or relative path from the backend
-    const backendRoot = `http://${window.location.hostname}:5000`;
+    // Use centralized backend root
+    const backendRoot = BASE_URL;
 
     // If it starts with / we assume it's from the backend root
     if (url.startsWith("/")) {

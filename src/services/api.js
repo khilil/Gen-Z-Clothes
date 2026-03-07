@@ -1,6 +1,7 @@
 import axios from "axios";
 
-export const API_BASE_URL = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:5000/api/v1`;
+export const BASE_URL = import.meta.env.VITE_BASE_URL || `https://backend-clothes-1p7b.onrender.com`;
+export const API_BASE_URL = `${BASE_URL}/api/v1`;
 
 const api = axios.create({
     baseURL: API_BASE_URL,
