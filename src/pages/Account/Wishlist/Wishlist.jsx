@@ -35,8 +35,8 @@ const Wishlist = () => {
   return (
     <div className="wishlist-page">
       {/* 🏛️ ARCHIVES: SAVED PROTOCOLS */}
-      <header className="mb-16 border-b border-black/[0.03] pb-10 flex flex-col md:flex-row md:items-end justify-between gap-8">
-        <div>
+      <div className="wishlist-header mb-12 md:mb-16 border-b border-black/[0.03] pb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8">
+        <div className="pt-4 md:pt-0">
           <h1 className="font-impact text-5xl md:text-6xl uppercase tracking-tight text-black">
             Saved Protocols
           </h1>
@@ -47,15 +47,15 @@ const Wishlist = () => {
         {wishlist.length > 0 && (
           <button
             onClick={handleDeployAll}
-            className="px-10 py-5 bg-black text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-[#8b7e6d] transition-all hover:scale-105 active:scale-95 shadow-[0_20px_40px_rgba(0,0,0,0.1)]"
+            className="w-full md:w-auto mt-6 md:mt-0 px-4 md:px-10 py-5 bg-black text-white rounded-xl md:rounded-2xl text-[12px] md:text-[10px] font-black uppercase tracking-[0.2em] hover:bg-[#8b7e6d] transition-all hover:scale-105 active:scale-95 shadow-[0_20px_40px_rgba(0,0,0,0.1)]"
           >
             Deploy All to Cart
           </button>
         )}
-      </header>
+      </div>
 
       {/* GRID */}
-      <div className="wishlist-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+      <div className="wishlist-grid grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-10">
         {wishlist.length > 0 ? (
           wishlist.map((product) => (
             <div key={product._id || product.id} className="group/card relative">

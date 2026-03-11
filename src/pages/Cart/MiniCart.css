@@ -30,6 +30,7 @@
   position: relative;
   width: 100%;
   max-width: 440px;
+  height: 100vh;
   height: 100dvh;
   /* Using dynamic viewport height */
   background: #000;
@@ -37,6 +38,7 @@
   display: flex;
   flex-direction: column;
   box-shadow: -20px 0 50px rgba(0, 0, 0, 0.8);
+  overflow: hidden; /* Prevent parent overflow */
 }
 
 /* Glassmorphism utility */
@@ -50,10 +52,19 @@
 
 /* HEADER */
 .mini-cart__header {
+  flex-shrink: 0; /* Crucial: don't let it be squeezed */
   padding: 40px 32px 32px;
   border-bottom: 1px solid var(--glass-border);
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0.02), transparent);
 }
+
+
+@media (max-width: 768px) {
+  .mini-cart__header {
+    padding: 24px 20px 20px;
+  }
+}
+
 
 .mini-cart__header-top {
   display: flex;
@@ -136,14 +147,31 @@
 
 /* BODY */
 .mini-cart__body {
-  flex: 1;
+  flex: 1 1 auto; /* Grow to fill space, shrink if needed */
+  min-height: 0; /* Important for flex items to be scrollable */
   padding: 32px;
-  overflow-y: auto;
+  overflow-y: auto !important; /* Force scrollbar if content overflows */
   overflow-x: hidden;
   position: relative;
-  min-height: 0;
-  /* Essential for flexbox scrolling */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
+  display: flex;
+  flex-direction: column;
 }
+
+@media (max-width: 768px) {
+  .mini-cart__body {
+    padding: 24px 20px;
+  }
+}
+
+.mini-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  flex-shrink: 0; /* Ensure the list doesn't shrink and force scrolling */
+  padding-bottom: 20px; /* Extra space at bottom */
+}
+
 
 /* Empty State */
 .mini-cart__empty {
@@ -393,10 +421,17 @@
 
 /* FOOTER */
 .mini-cart__footer {
+  flex-shrink: 0; /* Don't let footer be squeezed */
   padding: 32px;
   background: #000;
   border-top: 1px solid var(--glass-border);
   background: linear-gradient(to top, rgba(255, 255, 255, 0.02), transparent);
+}
+
+@media (max-width: 768px) {
+  .mini-cart__footer {
+    padding: 24px 20px;
+  }
 }
 
 .mini-cart__summary {
@@ -451,6 +486,14 @@
   letter-spacing: 0.2em;
   border-radius: 4px;
   transition: var(--transition);
+}
+
+@media (max-width: 768px) {
+  .mini-cart__checkout,
+  .mini-cart__pay {
+    height: 48px;
+    font-size: 10px;
+  }
 }
 
 .mini-cart__checkout {
