@@ -23,6 +23,7 @@
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
   /* backdrop-filter is handled by framer motion for smoother animation */
 }
 
@@ -30,15 +31,14 @@
   position: relative;
   width: 100%;
   max-width: 440px;
-  height: 100vh;
-  height: 100dvh;
-  /* Using dynamic viewport height */
+  height: 100dvh; /* Force full dynamic viewport height */
   background: #000;
   border-left: 1px solid var(--glass-border);
   display: flex;
   flex-direction: column;
   box-shadow: -20px 0 50px rgba(0, 0, 0, 0.8);
-  overflow: hidden; /* Prevent parent overflow */
+  overflow: hidden;
+  z-index: 5;
 }
 
 /* Glassmorphism utility */
@@ -50,9 +50,8 @@
   pointer-events: none;
 }
 
-/* HEADER */
 .mini-cart__header {
-  flex-shrink: 0; /* Crucial: don't let it be squeezed */
+  flex: 0 0 auto; /* Header never shrinks */
   padding: 40px 32px 32px;
   border-bottom: 1px solid var(--glass-border);
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0.02), transparent);
@@ -146,16 +145,20 @@
 }
 
 /* BODY */
-.mini-cart__body {
-  flex: 1 1 auto; /* Grow to fill space, shrink if needed */
-  min-height: 0; /* Important for flex items to be scrollable */
-  padding: 32px;
-  overflow-y: auto !important; /* Force scrollbar if content overflows */
-  overflow-x: hidden;
+.mini-cart__body-wrapper {
+  flex: 1 1 0%;
   position: relative;
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
-  display: flex;
-  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.mini-cart__body {
+  position: absolute;
+  inset: 0;
+  padding: 32px;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 @media (max-width: 768px) {
@@ -168,8 +171,8 @@
   display: flex;
   flex-direction: column;
   gap: 40px;
-  flex-shrink: 0; /* Ensure the list doesn't shrink and force scrolling */
-  padding-bottom: 20px; /* Extra space at bottom */
+  flex-shrink: 0;
+  padding-bottom: 20px;
 }
 
 
@@ -233,12 +236,6 @@
   letter-spacing: 0.3em;
 }
 
-/* ITEMS LIST */
-.mini-items-list {
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-}
 
 .mini-item {
   display: flex;
@@ -421,7 +418,8 @@
 
 /* FOOTER */
 .mini-cart__footer {
-  flex-shrink: 0; /* Don't let footer be squeezed */
+  flex-shrink: 0;
+  /* Don't let footer be squeezed */
   padding: 32px;
   background: #000;
   border-top: 1px solid var(--glass-border);
@@ -489,6 +487,7 @@
 }
 
 @media (max-width: 768px) {
+
   .mini-cart__checkout,
   .mini-cart__pay {
     height: 48px;
@@ -517,17 +516,23 @@
 
 /* SCROLLBAR */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+  /* Increased from 6px for easier clicking on PC */
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.05);
+  /* More visible track */
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.5);
+  background: rgba(255, 255, 255, 0.4);
+  /* Brighter thumb */
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { motion, AnimatePresence } from "framer-motion";
@@ -31,7 +31,19 @@ export default function MiniCart({ open, onClose }) {
   const shippingProgress = Math.min((subtotal / FREE_SHIPPING_THRESHOLD) * 100, 100);
   const remainingForFreeShipping = FREE_SHIPPING_THRESHOLD - subtotal;
 
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [open]);
+
   return (
+
     <>
       <AnimatePresence>
         {open && (
@@ -85,109 +97,112 @@ export default function MiniCart({ open, onClose }) {
               </div>
 
               {/* BODY */}
-              <div className="mini-cart__body custom-scrollbar">
-                {cart.length === 0 ? (
-                  <div className="mini-cart__empty">
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="empty-icon"
-                    >
-                      <span className="material-symbols-outlined">shopping_basket</span>
-                    </motion.div>
-                    <p className="empty-title">Your bag is empty</p>
-                    <p className="empty-text">Looks like you haven't added anything yet.</p>
-                    <button
-                      className="empty-cta"
-                      onClick={() => { onClose(); navigate("/shop"); }}
-                    >
-                      Start Shopping
-                    </button>
-                  </div>
-                ) : (
-                  <div className="mini-items-list">
-                    {cart.map((item, index) => (
+              <div className="mini-cart__body-wrapper">
+                <div className="mini-cart__body custom-scrollbar">
+                  {cart.length === 0 ? (
+                    <div className="mini-cart__empty">
                       <motion.div
-                        className="mini-item"
-                        key={item.cartItemId || item.variantId}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1 }}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="empty-icon"
                       >
-                        <div
-                          className="mini-item__thumb group/thumb cursor-pointer relative"
-                          onClick={() => {
-                            if (item.customizations?.previews) {
-                              setSelectedItemForPreview(item);
-                              setPreviewSide("front");
-                            }
-                          }}
-                        >
-                          <img src={item.image} alt={item.title} />
-                          {item.customizations?.previews ? (
-                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/thumb:opacity-100 flex items-center justify-center transition-opacity rounded-xl">
-                              <span className="material-symbols-outlined text-white text-lg">zoom_in</span>
-                            </div>
-                          ) : (
-                            <div className="absolute inset-0 bg-white/5 opacity-0 group-hover/thumb:opacity-100 transition-opacity rounded-xl" />
-                          )}
-                        </div>
-
-                        <div className="mini-item__info">
-                          <div className="mini-item__row">
-                            <h4 className="mini-item__title">{item.title}</h4>
-                            <span className="mini-item__price">
-                              ₹{(item.price || 0).toLocaleString()}
-                            </span>
-                          </div>
-
-                          <div className="mini-item__meta">
-                            <span>Size: {item.size}</span>
-                            <span className="divider">•</span>
-                            <span>Color: {item.color}</span>
-                          </div>
-
-                          {/* 🎨 Indicator if Customized */}
-                          {item.customizations?.previews && (
-                            <div className="mini-item__custom-info">
-                              <span className="custom-badge">Design Applied</span>
-                            </div>
-                          )}
-
-                          <div className="mini-item__actions">
-                            <div className="qty-control">
-                              <button
-                                onClick={() => decreaseQty(item.id, item.variantId, item.qty)}
-                                disabled={item.qty <= 1}
-                                className="qty-btn"
-                              >
-                                <span className="material-symbols-outlined">remove</span>
-                              </button>
-
-                              <span className="qty-value">
-                                {item.qty}
-                              </span>
-
-                              <button
-                                onClick={() => increaseQty(item.id, item.variantId, item.qty)}
-                                className="qty-btn"
-                              >
-                                <span className="material-symbols-outlined">add</span>
-                              </button>
-                            </div>
-
-                            <button
-                              className="mini-item__remove"
-                              onClick={() => removeItem(item.cartItemId)}
-                            >
-                              <span className="material-symbols-outlined">delete</span>
-                            </button>
-                          </div>
-                        </div>
+                        <span className="material-symbols-outlined">shopping_basket</span>
                       </motion.div>
-                    ))}
-                  </div>
-                )}
+                      <p className="empty-title">Your bag is empty</p>
+                      <p className="empty-text">Looks like you haven't added anything yet.</p>
+                      <button
+                        className="empty-cta"
+                        onClick={() => { onClose(); navigate("/shop"); }}
+                      >
+                        Start Shopping
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="mini-items-list">
+                      {cart.map((item, index) => (
+                        <motion.div
+                          className="mini-item"
+
+                          key={item.cartItemId || item.variantId}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                        >
+                          <div
+                            className="mini-item__thumb group/thumb cursor-pointer relative"
+                            onClick={() => {
+                              if (item.customizations?.previews) {
+                                setSelectedItemForPreview(item);
+                                setPreviewSide("front");
+                              }
+                            }}
+                          >
+                            <img src={item.image} alt={item.title} />
+                            {item.customizations?.previews ? (
+                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/thumb:opacity-100 flex items-center justify-center transition-opacity rounded-xl">
+                                <span className="material-symbols-outlined text-white text-lg">zoom_in</span>
+                              </div>
+                            ) : (
+                              <div className="absolute inset-0 bg-white/5 opacity-0 group-hover/thumb:opacity-100 transition-opacity rounded-xl" />
+                            )}
+                          </div>
+
+                          <div className="mini-item__info">
+                            <div className="mini-item__row">
+                              <h4 className="mini-item__title">{item.title}</h4>
+                              <span className="mini-item__price">
+                                ₹{(item.price || 0).toLocaleString()}
+                              </span>
+                            </div>
+
+                            <div className="mini-item__meta">
+                              <span>Size: {item.size}</span>
+                              <span className="divider">•</span>
+                              <span>Color: {item.color}</span>
+                            </div>
+
+                            {/* 🎨 Indicator if Customized */}
+                            {item.customizations?.previews && (
+                              <div className="mini-item__custom-info">
+                                <span className="custom-badge">Design Applied</span>
+                              </div>
+                            )}
+
+                            <div className="mini-item__actions">
+                              <div className="qty-control">
+                                <button
+                                  onClick={() => decreaseQty(item.id, item.variantId, item.qty)}
+                                  disabled={item.qty <= 1}
+                                  className="qty-btn"
+                                >
+                                  <span className="material-symbols-outlined">remove</span>
+                                </button>
+
+                                <span className="qty-value">
+                                  {item.qty}
+                                </span>
+
+                                <button
+                                  onClick={() => increaseQty(item.id, item.variantId, item.qty)}
+                                  className="qty-btn"
+                                >
+                                  <span className="material-symbols-outlined">add</span>
+                                </button>
+                              </div>
+
+                              <button
+                                className="mini-item__remove"
+                                onClick={() => removeItem(item.cartItemId)}
+                              >
+                                <span className="material-symbols-outlined">delete</span>
+                              </button>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* FOOTER */}

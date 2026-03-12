@@ -91,63 +91,6 @@ export default function Header({ forceSolid = false }) {
                 New Arrivals
               </Link>
 
-              <div className="mega-menu-trigger group h-full flex items-center">
-                <span className="nav-link text-[10px] font-black uppercase tracking-[0.3em] cursor-default opacity-70 group-hover:opacity-100 transition-opacity">
-                  Clothing
-                </span>
-
-                {/* MEGA MENU */}
-                <div className="mega-menu">
-                  <div className="max-w-[1920px] mx-auto grid grid-cols-5 gap-0 min-h-[500px] border-t border-white/[0.03]">
-                    {isLoading ? (
-                      Array(4).fill(0).map((_, i) => (
-                        <div key={i} className="p-12 border-r border-white/5 animate-pulse">
-                          <div className="h-4 w-24 bg-white/10 mb-8 rounded"></div>
-                          <div className="space-y-4">
-                            <div className="h-3 w-32 bg-white/5 rounded"></div>
-                            <div className="h-3 w-28 bg-white/5 rounded"></div>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      menuGroups.map(group => (
-                        <div key={group._id} className="p-12 border-r border-white/5 flex flex-col hover:bg-white/[0.02] transition-colors group/col">
-                          <h4 className="text-accent text-[11px] font-black uppercase tracking-[0.4em] mb-8 group-hover/col:translate-x-1 transition-transform">
-                            <Link to={`/category/${group.slug}`} className="hover:text-white transition-colors">
-                              {group.name}
-                            </Link>
-                          </h4>
-                          <ul className="space-y-4">
-                            {group.children.map(child => (
-                              <li key={child._id}>
-                                <Link className="text-[13px] text-white/40 hover:text-white hover:translate-x-1 inline-block transition-all" to={`/category/${child.slug}`}>
-                                  {child.name}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))
-                    )}
-
-                    {/* PROMO BOX */}
-                    <div className="relative overflow-hidden group/promo">
-                      <img alt="Model in Atelier" className="w-full h-full object-cover grayscale brightness-50 group-hover/promo:scale-110 group-hover/promo:grayscale-0 group-hover/promo:brightness-100 transition-all duration-[2s] ease-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxCDaHXAgfnZZMJ5PJyJlJu2htQPWM6diBOxWwEZCVgRqK2NioQJtdBpkA898DJ8jaVUX8zXqiqMulmIS-p9A6Vvw60YVvk7uOoV_7doTOJ1sNlbE0RcmuvhwJ2LrbI9PBFadnFpLV-RUa4tq9StHqLjSSOJHeeWnbhzilO_f0RDPVlLJFH-Gjgj2ltfyvxQ9Enril9a9C-hcpECVdFnYR7c4QcBOmkqdxTf4IDpIVmtgWbA9rPF_OT7g9mJuNlKudYCzeL9_ieJpz" />
-                      <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center p-8 backdrop-blur-[2px] group-hover/promo:backdrop-blur-0 transition-all duration-1000">
-                        <p className="text-[9px] font-black uppercase tracking-[0.5em] mb-4 text-white/60">The Atelier Series</p>
-                        <h5 className="text-3xl font-impact tracking-tighter mb-8 text-white scale-90 group-hover/promo:scale-100 transition-transform duration-1000">SS24<br />EDITORIAL</h5>
-                        <Link className="px-10 py-4 bg-white text-black text-[10px] font-black uppercase tracking-widest hover:bg-accent transition-all hover:px-12" to="/shop">Explore</Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <Link className="nav-link text-[10px] font-black uppercase tracking-[0.3em] flex items-center gap-2 group/studio" to="/customize">
-                <span className="w-1 h-1 bg-accent rounded-full group-hover/studio:animate-ping"></span>
-                <span className="text-accent underline underline-offset-[6px] decoration-accent/30 group-hover:decoration-accent transition-all">Studio</span>
-              </Link>
-
               <Link className="nav-link text-[10px] font-black uppercase tracking-[0.3em] text-white/70 hover:text-white" to="/sale">Sale</Link>
             </nav>
           )}
@@ -225,9 +168,8 @@ export default function Header({ forceSolid = false }) {
                   <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-[18px]">search</span>
                 </motion.div>
 
-                {/* NAV LINKS */}
                 <nav className="flex flex-col gap-6">
-                  {['New Arrivals', 'Collections', 'Studio', 'Sale'].map((item, i) => (
+                  {['New Arrivals', 'Collections', 'Sale'].map((item, i) => (
                     <motion.div
                       key={item}
                       initial={{ opacity: 0, x: -20 }}
@@ -235,8 +177,8 @@ export default function Header({ forceSolid = false }) {
                       transition={{ delay: 0.3 + i * 0.05 }}
                     >
                       <Link
-                        className={`text-2xl font-impact uppercase tracking-wider transition-colors hover:text-accent ${item === 'Sale' || item === 'Studio' ? 'text-accent' : 'text-white'}`}
-                        to={item === 'Studio' ? '/customize' : `/${item.toLowerCase().replace(' ', '-')}`}
+                        className={`text-2xl font-impact uppercase tracking-wider transition-colors hover:text-accent ${item === 'Sale' ? 'text-accent' : 'text-white'}`}
+                        to={`/${item.toLowerCase().replace(' ', '-')}`}
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         {item}
@@ -244,7 +186,7 @@ export default function Header({ forceSolid = false }) {
                     </motion.div>
                   ))}
 
-                  {/* MOBILE ACCORDION (Clothing) */}
+                  {/* MOBILE ACCORDION (Clothing) - Restored by User Request */}
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
