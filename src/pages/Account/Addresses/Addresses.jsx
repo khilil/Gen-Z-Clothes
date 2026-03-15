@@ -5,6 +5,7 @@ import {
     setDefaultAddressAPI
 } from "../../../features/address/addressService";
 import api from "../../../services/api";
+import AddAddressModal from "./AddAddressModal";
 
 const Addresses = () => {
     const [open, setOpen] = useState(false);
