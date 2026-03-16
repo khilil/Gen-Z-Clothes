@@ -87,6 +87,10 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.user = action.payload.data.user;
                 state.role = action.payload.data.role;
+                // 🔥 Save refresh token for cross-site persistence
+                if (action.payload.data.refreshToken) {
+                    localStorage.setItem("refreshToken", action.payload.data.refreshToken);
+                }
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;
@@ -117,6 +121,10 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.user = action.payload.data.user;
                 state.role = action.payload.data.role;
+                // 🔥 Save refresh token for cross-site persistence
+                if (action.payload.data.refreshToken) {
+                    localStorage.setItem("refreshToken", action.payload.data.refreshToken);
+                }
             })
             .addCase(registerUser.rejected, (state, action) => {
                 state.loading = false;
@@ -130,6 +138,7 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.user = null;
                 state.role = null;
+                localStorage.removeItem("refreshToken"); // 🧹 Clear token
             })
             .addCase(logoutUser.rejected, (state) => {
                 state.loading = false;
@@ -142,6 +151,10 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.user = action.payload.data.user;
                 state.role = action.payload.data.role;
+                // 🔥 Save refresh token for cross-site persistence
+                if (action.payload.data.refreshToken) {
+                    localStorage.setItem("refreshToken", action.payload.data.refreshToken);
+                }
             })
             .addCase(googleLoginUser.rejected, (state, action) => {
                 state.loading = false;

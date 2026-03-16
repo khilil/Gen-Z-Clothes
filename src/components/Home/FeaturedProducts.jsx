@@ -35,7 +35,7 @@ function FeaturedProducts() {
     return (
         <section className="py-[80px] md:py-[120px] bg-[#0a0a0a] text-white">
             <div className="container-wide">
-                <div className="flex flex-col lg:flex-row justify-start lg:justify-between items-start lg:items-end mb-[80px] gap-8 lg:gap-10">
+                <div className="flex flex-col lg:flex-row justify-start lg:justify-between items-start lg:items-end mb-[60px] gap-8 lg:gap-10">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}

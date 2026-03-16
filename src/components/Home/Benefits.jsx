@@ -25,7 +25,7 @@ const benefitItems = [
 
 function Benefits() {
     return (
-        <section className="py-20 bg-[#0a0a0a] border-y border-white/5">
+        <section className="py-[80px] md:py-[120px] bg-[#0a0a0a] border-y border-white/5">
             <div className="container-wide">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-10">
                     {benefitItems.map((item, index) => (

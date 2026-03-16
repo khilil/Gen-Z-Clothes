@@ -1,6 +1,10 @@
 import axios from "axios";
 
-export const BASE_URL = import.meta.env.VITE_BASE_URL || `https://backend-clothes-1p7b.onrender.com`;
+const USE_LIVE_API = false; // 🚀 Set to TRUE for Render, FALSE for Localhost
+const LIVE_URL = "https://backend-clothes-1p7b.onrender.com";
+const LOCAL_URL = "http://localhost:5000";
+
+export const BASE_URL = USE_LIVE_API ? LIVE_URL : LOCAL_URL;
 export const API_BASE_URL = `${BASE_URL}/api/v1`;
 
 const api = axios.create({
@@ -57,13 +61,19 @@ api.interceptors.response.use(
             isRefreshing = true;
 
             return new Promise(function (resolve, reject) {
+                const storedRefreshToken = localStorage.getItem("refreshToken");
+                
                 axios
                     .post(
                         `${API_BASE_URL}/users/refresh-token`,
-                        {},
+                        { refreshToken: storedRefreshToken }, // 🔥 Send as body fallback
                         { withCredentials: true }
                     )
-                    .then(() => {
+                    .then((res) => {
+                        // 🔥 Save new refresh token if rotated
+                        if (res.data.data?.refreshToken) {
+                            localStorage.setItem("refreshToken", res.data.data.refreshToken);
+                        }
                         processQueue(null);
                         resolve(api(originalRequest));
                     })

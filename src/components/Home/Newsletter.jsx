@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 
 function Newsletter() {
     return (
-        <section className="py-[80px] md:py-[160px] bg-black relative overflow-hidden before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:w-[60%] before:h-[60%] before:bg-[radial-gradient(circle,rgba(212,196,177,0.05)_0%,transparent_70%)] before:pointer-events-none">
+        <section className="py-[80px] md:py-[120px] bg-black relative overflow-hidden before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:w-[60%] before:h-[60%] before:bg-[radial-gradient(circle,rgba(212,196,177,0.05)_0%,transparent_70%)] before:pointer-events-none">
             <div className="container-wide">
                 <div className="flex justify-center text-center">
                     <motion.div

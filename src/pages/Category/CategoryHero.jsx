@@ -8,7 +8,10 @@ export default function CategoryHero() {
 
   useEffect(() => {
     fetchCategories().then((cats) => {
-      const matched = cats.find(c => c.slug === slug);
+      if (!cats) return;
+      // Normalize slugs to handle case and special character differences (e.g. t-shirts vs tshirts)
+      const normalize = (s) => s?.toLowerCase().replace(/[^a-z0-9]/g, "");
+      const matched = cats.find(c => normalize(c.slug) === normalize(slug));
       setCategory(matched);
     });
   }, [slug]);

@@ -44,6 +44,7 @@ import CustomizationManagement from "../Admin/Pages/Customization/CustomizationM
 import NewArrivals from "../pages/NewArrivals/NewArrivals";
 import SalePage from "../pages/Sale/SalePage";
 import PrintQueue from "../Admin/Pages/Production/PrintQueue";
+import AdminHeroSlider from "../Admin/Pages/HeroSlider/AdminHeroSlider";
 
 
 export default function AppRoutes() {
@@ -69,6 +70,7 @@ export default function AppRoutes() {
                 <Route path="customers" element={<AdminCustomers />} />
                 <Route path="analytics" element={<AdminAnalytics />} />
                 <Route path="production" element={<PrintQueue />} />
+                <Route path="hero-slider" element={<AdminHeroSlider />} />
             </Route>
 
             <Route path="/admin/orders/:orderId" element={

@@ -10,7 +10,8 @@ import {
     ShoppingBasket,
     Layers,
     Palette,
-    Printer
+    Printer,
+    Image as ImageIcon
 } from 'lucide-react';
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -40,6 +41,7 @@ const Sidebar = () => {
         { name: 'Print Queue', path: '/admin/production', icon: Printer },
         { name: 'Customers', path: '/admin/customers', icon: Users },
         { name: 'Analytics', path: '/admin/analytics', icon: BarChart3 },
+        { name: 'Hero Slider', path: '/admin/hero-slider', icon: ImageIcon },
     ];
 
     const supportItems = [

@@ -10,7 +10,8 @@ import {
     Loader2,
     Layers,
     ChevronRight,
-    Tag
+    Tag,
+    Image as ImageIcon
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getAllCategories, createCategory, updateCategory, deleteCategory } from '../../../services/categoryService';
@@ -24,6 +25,8 @@ export default function AdminCategories() {
     const [showAddModal, setShowAddModal] = useState(false);
     const [editingCategory, setEditingCategory] = useState(null);
     const [deleteModal, setDeleteModal] = useState({ isOpen: false, id: null, name: '' });
+    const [image, setImage] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
 
     // Form state
     const [formData, setFormData] = useState({
@@ -66,15 +69,33 @@ export default function AdminCategories() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImage(file);
+            setImagePreview(URL.createObjectURL(file));
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
+
+        const data = new FormData();
+        data.append('name', formData.name);
+        data.append('description', formData.description);
+        data.append('parentCategory', formData.parentCategory);
+        data.append('displayOrder', formData.displayOrder);
+        if (image) {
+            data.append('image', image);
+        }
+
         try {
             if (editingCategory) {
-                await updateCategory(editingCategory._id, formData);
+                await updateCategory(editingCategory._id, data);
                 showNotification('success', 'Category updated successfully');
             } else {
-                await createCategory(formData);
+                await createCategory(data);
                 showNotification('success', 'Category created successfully');
             }
             fetchCategories();
@@ -94,6 +115,9 @@ export default function AdminCategories() {
             parentCategory: category.parentCategory?._id || category.parentCategory || '',
             displayOrder: category.displayOrder || 0
         });
+        if (category.image) {
+            setImagePreview(category.image);
+        }
         setShowAddModal(true);
     };
 
@@ -101,6 +125,8 @@ export default function AdminCategories() {
         setShowAddModal(false);
         setEditingCategory(null);
         setFormData({ name: '', description: '', parentCategory: '', displayOrder: 0 });
+        setImage(null);
+        setImagePreview(null);
     };
 
     const handleDeleteClick = (category) => {
@@ -316,6 +342,52 @@ export default function AdminCategories() {
                                             className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 outline-none focus:border-indigo-500"
                                             placeholder="e.g. Mens T-Shirts"
                                         />
+                                    </div>
+
+                                    <div className="space-y-1.5">
+                                        <label className="text-xs font-black uppercase tracking-widest text-slate-500">Hero Background Image</label>
+                                        <div className="flex items-center gap-4">
+                                            <div className="relative flex h-24 w-40 items-center justify-center overflow-hidden rounded-xl border border-dashed border-slate-700 bg-slate-950/50">
+                                                {imagePreview ? (
+                                                    <>
+                                                        <img src={imagePreview} alt="Preview" className="h-full w-full object-cover" />
+                                                        <button
+                                                            type="button"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                setImage(null);
+                                                                setImagePreview(null);
+                                                            }}
+                                                            className="absolute top-1 right-1 h-6 w-6 rounded-full bg-rose-500 flex items-center justify-center text-white shadow-lg"
+                                                        >
+                                                            <X size={12} />
+                                                        </button>
+                                                    </>
+                                                ) : (
+                                                    <div className="flex flex-col items-center gap-1 text-slate-600">
+                                                        <ImageIcon size={24} />
+                                                        <span className="text-[10px] font-bold uppercase tracking-tighter">No Image</span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="flex-1">
+                                                <input
+                                                    type="file"
+                                                    id="image-upload"
+                                                    className="hidden"
+                                                    accept="image/*"
+                                                    onChange={handleImageChange}
+                                                />
+                                                <label
+                                                    htmlFor="image-upload"
+                                                    className="flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-slate-800 px-4 py-2 text-xs font-bold text-slate-300 transition-all hover:bg-slate-700 hover:text-white"
+                                                >
+                                                    <Plus size={14} />
+                                                    {imagePreview ? 'Change Image' : 'Choose Background'}
+                                                </label>
+                                                <p className="mt-2 text-[10px] text-slate-600 font-medium italic">Used as background for this category's page</p>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div className="space-y-1.5">
                                         <label className="text-xs font-black uppercase tracking-widest text-slate-500">Parent Category (Optional)</label>
