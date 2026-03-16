@@ -1,6 +1,8 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { fetchProducts } from "../../api/products.api";
+import { fetchCategories } from "../../api/categories.api";
+import { fetchSizes, fetchColors } from "../../api/attributes.api";
 import { motion, AnimatePresence } from "framer-motion";
 
 import FiltersSidebar from "../../pages/ProductDetail/Filters sidebar/FiltersSidebar";
@@ -18,32 +20,23 @@ export default function CategoryPage() {
   // મોબાઈલ ડ્રોઅર કંટ્રોલ કરવા માટે
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
+  // Dynamic Filter Data
+  const [availableCategories, setAvailableCategories] = useState([]);
+  const [availableSizes, setAvailableSizes] = useState([]);
+  const [availableColors, setAvailableColors] = useState([]);
+  const [availableBrands, setAvailableBrands] = useState([]);
+
   const [filters, setFilters] = useState({
     category: slug || 'all',
     brand: [],
     sizes: [], // Changed from size: null to sizes: []
+    color: null,
     fit: [],
     price: 10000,
     sort: 'newest'
   });
 
-  // Extract available sizes based on category/product group
-  const availableSizes = useMemo(() => {
-    // If we can determine the category from the slug or product types
-    const firstProductType = allProducts.length > 0 ? allProducts[0].productType : '';
-
-    if (isBottomwear(slug, firstProductType)) {
-      return BOTTOMWEAR_SIZES;
-    }
-
-    // Default to Topwear for clothing if not clearly bottomwear
-    return TOPWEAR_SIZES;
-  }, [allProducts, slug]);
-
-  const availableFits = useMemo(() => {
-    // Current schema uses productType instead of explicit "fit" usually, 
-    // but if fits exist in metadata we could pull them.
-    // For now, let's use product types as "fits" or just return common ones.
+  const availableFitsSource = useMemo(() => {
     const types = new Set(allProducts.map(p => p.productType).filter(Boolean));
     return Array.from(types);
   }, [allProducts]);
@@ -52,6 +45,61 @@ export default function CategoryPage() {
     if (allProducts.length === 0) return 10000;
     return Math.max(...allProducts.map(p => p.price || 0));
   }, [allProducts]);
+
+  const categorizedColors = useMemo(() => {
+    const top = new Map();
+    const bottom = new Map();
+    
+    allProducts.forEach(p => {
+      const isBottom = isBottomwear(p.slug || '', p.productType || '');
+      p.variants?.forEach(v => {
+        if (v.color?.name) {
+          if (isBottom) bottom.set(v.color.name, v.color);
+          else top.set(v.color.name, v.color);
+        }
+      });
+    });
+    
+    return {
+      top: Array.from(top.values()),
+      bottom: Array.from(bottom.values())
+    };
+  }, [allProducts]);
+
+  // Fetch Filter Data
+  useEffect(() => {
+    const loadFilterData = async () => {
+      try {
+        const [categories, sizes, colors] = await Promise.all([
+          fetchCategories(),
+          fetchSizes(),
+          fetchColors()
+        ]);
+        setAvailableCategories(categories || []);
+        setAvailableSizes((sizes.data || []).map(s => s.name));
+        setAvailableColors(colors.data || []);
+      } catch (error) {
+        console.error("Error loading filter data:", error);
+      }
+    };
+    loadFilterData();
+  }, []);
+
+  // Sync state with URL category changes
+  useEffect(() => {
+    const currentCategory = slug || 'all';
+    if (filters.category !== currentCategory) {
+      setFilters(prev => ({
+        ...prev,
+        category: currentCategory,
+        brand: [],
+        sizes: [],
+        color: null,
+        fit: [],
+        price: maxPrice
+      }));
+    }
+  }, [slug, maxPrice]);
 
   const handleSizeChange = size => {
     setFilters(prev => ({
@@ -64,6 +112,15 @@ export default function CategoryPage() {
 
   const handleSortChange = sort => setFilters(prev => ({ ...prev, sort }));
 
+  const handleBrandChange = (brand) => {
+    setFilters(prev => ({
+      ...prev,
+      brand: prev.brand.includes(brand)
+        ? prev.brand.filter(b => b !== brand)
+        : [...prev.brand, brand]
+    }));
+  };
+
   const handleFitChange = fit => {
     setFilters(prev => ({
       ...prev,
@@ -73,6 +130,10 @@ export default function CategoryPage() {
     }));
   };
 
+  const handleColorChange = (color) => {
+    setFilters(prev => ({ ...prev, color: prev.color === color ? null : color }));
+  };
+
   const handlePriceChange = price => setFilters(prev => ({ ...prev, price }));
 
   const handleClear = () => {
@@ -80,6 +141,7 @@ export default function CategoryPage() {
       category: slug || 'all',
       brand: [],
       sizes: [],
+      color: null,
       fit: [],
       price: maxPrice,
       sort: 'newest'
@@ -104,6 +166,11 @@ export default function CategoryPage() {
     fetchProducts({ category: slug }).then(data => {
       setAllProducts(data?.products || []);
       setIsLoading(false);
+
+      if (data?.products?.length > 0) {
+        const brands = [...new Set(data.products.map(p => p.brand).filter(Boolean))];
+        setAvailableBrands(prev => [...new Set([...prev, ...brands])]);
+      }
     }).catch(err => {
       console.error("Fetch products error:", err);
       setIsLoading(false);
@@ -128,7 +195,14 @@ export default function CategoryPage() {
       result = result.filter(p => p.productType && filters.fit.includes(p.productType.toLowerCase()));
     }
 
-    // 3. Filter by Price
+    // 3. Filter by Color
+    if (filters.color) {
+      result = result.filter(p =>
+        p.variants?.some(v => v.color?.name === filters.color)
+      );
+    }
+
+    // 4. Filter by Price
     result = result.filter(p => (p.price || 0) <= filters.price);
 
     // 4. Apply Sorting
@@ -154,13 +228,21 @@ export default function CategoryPage() {
       <main className="flex-1 flex flex-col lg:flex-row pt-5 lg:pt-20">
 
         {/* DESKTOP SIDEBAR - (મોબાઈલમાં છુપાઈ જશે) */}
-        <aside className="hidden lg:block w-80 h-fit sticky top-20 border-r border-white/5 bg-black/20 overflow-y-auto custom-scrollbar">
+        <aside 
+          data-lenis-prevent
+          className="hidden lg:block w-80 h-[calc(100vh-80px)] sticky top-20 border-r border-white/5 bg-black/20 overflow-y-auto custom-scrollbar"
+        >
           <FiltersSidebar
             filters={filters}
+            availableCategories={availableCategories}
+            availableBrands={availableBrands}
             availableSizes={availableSizes}
-            availableFits={availableFits}
+            availableColors={categorizedColors}
+            availableFits={availableFitsSource}
             maxPrice={maxPrice}
             onSizeChange={handleSizeChange}
+            onBrandChange={handleBrandChange}
+            onColorChange={handleColorChange}
             onFitChange={handleFitChange}
             onPriceChange={handlePriceChange}
             onSortChange={handleSortChange}
@@ -198,17 +280,25 @@ export default function CategoryPage() {
                   <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 group-hover:text-white transition-colors">Tap to Close</h4>
                 </button>
 
-                <div className="p-8 pt-4 pb-32 overflow-y-auto custom-scrollbar">
+                <div 
+                  data-lenis-prevent
+                  className="p-8 pt-4 pb-32 overflow-y-auto custom-scrollbar"
+                >
                   <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/5">
                     <h4 className="text-[12px] font-black uppercase tracking-[0.4em] text-white/90">Refine Collection</h4>
                   </div>
 
                   <FiltersSidebar
                     filters={filters}
+                    availableCategories={availableCategories}
+                    availableBrands={availableBrands}
                     availableSizes={availableSizes}
-                    availableFits={availableFits}
+                    availableColors={categorizedColors}
+                    availableFits={availableFitsSource}
                     maxPrice={maxPrice}
                     onSizeChange={handleSizeChange}
+                    onBrandChange={handleBrandChange}
+                    onColorChange={handleColorChange}
                     onFitChange={handleFitChange}
                     onPriceChange={handlePriceChange}
                     onSortChange={handleSortChange}
@@ -320,6 +410,16 @@ export default function CategoryPage() {
                     <span className="material-symbols-outlined text-[14px] text-white/20 group-hover:text-white">close</span>
                   </button>
                 ))}
+                {filters.color && (
+                  <button
+                    onClick={() => handleColorChange(filters.color)}
+                    className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 hover:border-white/30 rounded-full transition-colors group"
+                  >
+                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: filters.color }}></div>
+                    <span className="text-[9px] font-black uppercase tracking-widest text-white/60 group-hover:text-white">Color: {filters.color}</span>
+                    <span className="material-symbols-outlined text-[14px] text-white/20 group-hover:text-white">close</span>
+                  </button>
+                )}
                 <button
                   onClick={handleClear}
                   className="px-3 py-1.5 text-[9px] font-black uppercase tracking-widest text-accent hover:text-white transition-colors"

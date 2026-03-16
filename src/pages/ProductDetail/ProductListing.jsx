@@ -2,9 +2,13 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchProducts } from '../../api/products.api';
+import { fetchCategories } from '../../api/categories.api';
+import { fetchSizes, fetchColors } from '../../api/attributes.api';
 import ProductCard from '../../components/product/ProductCard/ProductCard';
 import FiltersSidebar from './Filters sidebar/FiltersSidebar';
 import SkeletonCards from '../../components/product/Skeleton/SkeletonCards';
+import { isBottomwear } from '../../utils/sizeConstants';
+
 const ProductListing = () => {
   const { category: urlCategory } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -18,6 +22,13 @@ const ProductListing = () => {
   const [totalProducts, setTotalProducts] = useState(0);
   const [hasMore, setHasMore] = useState(true);
 
+  // Dynamic Filters Data
+  const [availableCategories, setAvailableCategories] = useState([]);
+  const [availableSizes, setAvailableSizes] = useState([]);
+  const [availableColors, setAvailableColors] = useState([]);
+  const [availableBrands, setAvailableBrands] = useState([]);
+  const [availableFits, setAvailableFits] = useState([]);
+
   // Filters State
   const [filters, setFilters] = useState({
     category: urlCategory || searchParams.get('category') || 'all',
@@ -28,14 +39,25 @@ const ProductListing = () => {
     sort: searchParams.get('sort') || 'newest'
   });
 
-  const availableColors = [
-    { name: "Black", hexCode: "#000000" },
-    { name: "White", hexCode: "#FFFFFF" },
-    { name: "Grey", hexCode: "#808080" },
-    { name: "Beige", hexCode: "#F5F5DC" },
-    { name: "Navy", hexCode: "#000080" },
-    { name: "Olive", hexCode: "#808000" }
-  ];
+  const categorizedColors = useMemo(() => {
+    const top = new Map();
+    const bottom = new Map();
+    
+    products.forEach(p => {
+      const isBottom = isBottomwear(p.slug || '', p.productType || '');
+      p.variants?.forEach(v => {
+        if (v.color?.name) {
+          if (isBottom) bottom.set(v.color.name, v.color);
+          else top.set(v.color.name, v.color);
+        }
+      });
+    });
+    
+    return {
+      top: Array.from(top.values()),
+      bottom: Array.from(bottom.values())
+    };
+  }, [products]);
 
   const observer = useRef();
   const lastProductElementRef = useCallback(node => {
@@ -48,6 +70,40 @@ const ProductListing = () => {
     });
     if (node) observer.current.observe(node);
   }, [loading, loadingMore, hasMore]);
+
+  // Fetch Filter Data
+  useEffect(() => {
+    const loadFilterData = async () => {
+      try {
+        const [categories, sizes, colors] = await Promise.all([
+          fetchCategories(),
+          fetchSizes(),
+          fetchColors()
+        ]);
+        setAvailableCategories(categories || []);
+        setAvailableSizes((sizes.data || []).map(s => s.name));
+        setAvailableColors(colors.data || []);
+      } catch (error) {
+        console.error("Error loading filter data:", error);
+      }
+    };
+    loadFilterData();
+  }, []);
+
+  // Sync state with URL category changes
+  useEffect(() => {
+    const currentCategory = urlCategory || searchParams.get('category') || 'all';
+    if (filters.category !== currentCategory) {
+      setFilters(prev => ({
+        ...prev,
+        category: currentCategory,
+        brand: [],
+        size: null,
+        color: null,
+        price: 10000
+      }));
+    }
+  }, [urlCategory, searchParams]);
 
   // Initial Fetch & Filter Change
   useEffect(() => {
@@ -69,6 +125,15 @@ const ProductListing = () => {
         setTotalPages(data.totalPages);
         setTotalProducts(data.totalProducts);
         setHasMore(data.currentPage < data.totalPages);
+
+        // Derive brands and fits from products if not already set or for updates
+        if (data.products.length > 0) {
+          const brands = [...new Set(data.products.map(p => p.brand).filter(Boolean))];
+          setAvailableBrands(prev => [...new Set([...prev, ...brands])]);
+          
+          const fits = [...new Set(data.products.map(p => p.productType).filter(Boolean))];
+          setAvailableFits(prev => [...new Set([...prev, ...fits])]);
+        }
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
@@ -177,7 +242,10 @@ const ProductListing = () => {
     <div className="bg-[#0a0a0a] min-h-screen text-white pt-[80px] lg:pt-[100px]">
       <main className="flex max-w-[1600px] mx-auto gap-5 lg:gap-10 px-5 lg:px-10">
         {/* Sidebar Filters */}
-        <aside className="hidden lg:block w-[300px] shrink-0 sticky top-[120px] h-[calc(100vh-150px)] overflow-y-auto pr-[15px] custom-scrollbar">
+        <aside 
+          data-lenis-prevent
+          className="hidden lg:block w-[300px] shrink-0 sticky top-[120px] h-[calc(100vh-150px)] overflow-y-auto pr-[15px] custom-scrollbar"
+        >
           <FiltersSidebar
             filters={filters}
             onCategoryChange={handleCategoryChange}
@@ -187,7 +255,11 @@ const ProductListing = () => {
             onPriceChange={handlePriceChange}
             onSortChange={handleSortChange}
             onClear={handleClearFilters}
-            availableColors={availableColors}
+            availableCategories={availableCategories}
+            availableBrands={availableBrands}
+            availableSizes={availableSizes}
+            availableColors={categorizedColors}
+            availableFits={availableFits}
             maxPrice={10000}
           />
         </aside>
@@ -210,6 +282,57 @@ const ProductListing = () => {
               )}
             </button>
           </header>
+
+          {/* ACTIVE FILTER CHIPS */}
+          <AnimatePresence>
+            {(filters.brand?.length > 0 || filters.size || filters.color) && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="flex flex-wrap gap-2 mb-6"
+              >
+                {filters.brand?.map((brand) => (
+                  <button
+                    key={brand}
+                    onClick={() => handleBrandChange(brand)}
+                    className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 hover:border-white/30 rounded-full transition-colors group"
+                  >
+                    <span className="text-[9px] font-black uppercase tracking-widest text-white/40 group-hover:text-white">Brand: {brand}</span>
+                    <span className="material-symbols-outlined text-[14px] text-white/20 group-hover:text-white">close</span>
+                  </button>
+                ))}
+
+                {filters.size && (
+                  <button
+                    onClick={() => handleSizeChange(filters.size)}
+                    className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 hover:border-white/30 rounded-full transition-colors group"
+                  >
+                    <span className="text-[9px] font-black uppercase tracking-widest text-white/40 group-hover:text-white">Size: {filters.size}</span>
+                    <span className="material-symbols-outlined text-[14px] text-white/20 group-hover:text-white">close</span>
+                  </button>
+                )}
+
+                {filters.color && (
+                  <button
+                    onClick={() => handleColorChange(filters.color)}
+                    className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 hover:border-white/30 rounded-full transition-colors group"
+                  >
+                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: filters.color }}></div>
+                    <span className="text-[9px] font-black uppercase tracking-widest text-white/40 group-hover:text-white">Color: {filters.color}</span>
+                    <span className="material-symbols-outlined text-[14px] text-white/20 group-hover:text-white">close</span>
+                  </button>
+                )}
+
+                <button
+                  onClick={handleClearFilters}
+                  className="px-3 py-1.5 text-[9px] font-black uppercase tracking-widest text-accent hover:text-white transition-colors"
+                >
+                  Clear All
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Mobile Filter Drawer */}
           <AnimatePresence>
@@ -236,7 +359,10 @@ const ProductListing = () => {
                       <span className="material-symbols-outlined">close</span>
                     </button>
                   </div>
-                  <div className="flex-1 overflow-y-auto pt-5 pb-5 px-6 no-scrollbar">
+                  <div 
+                    data-lenis-prevent
+                    className="flex-1 overflow-y-auto pt-5 pb-5 px-6 no-scrollbar"
+                  >
                     <FiltersSidebar
                       filters={filters}
                       onCategoryChange={handleCategoryChange}
@@ -246,7 +372,11 @@ const ProductListing = () => {
                       onPriceChange={handlePriceChange}
                       onSortChange={handleSortChange}
                       onClear={handleClearFilters}
-                      availableColors={availableColors}
+                      availableCategories={availableCategories}
+                      availableBrands={availableBrands}
+                      availableSizes={availableSizes}
+                      availableColors={categorizedColors}
+                      availableFits={availableFits}
                       maxPrice={10000}
                       isMobile={true}
                     />
