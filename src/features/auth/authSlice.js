@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getCurrentUserAPI, googleLoginAPI, loginAPI, logoutAPI, registerAPI, addAddressAPI } from "./authService";
+import { getCurrentUserAPI, googleLoginAPI, loginAPI, logoutAPI, registerAPI, addAddressAPI, sendOTPAPI, verifyOTPAPI } from "./authService";
 
 
 export const loginUser = createAsyncThunk(
@@ -67,6 +67,29 @@ export const addUserAddress = createAsyncThunk(
         }
     }
 );
+
+export const sendOTP = createAsyncThunk(
+    "auth/send-otp",
+    async (email, thunkAPI) => {
+        try {
+            return await sendOTPAPI(email);
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);
+
+export const verifyOTP = createAsyncThunk(
+    "auth/verify-otp",
+    async ({ email, otp }, thunkAPI) => {
+        try {
+            return await verifyOTPAPI(email, otp);
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);
+
 
 const authSlice = createSlice({
     name: "auth",
@@ -173,7 +196,35 @@ const authSlice = createSlice({
             .addCase(addUserAddress.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+            })
+            // 🔥 SEND OTP
+            .addCase(sendOTP.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(sendOTP.fulfilled, (state) => {
+                state.loading = false;
+            })
+            .addCase(sendOTP.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+            // 🔥 VERIFY OTP
+            .addCase(verifyOTP.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(verifyOTP.fulfilled, (state, action) => {
+                state.loading = false;
+                state.user = action.payload.data.user;
+                state.role = action.payload.data.role;
+                if (action.payload.data.refreshToken) {
+                    localStorage.setItem("refreshToken", action.payload.data.refreshToken);
+                }
+            })
+            .addCase(verifyOTP.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
             });
+
 
     }
 });

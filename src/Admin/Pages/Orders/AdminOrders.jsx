@@ -149,6 +149,12 @@ const AdminOrders = () => {
                                         <td className="px-6 py-4">
                                             <div className="flex flex-col items-start gap-1">
                                                 <span className="font-bold text-sm">₹{order.totalAmount}</span>
+                                                {order.couponCode && (
+                                                    <span className="bg-emerald-500/10 text-emerald-500 text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-widest flex items-center gap-1">
+                                                        <span className="material-symbols-outlined text-[10px]">local_offer</span>
+                                                        {order.couponCode}
+                                                    </span>
+                                                )}
                                                 {isCustom && (
                                                     <span className="bg-accent/10 text-accent text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-widest">
                                                         Contains Custom

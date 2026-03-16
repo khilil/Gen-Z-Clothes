@@ -10,7 +10,7 @@ import {
     ShoppingBasket,
     Layers,
     Palette,
-    Printer,
+    Ticket,
     Image as ImageIcon
 } from 'lucide-react';
 import React from "react";
@@ -38,9 +38,9 @@ const Sidebar = () => {
         { name: 'Categories', path: '/admin/categories', icon: Layers },
         { name: 'Attributes', path: '/admin/attributes', icon: Palette },
         { name: 'Customization', path: '/admin/customization', icon: Settings },
-        { name: 'Print Queue', path: '/admin/production', icon: Printer },
         { name: 'Customers', path: '/admin/customers', icon: Users },
         { name: 'Analytics', path: '/admin/analytics', icon: BarChart3 },
+        { name: 'Offers', path: '/admin/offers', icon: Ticket },
         { name: 'Hero Slider', path: '/admin/hero-slider', icon: ImageIcon },
     ];
 

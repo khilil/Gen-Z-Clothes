@@ -2,10 +2,32 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useWishlist } from '../../../context/WishlistContext';
+import { useOffers } from '../../../context/OfferContext';
+import FlashSaleTimer from '../FlashSaleTimer';
 const ProductCard = React.memo(({ product }) => {
   const [isHovered, setIsHovered] = useState(false);
   const { toggleItem, isInWishlist } = useWishlist();
+  const { getProductOffer } = useOffers();
   const isLiked = isInWishlist(product._id || product.id);
+
+  const activeOffer = getProductOffer(product);
+  
+  // Calculate final price based on active offer
+  const hasActiveOffer = !!activeOffer;
+  let finalPrice = product.price;
+  let discountPercentage = 0;
+
+  if (hasActiveOffer) {
+    if (activeOffer.discountType === "PERCENTAGE") {
+        discountPercentage = activeOffer.discountValue;
+        finalPrice = Math.round(product.price * (1 - discountPercentage / 100));
+    } else {
+        finalPrice = product.price - activeOffer.discountValue;
+        discountPercentage = Math.round((activeOffer.discountValue / product.price) * 100);
+    }
+  }
+
+  const displayCompareAtPrice = product.compareAtPrice > product.price ? product.compareAtPrice : (hasActiveOffer ? product.price : null);
 
   // Extract unique colors and sizes from variants
   const { colors, sizes } = React.useMemo(() => {
@@ -80,7 +102,12 @@ const ProductCard = React.memo(({ product }) => {
           {/* Badges */}
           <div className="absolute top-[15px] left-[15px] z-[10] flex flex-col gap-[6px]">
             {product.isNewArrival && <span className="text-[8px] font-black tracking-[0.15em] py-[6px] px-[10px] uppercase backdrop-blur-[10px] border border-white/10 bg-white/90 text-black">NEW</span>}
-            {product.isOnSale && <span className="text-[8px] font-black tracking-[0.15em] py-[6px] px-[10px] uppercase backdrop-blur-[10px] border-[#d4c4b1]/20 bg-[#d4c4b1]/90 text-black">SALE</span>}
+            {(product.isOnSale || hasActiveOffer) && (
+                <span className="text-[8px] font-black tracking-[0.15em] py-[6px] px-[10px] uppercase backdrop-blur-[10px] border-[#d4c4b1]/20 bg-[#d4c4b1]/90 text-black">
+                    {activeOffer?.offerType ? activeOffer.offerType.replace(/_/g, ' ') : 'SALE'}
+                </span>
+            )}
+
           </div>
 
           {/* Wishlist Icon */}
@@ -148,14 +175,19 @@ const ProductCard = React.memo(({ product }) => {
           <div className="flex justify-between items-start">
             <span className="text-[9px] font-black text-[#d4c4b1] tracking-[0.3em] uppercase mt-1">{product.brand || "GEN-Z ARCHIVE"}</span>
             <div className="flex flex-col items-end gap-[2px]">
-              <span className="text-[14px] md:text-base font-[950] text-white tracking-[-0.01em]">₹{product.price}</span>
-              {product.compareAtPrice > product.price && (
-                <span className="text-[11px] text-white/20 line-through font-medium">₹{product.compareAtPrice}</span>
+              <span className="text-[14px] md:text-base font-[950] text-white tracking-[-0.01em]">₹{hasActiveOffer ? finalPrice : product.price}</span>
+              {displayCompareAtPrice && (
+                <span className="text-[11px] text-white/20 line-through font-medium">₹{displayCompareAtPrice}</span>
               )}
             </div>
           </div>
 
-          <h3 className="text-[12px] md:text-[13px] font-medium text-white/50 leading-[1.4] uppercase tracking-[0.05em] m-0 line-clamp-1">{product.title}</h3>
+          <div className="mt-4 flex flex-col gap-3">
+            {activeOffer?.offerType === 'FLASH_SALE' && activeOffer.endDate && (
+                <FlashSaleTimer endDate={activeOffer.endDate} />
+            )}
+            <h3 className="text-[12px] md:text-[13px] font-medium text-white/50 leading-[1.4] uppercase tracking-[0.05em] m-0 line-clamp-1">{product.title}</h3>
+          </div>
 
           <div className="mt-auto pt-3 border-t border-white/5 flex justify-between items-center">
             {colors.length > 0 && (

@@ -49,3 +49,13 @@ export const resetPasswordAPI = async (token, password) => {
     const response = await api.post(`/users/reset-password/${token}`, { password });
     return response.data;
 };
+
+export const sendOTPAPI = async (email) => {
+    const response = await api.post("/users/send-otp", { email });
+    return response.data;
+};
+
+export const verifyOTPAPI = async (email, otp) => {
+    const response = await api.post("/users/verify-otp", { email, otp });
+    return response.data;
+};

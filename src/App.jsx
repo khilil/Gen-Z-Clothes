@@ -1,5 +1,6 @@
 import { CartProvider } from "./context/CartContext";
 import { WishlistProvider } from "./context/WishlistContext";
+import { OfferProvider } from "./context/OfferContext";
 import AppRoutes from "./routes/AppRoutes";
 import { store } from "./app/store";
 import { useDispatch } from "react-redux";
@@ -18,12 +19,14 @@ function App() {
 
   return (
     <>
-      <CartProvider>
-        <WishlistProvider>
-          <SmoothScroll />
-          <AppRoutes />
-        </WishlistProvider>
-      </CartProvider>
+      <OfferProvider>
+        <CartProvider>
+          <WishlistProvider>
+            <SmoothScroll />
+            <AppRoutes />
+          </WishlistProvider>
+        </CartProvider>
+      </OfferProvider>
     </>
   );
 }

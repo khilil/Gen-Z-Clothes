@@ -158,7 +158,7 @@ const Variants = ({ variants, onAdd, onDelete, onChange, onResetSku, onToggleExp
                                                     {garmentType === 'top' ? (
                                                         <>
                                                             <div className="space-y-1.5">
-                                                                <label className="text-[10px] font-bold text-slate-500">Chest (in)</label>
+                                                                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Chest (in)</label>
                                                                 <input
                                                                     type="number"
                                                                     className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-1.5 text-sm text-slate-200 outline-none focus:border-indigo-500"
@@ -167,7 +167,7 @@ const Variants = ({ variants, onAdd, onDelete, onChange, onResetSku, onToggleExp
                                                                 />
                                                             </div>
                                                             <div className="space-y-1.5">
-                                                                <label className="text-[10px] font-bold text-slate-500">Front Length (in)</label>
+                                                                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Front Length (in)</label>
                                                                 <input
                                                                     type="number"
                                                                     className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-1.5 text-sm text-slate-200 outline-none focus:border-indigo-500"
@@ -176,7 +176,7 @@ const Variants = ({ variants, onAdd, onDelete, onChange, onResetSku, onToggleExp
                                                                 />
                                                             </div>
                                                             <div className="space-y-1.5">
-                                                                <label className="text-[10px] font-bold text-slate-500">Sleeve Length (in)</label>
+                                                                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Sleeve Length (in)</label>
                                                                 <input
                                                                     type="number"
                                                                     className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-1.5 text-sm text-slate-200 outline-none focus:border-indigo-500"
@@ -184,11 +184,38 @@ const Variants = ({ variants, onAdd, onDelete, onChange, onResetSku, onToggleExp
                                                                     onChange={(e) => onChange(v.id || v._id, 'meas_top_sleeveLength', parseFloat(e.target.value) || 0)}
                                                                 />
                                                             </div>
+                                                            <div className="space-y-1.5">
+                                                                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Shoulder (in)</label>
+                                                                <input
+                                                                    type="number"
+                                                                    className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-1.5 text-sm text-slate-200 outline-none focus:border-indigo-500"
+                                                                    value={v.measurements?.top?.shoulder || 0}
+                                                                    onChange={(e) => onChange(v.id || v._id, 'meas_top_shoulder', parseFloat(e.target.value) || 0)}
+                                                                />
+                                                            </div>
+                                                            <div className="space-y-1.5">
+                                                                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Waist (in)</label>
+                                                                <input
+                                                                    type="number"
+                                                                    className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-1.5 text-sm text-slate-200 outline-none focus:border-indigo-500"
+                                                                    value={v.measurements?.top?.waist || 0}
+                                                                    onChange={(e) => onChange(v.id || v._id, 'meas_top_waist', parseFloat(e.target.value) || 0)}
+                                                                />
+                                                            </div>
+                                                            <div className="space-y-1.5">
+                                                                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Hips (in)</label>
+                                                                <input
+                                                                    type="number"
+                                                                    className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-1.5 text-sm text-slate-200 outline-none focus:border-indigo-500"
+                                                                    value={v.measurements?.top?.hips || 0}
+                                                                    onChange={(e) => onChange(v.id || v._id, 'meas_top_hips', parseFloat(e.target.value) || 0)}
+                                                                />
+                                                            </div>
                                                         </>
                                                     ) : (
                                                         <>
                                                             <div className="space-y-1.5">
-                                                                <label className="text-[10px] font-bold text-slate-500">Waist (in)</label>
+                                                                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Waist (in)</label>
                                                                 <input
                                                                     type="number"
                                                                     className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-1.5 text-sm text-slate-200 outline-none focus:border-indigo-500"
@@ -197,7 +224,7 @@ const Variants = ({ variants, onAdd, onDelete, onChange, onResetSku, onToggleExp
                                                                 />
                                                             </div>
                                                             <div className="space-y-1.5">
-                                                                <label className="text-[10px] font-bold text-slate-500">Outseam Length (in)</label>
+                                                                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Outseam Length (in)</label>
                                                                 <input
                                                                     type="number"
                                                                     className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-1.5 text-sm text-slate-200 outline-none focus:border-indigo-500"
@@ -205,8 +232,79 @@ const Variants = ({ variants, onAdd, onDelete, onChange, onResetSku, onToggleExp
                                                                     onChange={(e) => onChange(v.id || v._id, 'meas_bottom_outseamLength', parseFloat(e.target.value) || 0)}
                                                                 />
                                                             </div>
+                                                            <div className="space-y-1.5">
+                                                                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Hips (in)</label>
+                                                                <input
+                                                                    type="number"
+                                                                    className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-1.5 text-sm text-slate-200 outline-none focus:border-indigo-500"
+                                                                    value={v.measurements?.bottom?.hips || 0}
+                                                                    onChange={(e) => onChange(v.id || v._id, 'meas_bottom_hips', parseFloat(e.target.value) || 0)}
+                                                                />
+                                                            </div>
+                                                            <div className="space-y-1.5">
+                                                                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Thigh (in)</label>
+                                                                <input
+                                                                    type="number"
+                                                                    className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-1.5 text-sm text-slate-200 outline-none focus:border-indigo-500"
+                                                                    value={v.measurements?.bottom?.thigh || 0}
+                                                                    onChange={(e) => onChange(v.id || v._id, 'meas_bottom_thigh', parseFloat(e.target.value) || 0)}
+                                                                />
+                                                            </div>
+                                                            <div className="space-y-1.5">
+                                                                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Inseam (in)</label>
+                                                                <input
+                                                                    type="number"
+                                                                    className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-1.5 text-sm text-slate-200 outline-none focus:border-indigo-500"
+                                                                    value={v.measurements?.bottom?.inseam || 0}
+                                                                    onChange={(e) => onChange(v.id || v._id, 'meas_bottom_inseam', parseFloat(e.target.value) || 0)}
+                                                                />
+                                                            </div>
                                                         </>
                                                     )}
+                                                </div>
+
+                                                {/* Custom Measurements Section */}
+                                                <div className="mt-4 pt-4 border-t border-slate-800/50">
+                                                    <div className="flex items-center justify-between mb-3">
+                                                        <h5 className="text-[10px] font-bold text-indigo-400 uppercase tracking-[0.2em]">Custom Spec</h5>
+                                                        <button 
+                                                            onClick={() => onChange(v.id || v._id, 'meas_add_custom', '')}
+                                                            className="flex items-center gap-1.5 rounded-lg bg-indigo-500/10 px-2.5 py-1 text-[10px] font-bold text-indigo-400 hover:bg-indigo-500/20 transition-all border border-indigo-500/20"
+                                                        >
+                                                            <Plus size={10} /> Add More
+                                                        </button>
+                                                    </div>
+                                                    
+                                                    <div className="space-y-3">
+                                                        {Object.entries(v.measurements?.[garmentType]?.custom || {}).map(([key, val], idx) => (
+                                                            <div key={idx} className="flex gap-3 items-end group">
+                                                                <div className="flex-1 space-y-1.5">
+                                                                    <input
+                                                                        type="text"
+                                                                        placeholder="Label (e.g. Shoulder)"
+                                                                        className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-1.5 text-[10px] text-slate-400 outline-none focus:border-indigo-500 font-bold uppercase tracking-wider"
+                                                                        value={key}
+                                                                        onChange={(e) => onChange(v.id || v._id, `meas_custom_rename_${key}`, e.target.value)}
+                                                                    />
+                                                                </div>
+                                                                <div className="flex-1 space-y-1.5">
+                                                                    <input
+                                                                        type="text"
+                                                                        placeholder="Value (e.g. 18.5)"
+                                                                        className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-1.5 text-sm text-slate-200 outline-none focus:border-indigo-500"
+                                                                        value={val}
+                                                                        onChange={(e) => onChange(v.id || v._id, `meas_custom_val_${key}`, e.target.value)}
+                                                                    />
+                                                                </div>
+                                                                <button 
+                                                                    onClick={() => onChange(v.id || v._id, `meas_custom_remove_${key}`, '')}
+                                                                    className="h-8 w-8 flex items-center justify-center rounded-lg text-slate-600 hover:text-rose-400 hover:bg-rose-500/10 transition-all opacity-0 group-hover:opacity-100"
+                                                                >
+                                                                    <X size={14} />
+                                                                </button>
+                                                            </div>
+                                                        ))}
+                                                    </div>
                                                 </div>
                                             </div>
 

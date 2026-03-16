@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useRef } from "react";
+import React, { useEffect, useState, useMemo, useRef, Fragment } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
 import { ProductSuggestions } from "./ProductSuggestions";
@@ -7,10 +7,13 @@ import CollectiveFooter from "../../../components/common/CollectiveFooter/Collec
 import { useCart } from "../../../context/CartContext";
 import CustomizationModal from "./CustomizationPop_popModel";
 import { getProductBySlug } from "../../../services/productService";
+import { OffersSection } from "./OffersSection";
+import { getActiveOffers } from "../../../services/offerService";
 
 export default function ProductDetailPage() {
     const { slug } = useParams();
     const [product, setProduct] = useState(null);
+    const [offers, setOffers] = useState([]);
     const [activeImage, setActiveImage] = useState(0);
     const [selectedSize, setSelectedSize] = useState("");
     const [selectedColor, setSelectedColor] = useState(null);
@@ -64,6 +67,19 @@ export default function ProductDetailPage() {
     };
 
     const [selectedVariant, setSelectedVariant] = useState(null);
+
+    useEffect(() => {
+        fetchOffers();
+    }, []);
+
+    const fetchOffers = async () => {
+        try {
+            const data = await getActiveOffers();
+            setOffers(data.data || []);
+        } catch (error) {
+            console.error("Fetch offers error:", error);
+        }
+    };
 
     useEffect(() => {
         setIsLoading(true);
@@ -404,36 +420,87 @@ export default function ProductDetailPage() {
                             )}
 
                             {/* Size Selection */}
-                            <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="space-y-4">
-                                <div className="flex justify-between items-center pr-4 border-b border-white/5 pb-2">
+                            <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="space-y-6">
+                                <div className="flex justify-between items-center pr-4">
                                     <div className="flex items-center gap-2">
-                                        <h4 className="text-[11px] font-black uppercase tracking-[0.3em] text-white/90">Choose Size</h4>
-                                        <span className="text-[9px] font-bold uppercase tracking-widest text-[#d4c4b1]/50">• {selectedColor?.name} Edition</span>
+                                        <h4 className="text-2xl font-impact uppercase tracking-tight text-white/90">Select Size</h4>
+                                        <span className="text-[9px] font-bold uppercase tracking-widest text-[#d4c4b1]/50">• {selectedColor?.name}</span>
                                     </div>
                                     <button className="text-[10px] font-bold uppercase tracking-widest text-accent/60 hover:text-accent border-b border-accent/20 transition-all">Sizing Guide</button>
                                 </div>
-                                <div className="grid grid-cols-4 sm:grid-cols-6 gap-3">
+                                <div className="flex flex-wrap gap-3">
                                     {filteredVariants.map(v => (
                                         <button
                                             key={v._id}
                                             onClick={() => handleSizeSelect(v)}
                                             disabled={v.stock <= 0}
-                                            className={`h-16 flex flex-col items-center justify-center transition-all duration-300 border-2 relative group/size
+                                            className={`min-w-[70px] h-14 rounded-xl flex items-center justify-center transition-all duration-300 border relative group/size
                                                 ${selectedVariant?._id === v._id
                                                     ? "bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.15)] z-10"
-                                                    : "border-white/5 bg-white/[0.02] text-white/40 hover:border-white/20 hover:text-white"}
+                                                    : "border-white/10 bg-white/[0.02] text-white/60 hover:border-white/20 hover:text-white"}
                                                 ${v.stock <= 0 ? "opacity-10 cursor-not-allowed filter grayscale pointer-events-none" : ""}
                                             `}
                                         >
-                                            <span className={`text-[12px] font-black tracking-[0.2em] uppercase transition-transform ${selectedVariant?._id === v._id ? "scale-110" : "group-hover/size:scale-105"}`}>
+                                            <span className={`text-[13px] font-bold tracking-tight uppercase transition-transform ${selectedVariant?._id === v._id ? "scale-105" : "group-hover/size:scale-105"}`}>
                                                 {v.size?.name}
                                             </span>
-                                            {selectedVariant?._id === v._id && (
-                                                <div className="absolute -bottom-[2px] left-0 right-0 h-[2px] bg-accent" />
-                                            )}
                                         </button>
                                     ))}
                                 </div>
+                                {selectedVariant?.measurements && (() => {
+                                    const type = selectedVariant.measurements.garmentType;
+                                    const measData = selectedVariant.measurements[type] || {};
+                                    const items = [];
+
+                                    // Helper to format labels
+                                    const formatLabel = (key) => {
+                                        const labels = {
+                                            chest: 'Chest',
+                                            frontLength: 'Front Length',
+                                            sleeveLength: 'Sleeve Length',
+                                            shoulder: 'Shoulder',
+                                            waist: 'Waist',
+                                            hips: 'Hips',
+                                            outseamLength: 'Outseam Length',
+                                            thigh: 'Thigh',
+                                            inseam: 'Inseam'
+                                        };
+                                        return labels[key] || key;
+                                    };
+
+                                    // Add standard fields
+                                    Object.entries(measData).forEach(([key, val]) => {
+                                        if (key !== 'custom' && val > 0) {
+                                            items.push({ label: formatLabel(key), val });
+                                        }
+                                    });
+
+                                    // Add custom fields
+                                    if (measData.custom) {
+                                        Object.entries(measData.custom).forEach(([key, val]) => {
+                                            if (key && val) {
+                                                items.push({ label: key, val });
+                                            }
+                                        });
+                                    }
+
+                                    if (items.length === 0) return null;
+
+                                    return (
+                                        <div className="pt-2 text-[11px] font-bold tracking-[0.05em] flex flex-wrap items-center gap-x-3 gap-y-2">
+                                            <span className="text-white/90 uppercase text-[10px] tracking-[0.2em] font-black">Garment (In Inches)</span>
+                                            {items.map((item, i) => (
+                                                <Fragment key={i}>
+                                                    <div className="flex items-center gap-1.5 bg-white/5 px-2 py-1 rounded-md border border-white/5">
+                                                        <span className="text-white/30 uppercase font-black tracking-widest text-[9px]">{item.label} :</span>
+                                                        <span className="text-accent font-impact text-sm tracking-tight">{item.val}</span>
+                                                    </div>
+                                                    {i < items.length - 1 && <span className="text-white/10 hidden sm:block">|</span>}
+                                                </Fragment>
+                                            ))}
+                                        </div>
+                                    );
+                                })()}
                                 {selectedVariant && (
                                     <div className="flex items-center gap-2 pt-1">
                                         <div className={`w-1.5 h-1.5 rounded-full ${selectedVariant.stock > 5 ? 'bg-green-500' : 'bg-red-500 animate-pulse'}`}></div>
@@ -497,6 +564,11 @@ export default function ProductDetailPage() {
                                         Personalize Design <span className="material-symbols-outlined">auto_fix_high</span>
                                     </button>
                                 )}
+                            </motion.div>
+
+                            {/* Interactive Offers Section */}
+                            <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
+                                <OffersSection offers={offers} />
                             </motion.div>
 
                             {/* Trust signals & Benefits */}

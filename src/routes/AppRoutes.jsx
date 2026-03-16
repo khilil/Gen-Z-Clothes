@@ -43,8 +43,8 @@ import AttributeManagement from "../Admin/Pages/Attributes/AttributeManagement";
 import CustomizationManagement from "../Admin/Pages/Customization/CustomizationManagement";
 import NewArrivals from "../pages/NewArrivals/NewArrivals";
 import SalePage from "../pages/Sale/SalePage";
-import PrintQueue from "../Admin/Pages/Production/PrintQueue";
 import AdminHeroSlider from "../Admin/Pages/HeroSlider/AdminHeroSlider";
+import OfferManagement from "../Admin/Pages/Discounts/OfferManagement";
 
 
 export default function AppRoutes() {
@@ -69,8 +69,8 @@ export default function AppRoutes() {
                 <Route path="customization" element={<CustomizationManagement />} />
                 <Route path="customers" element={<AdminCustomers />} />
                 <Route path="analytics" element={<AdminAnalytics />} />
-                <Route path="production" element={<PrintQueue />} />
                 <Route path="hero-slider" element={<AdminHeroSlider />} />
+                <Route path="offers" element={<OfferManagement />} />
             </Route>
 
             <Route path="/admin/orders/:orderId" element={

@@ -12,7 +12,7 @@ export default function Checkout() {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-  const { cart, clearCart } = useCart();
+  const { cart, clearCart, appliedCoupon } = useCart();
   const { user } = useSelector((state) => state.auth);
 
   const directBuy = location.state?.directBuy;
@@ -99,8 +99,10 @@ export default function Checkout() {
   }, [cart, directBuy]);
 
   const subtotal = checkoutItems.reduce((acc, item) => acc + (item.price || 0) * (item.qty || item.quantity || 1), 0);
-  const tax = subtotal * 0.082; // 8.2% estimated tax like in mockup
-  const total = Math.round(subtotal + tax);
+  const discountAmount = appliedCoupon?.discountAmount || 0;
+  const taxableAmount = Math.max(0, subtotal - discountAmount);
+  const tax = taxableAmount * 0.082; // 8.2% estimated tax like in mockup
+  const total = Math.round(taxableAmount + tax);
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -169,7 +171,9 @@ export default function Checkout() {
 
       const orderData = {
         shippingAddress,
-        paymentMethod: formData.paymentMethod
+        paymentMethod: formData.paymentMethod,
+        couponCode: appliedCoupon?.code || "",
+        discountAmount: appliedCoupon?.discountAmount || 0
       };
 
       let result;
@@ -616,6 +620,12 @@ export default function Checkout() {
                       <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-[#d4c4b1] drop-shadow-[0_0_10px_rgba(212,196,177,0.2)]">
                         <span>Customization Architecture</span>
                         <span className="font-bold">+₹{checkoutItems.reduce((acc, item) => acc + (item.price - (item.basePrice || item.price)) * (item.qty || 1), 0).toLocaleString()}</span>
+                      </div>
+                    )}
+                    {appliedCoupon && (
+                      <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-emerald-600">
+                        <span>Offer Discount ({appliedCoupon.code})</span>
+                        <span className="font-bold">-₹{(appliedCoupon.discountAmount || 0).toLocaleString()}</span>
                       </div>
                     )}
                     <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-gray-500">

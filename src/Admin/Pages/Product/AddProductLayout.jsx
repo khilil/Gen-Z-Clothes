@@ -113,8 +113,8 @@ function AddProductLayout() {
             allowBackorder: false,
             measurements: {
                 garmentType: productData.garmentType,
-                top: { chest: 0, frontLength: 0, sleeveLength: 0 },
-                bottom: { waist: 0, outseamLength: 0 }
+                top: { chest: 0, frontLength: 0, sleeveLength: 0, shoulder: 0, waist: 0, hips: 0, custom: {} },
+                bottom: { waist: 0, outseamLength: 0, hips: 0, thigh: 0, inseam: 0, custom: {} }
             },
             isExpanded: true
         };
@@ -131,14 +131,55 @@ function AddProductLayout() {
                 let updated = { ...v };
 
                 if (field.startsWith('meas_')) {
-                    const [_, type, mField] = field.split('_');
-                    updated.measurements = {
-                        ...updated.measurements,
-                        [type]: {
-                            ...updated.measurements[type],
-                            [mField]: value
-                        }
-                    };
+                    if (field === 'meas_add_custom') {
+                        const type = updated.measurements.garmentType;
+                        updated.measurements = {
+                            ...updated.measurements,
+                            [type]: {
+                                ...updated.measurements[type],
+                                custom: { ...updated.measurements[type].custom, '': '' }
+                            }
+                        };
+                    } else if (field.startsWith('meas_custom_rename_')) {
+                        const oldKey = field.replace('meas_custom_rename_', '');
+                        const type = updated.measurements.garmentType;
+                        const custom = { ...updated.measurements[type].custom };
+                        const val = custom[oldKey];
+                        delete custom[oldKey];
+                        custom[value] = val;
+                        updated.measurements = {
+                            ...updated.measurements,
+                            [type]: { ...updated.measurements[type], custom }
+                        };
+                    } else if (field.startsWith('meas_custom_val_')) {
+                        const key = field.replace('meas_custom_val_', '');
+                        const type = updated.measurements.garmentType;
+                        updated.measurements = {
+                            ...updated.measurements,
+                            [type]: {
+                                ...updated.measurements[type],
+                                custom: { ...updated.measurements[type].custom, [key]: value }
+                            }
+                        };
+                    } else if (field.startsWith('meas_custom_remove_')) {
+                        const key = field.replace('meas_custom_remove_', '');
+                        const type = updated.measurements.garmentType;
+                        const custom = { ...updated.measurements[type].custom };
+                        delete custom[key];
+                        updated.measurements = {
+                            ...updated.measurements,
+                            [type]: { ...updated.measurements[type], custom }
+                        };
+                    } else {
+                        const [_, type, mField] = field.split('_');
+                        updated.measurements = {
+                            ...updated.measurements,
+                            [type]: {
+                                ...updated.measurements[type],
+                                [mField]: value
+                            }
+                        };
+                    }
                 } else if (field === 'garmentType') {
                     updated.measurements = {
                         ...updated.measurements,

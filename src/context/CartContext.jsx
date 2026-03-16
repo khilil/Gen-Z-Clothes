@@ -2,13 +2,16 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import * as cartService from "../services/cartService";
 import { ensureAbsoluteUrl } from "../utils/urlUtils";
+import { useOffers } from "./OfferContext";
 
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
   const { user, loading: authLoading } = useSelector((state) => state.auth);
+  const { getCartOffers } = useOffers();
 
   /* 🔄 HELPERS */
   const getGuestCart = () => {
@@ -264,6 +267,15 @@ export function CartProvider({ children }) {
   const clearCart = () => {
     if (!user) localStorage.removeItem("guest_cart");
     setCart([]);
+    setAppliedCoupon(null);
+  };
+
+  const applyCoupon = (couponData) => {
+    setAppliedCoupon(couponData);
+  };
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null);
   };
 
   return (
@@ -274,7 +286,10 @@ export function CartProvider({ children }) {
         addToCart,
         updateQty,
         removeItem,
-        clearCart
+        clearCart,
+        appliedCoupon,
+        applyCoupon,
+        removeCoupon
       }}
     >
       {children}

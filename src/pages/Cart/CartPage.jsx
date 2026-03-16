@@ -1,16 +1,102 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
+import { useOffers } from "../../context/OfferContext";
 import { motion, AnimatePresence } from "framer-motion";
+import { validateOffer } from "../../services/offerService";
 
 export default function CartPage() {
-    const { cart, updateQty, removeItem, isLoading } = useCart();
+    const { cart, updateQty, removeItem, isLoading, appliedCoupon, applyCoupon, removeCoupon } = useCart();
+    const { getCartOffers, getProductOffer, activeOffers } = useOffers();
     const [selectedItemForPreview, setSelectedItemForPreview] = useState(null);
     const [previewSide, setPreviewSide] = useState("front");
-
+    const [promoCode, setPromoCode] = useState("");
+    const [isApplying, setIsApplying] = useState(false);
+    const [error, setError] = useState("");
+ 
+    // 1. Calculate Base Subtotal
     const subtotal = cart.reduce((acc, item) => acc + (item.price || 0) * (item.qty || 0), 0);
-    const estimatedTax = subtotal * 0.08; // Example 8% tax
-    const total = subtotal + estimatedTax;
+
+    // 2. Calculate Product-Level Discounts (Flash Sale, etc. if not already in item.price)
+    // Note: If ProductCard already shows discounted price, item.price might be discounted. 
+    // But usually cart stores base price. Let's check how item is added in CartContext.
+    // In CartContext, item.price is set at fetch time. 
+    
+    // 3. Calculate Automatic Cart-Wide Offers (Buy More Save More)
+    const cartOffers = getCartOffers(subtotal);
+    const buyMoreSaveMore = cartOffers.find(o => o.offerType === "BUY_MORE_SAVE_MORE");
+    
+    let autoDiscountAmount = 0;
+    let autoDiscountLabel = "";
+
+    if (buyMoreSaveMore) {
+        if (buyMoreSaveMore.discountType === "PERCENTAGE") {
+            autoDiscountAmount = (subtotal * buyMoreSaveMore.discountValue) / 100;
+        } else {
+            autoDiscountAmount = buyMoreSaveMore.discountValue;
+        }
+        autoDiscountLabel = buyMoreSaveMore.title;
+    }
+
+    // 4. Calculate Buy X Get Y Offers
+    const buyXGetYOffer = activeOffers.find(o => o.offerType === "BUY_X_GET_Y");
+    let buyXGetYDiscount = 0;
+    
+    if (buyXGetYOffer) {
+        const buyQty = buyXGetYOffer.buyXGetYConfig?.buyQty || 2;
+        const getQty = buyXGetYOffer.buyXGetYConfig?.getQty || 1;
+        
+        // Count items in applicable categories
+        const applicableItems = cart.filter(item => {
+            if (!buyXGetYOffer.applicableCategories?.length) return true;
+            return buyXGetYOffer.applicableCategories.includes(item.productType);
+        });
+        
+        const totalItemsInDeal = applicableItems.reduce((acc, item) => acc + (item.qty || 0), 0);
+        const freeUnits = Math.floor(totalItemsInDeal / (buyQty + getQty)) * getQty;
+        
+        if (freeUnits > 0) {
+            // Find the cheapest item to give for free (standard practice)
+            const sortedItems = [...applicableItems].sort((a, b) => a.price - b.price);
+            let remainingFreeUnits = freeUnits;
+            
+            for (const item of sortedItems) {
+                const unitsFromThisItem = Math.min(item.qty, remainingFreeUnits);
+                buyXGetYDiscount += unitsFromThisItem * item.price;
+                remainingFreeUnits -= unitsFromThisItem;
+                if (remainingFreeUnits <= 0) break;
+            }
+        }
+    }
+
+    // 5. Calculate Free Shipping
+    const freeShippingOffer = cartOffers.find(o => o.offerType === "FREE_SHIPPING");
+    const isFreeShipping = subtotal >= (freeShippingOffer?.minPurchaseAmount || 5000) || (freeShippingOffer ? true : false);
+    const shippingCost = isFreeShipping ? 0 : 250;
+
+    // 6. Calculate Coupon Discount
+    const couponDiscountAmount = appliedCoupon?.discountAmount || 0;
+
+    // 7. Totals
+    const totalDiscount = autoDiscountAmount + couponDiscountAmount + buyXGetYDiscount;
+    const amountAfterDiscount = Math.max(0, subtotal - totalDiscount);
+    const estimatedTax = amountAfterDiscount * 0.08; 
+    const total = amountAfterDiscount + shippingCost + estimatedTax;
+
+    const handleApplyPromo = async () => {
+        if (!promoCode) return;
+        setIsApplying(true);
+        setError("");
+        try {
+            const res = await validateOffer(promoCode, subtotal);
+            applyCoupon(res.data);
+            setPromoCode("");
+        } catch (err) {
+            setError(err.response?.data?.message || "Invalid coupon");
+        } finally {
+            setIsApplying(false);
+        }
+    };
 
     if (isLoading) {
         return (
@@ -168,33 +254,82 @@ export default function CartPage() {
 
                                 <div className="mb-8">
                                     <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 block mb-3">Promo Code</label>
-                                    <div className="flex gap-2">
-                                        <input
-                                            className="flex-1 border-gray-200 rounded-xl py-3 px-4 text-xs focus:ring-black focus:border-black outline-none"
-                                            placeholder="Enter code"
-                                            type="text"
-                                        />
-                                        <button className="px-6 py-3 bg-black text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-[#d4c4b1] hover:text-black transition-all">Apply</button>
-                                    </div>
+                                    {!appliedCoupon ? (
+                                        <>
+                                            <div className="flex gap-2">
+                                                <input
+                                                    className="flex-1 border-gray-200 rounded-xl py-3 px-4 text-xs focus:ring-black focus:border-black outline-none"
+                                                    placeholder="Enter code"
+                                                    type="text"
+                                                    value={promoCode}
+                                                    onChange={(e) => setPromoCode(e.target.value)}
+                                                />
+                                                <button 
+                                                    onClick={handleApplyPromo}
+                                                    disabled={isApplying}
+                                                    className="px-6 py-3 bg-black text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-[#d4c4b1] hover:text-black transition-all disabled:opacity-50"
+                                                >
+                                                    {isApplying ? "..." : "Apply"}
+                                                </button>
+                                            </div>
+                                            {error && <p className="text-[9px] text-red-500 font-bold uppercase mt-2 tracking-widest">{error}</p>}
+                                        </>
+                                    ) : (
+                                        <div className="flex items-center justify-between bg-black/5 p-4 rounded-xl border border-black/10">
+                                            <div>
+                                                <p className="text-[10px] font-black uppercase tracking-widest text-black flex items-center gap-2">
+                                                    <span className="material-symbols-outlined text-sm">local_offer</span>
+                                                    {appliedCoupon.code}
+                                                </p>
+                                                <p className="text-[8px] text-gray-500 font-bold uppercase tracking-[0.2em] mt-0.5">Applied Successfully</p>
+                                            </div>
+                                            <button 
+                                                onClick={removeCoupon}
+                                                className="text-gray-400 hover:text-red-500 transition-colors"
+                                            >
+                                                <span className="material-symbols-outlined text-lg">close</span>
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="space-y-4 pt-6 border-t border-gray-200">
                                     <div className="flex justify-between text-[11px] font-black uppercase tracking-widest text-gray-500">
                                         <span>Subtotal</span>
-                                        <span className="text-black">₹{subtotal.toLocaleString()}</span>
+                                        <span className="text-black">₹{(subtotal || 0).toLocaleString()}</span>
                                     </div>
+                                    {autoDiscountAmount > 0 && (
+                                        <div className="flex justify-between text-[11px] font-black uppercase tracking-widest text-emerald-600">
+                                            <span>{autoDiscountLabel || 'Auto Discount'}</span>
+                                            <span>-₹{(autoDiscountAmount || 0).toLocaleString()}</span>
+                                        </div>
+                                    )}
+                                    {appliedCoupon && (
+                                        <div className="flex justify-between text-[11px] font-black uppercase tracking-widest text-indigo-600">
+                                            <span>Coupon: {appliedCoupon.code}</span>
+                                            <span>-₹{(couponDiscountAmount || 0).toLocaleString()}</span>
+                                        </div>
+                                    )}
+                                    {buyXGetYDiscount > 0 && (
+                                        <div className="flex justify-between text-[11px] font-black uppercase tracking-widest text-amber-600">
+                                            <span>BOGO Offer</span>
+                                            <span>-₹{(buyXGetYDiscount || 0).toLocaleString()}</span>
+                                        </div>
+                                    )}
                                     <div className="flex justify-between text-[11px] font-black uppercase tracking-widest text-gray-500">
                                         <span>Shipping</span>
-                                        <span className="text-emerald-600">Calculated at next step</span>
+                                        <span className={shippingCost === 0 ? "text-emerald-600" : "text-black"}>
+                                            {shippingCost === 0 ? "FREE" : `₹${shippingCost.toLocaleString()}`}
+                                        </span>
                                     </div>
                                     <div className="flex justify-between text-[11px] font-black uppercase tracking-widest text-gray-500">
-                                        <span>Estimated Tax</span>
-                                        <span className="text-black">₹{estimatedTax.toLocaleString()}</span>
+                                        <span>Estimated Tax (8%)</span>
+                                        <span className="text-black">₹{(estimatedTax || 0).toLocaleString()}</span>
                                     </div>
 
                                     <div className="pt-6 border-t border-gray-200 flex justify-between items-end">
                                         <span className="text-lg font-[Oswald] uppercase tracking-tighter">Total</span>
-                                        <span className="text-3xl font-[Oswald] uppercase tracking-tight text-black">₹{total.toLocaleString()}</span>
+                                        <span className="text-3xl font-[Oswald] uppercase tracking-tight text-black">₹{(total || 0).toLocaleString()}</span>
                                     </div>
                                 </div>
 
