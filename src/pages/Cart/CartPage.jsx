@@ -100,21 +100,21 @@ export default function CartPage() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-background flex items-center justify-center">
-                <div className="animate-pulse font-primary tracking-widest uppercase text-textPrimary text-2xl">Loading Bag…</div>
+            <div className="min-h-screen bg-white flex items-center justify-center">
+                <div className="animate-pulse font-[Oswald] tracking-widest uppercase text-black text-2xl">Loading Bag…</div>
             </div>
         );
     }
 
     return (
-        <div className="luxury-gradient-bg min-h-screen font-secondary text-textPrimary selection:bg-accent selection:text-primary">
+        <div className="bg-white min-h-screen font-sans text-black selection:bg-[#d4c4b1] selection:text-black">
             {/* Header Area */}
             <main className="max-w-7xl mx-auto px-4 md:px-8 py-24 md:py-32">
                 {/* Progress Stepper */}
                 <div className="hidden md:flex items-center justify-center mb-16 max-w-2xl mx-auto">
-                    <div className="flex items-center gap-4 group">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-textPrimary">Cart</span>
-                        <div className="w-12 md:w-16 h-[2px] bg-textPrimary"></div>
+                    <div className="flex items-center gap-4">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-black">Cart</span>
+                        <div className="w-12 md:w-16 h-[2px] bg-black"></div>
                     </div>
                     <div className="flex items-center gap-4 px-4 opacity-30">
                         <span className="text-[10px] font-black uppercase tracking-widest">Shipping</span>
@@ -131,9 +131,9 @@ export default function CartPage() {
 
                 {cart.length === 0 ? (
                     <div className="text-center py-32 space-y-8">
-                        <h2 className="text-4xl font-primary uppercase tracking-tighter text-textPrimary">Your Bag is Empty</h2>
-                        <p className="text-textSecondary uppercase tracking-widest text-[11px] font-bold">Start exploring our premium collection</p>
-                        <Link to="/" className="inline-block px-12 py-5 bg-textPrimary text-primary text-[11px] font-black uppercase tracking-[0.4em] hover:bg-accent hover:text-primary transition-all duration-500 rounded-xl">
+                        <h2 className="text-4xl font-[Oswald] uppercase tracking-tighter text-black">Your Bag is Empty</h2>
+                        <p className="text-gray-400 uppercase tracking-widest text-[11px] font-bold">Start exploring our premium collection</p>
+                        <Link to="/" className="inline-block px-12 py-5 bg-black text-white text-[11px] font-black uppercase tracking-[0.4em] hover:bg-[#d4c4b1] hover:text-black transition-all duration-500 rounded-xl">
                             Continue Exploration
                         </Link>
                     </div>
@@ -141,12 +141,12 @@ export default function CartPage() {
                     <div className="flex flex-col lg:flex-row gap-16">
                         {/* Cart Items List */}
                         <div className="flex-1 space-y-8">
-                            <h1 className="text-2xl md:text-3xl font-primary uppercase tracking-tight mb-8 text-textPrimary">Your Bag ({cart.length} {cart.length === 1 ? 'Item' : 'Items'})</h1>
+                            <h1 className="text-2xl md:text-3xl font-[Oswald] uppercase tracking-tight mb-8 text-black">Your Bag ({cart.length} {cart.length === 1 ? 'Item' : 'Items'})</h1>
 
                             {cart.map((item) => (
-                                <div key={item.cartItemId} className="flex flex-col sm:flex-row gap-4 md:gap-8 py-8 border-b border-textPrimary/5 last:border-0 hover:bg-textPrimary/5 transition-colors p-4 rounded-3xl group">
+                                <div key={item.cartItemId} className="flex flex-col sm:flex-row gap-4 md:gap-8 py-8 border-b border-gray-100 last:border-0 hover:bg-gray-50/50 transition-colors p-4 rounded-3xl group">
                                     <div
-                                        className="w-full sm:w-40 aspect-[3/4] bg-secondary rounded-2xl overflow-hidden flex-shrink-0 relative cursor-zoom-in group"
+                                        className="w-full sm:w-40 aspect-[3/4] bg-gray-100 rounded-2xl overflow-hidden flex-shrink-0 relative cursor-zoom-in group"
                                         onClick={() => {
                                             if (item.customizations?.previews) {
                                                 setSelectedItemForPreview(item);
@@ -160,18 +160,18 @@ export default function CartPage() {
                                             src={item.image}
                                         />
                                         {item.customizations?.previews && (
-                                            <div className="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                                                <span className="material-symbols-outlined text-textPrimary text-3xl">zoom_in</span>
+                                            <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                                                <span className="material-symbols-outlined text-white text-3xl">zoom_in</span>
                                             </div>
                                         )}
                                     </div>
                                     <div className="flex flex-col flex-1">
                                         <div className="flex justify-between items-start">
                                             <div>
-                                                <h3 className="text-lg font-primary uppercase tracking-widest text-textPrimary group-hover:text-accent transition-colors duration-300">{item.title}</h3>
-                                                <p className="text-[10px] text-textSecondary font-bold uppercase tracking-widest mt-1">Ref: {item.variantId?.slice(-8).toUpperCase() || "MM-OX-001"}</p>
+                                                <h3 className="text-lg font-[Oswald] uppercase tracking-widest text-black group-hover:text-[#d4c4b1] transition-colors duration-300">{item.title}</h3>
+                                                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Ref: {item.variantId?.slice(-8).toUpperCase() || "MM-OX-001"}</p>
                                             </div>
-                                            <p className="text-xl font-primary text-textPrimary">₹{item.price?.toLocaleString()}</p>
+                                            <p className="text-xl font-[Oswald] text-black">₹{item.price?.toLocaleString()}</p>
                                         </div>
 
                                         <div className="mt-4 space-y-4">
@@ -192,7 +192,7 @@ export default function CartPage() {
                                                         item.customizations.previews[side] && (
                                                             <div
                                                                 key={side}
-                                                                className="w-12 h-16 rounded-md border border-[#1f1f1f] bg-background p-1 group/thumb relative transition-transform hover:scale-105 overflow-hidden cursor-pointer"
+                                                                className="w-12 h-16 rounded-md border border-gray-200 bg-gray-50 p-1 group/thumb relative transition-transform hover:scale-105 overflow-hidden cursor-pointer"
                                                                 onClick={() => {
                                                                     setSelectedItemForPreview(item);
                                                                     setPreviewSide(side);
@@ -203,8 +203,8 @@ export default function CartPage() {
                                                                     className="w-full h-full object-contain"
                                                                     alt={side}
                                                                 />
-                                                                <div className="absolute inset-0 bg-primary/40 opacity-0 group-hover/thumb:opacity-100 flex items-center justify-center transition-opacity">
-                                                                    <span className="text-[6px] text-textPrimary font-black uppercase">{side}</span>
+                                                                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover/thumb:opacity-100 flex items-center justify-center transition-opacity">
+                                                                    <span className="text-[6px] text-white font-black uppercase">{side}</span>
                                                                 </div>
                                                             </div>
                                                         )
@@ -213,17 +213,17 @@ export default function CartPage() {
                                             )}
 
                                             <div className="flex items-center gap-4">
-                                                <span className="text-[11px] font-black uppercase tracking-widest text-textPrimary">Quantity:</span>
-                                                <div className="flex items-center border border-[#1f1f1f] rounded-lg overflow-hidden bg-background shadow-inner">
+                                                <span className="text-[11px] font-black uppercase tracking-widest text-black">Quantity:</span>
+                                                <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-white shadow-inner">
                                                     <button
                                                         onClick={() => updateQty(item.id, item.variantId, item.qty - 1)}
-                                                        className="px-3 py-1 hover:bg-textPrimary/10 transition-colors border-r border-textPrimary/10 disabled:opacity-30 text-textPrimary"
+                                                        className="px-3 py-1 hover:bg-gray-100 transition-colors border-r border-gray-100 disabled:opacity-30 text-black"
                                                         disabled={item.qty <= 1}
                                                     >-</button>
-                                                    <span className="px-5 py-1 text-xs font-bold w-12 text-center text-textPrimary">{item.qty}</span>
+                                                    <span className="px-5 py-1 text-xs font-bold w-12 text-center text-black">{item.qty}</span>
                                                     <button
                                                         onClick={() => updateQty(item.id, item.variantId, item.qty + 1)}
-                                                        className="px-3 py-1 hover:bg-accent hover:text-primary transition-all border-l border-[#1f1f1f] text-textSecondary hover:text-primary"
+                                                        className="px-3 py-1 hover:bg-[#d4c4b1] hover:text-black transition-all border-l border-gray-100 text-gray-400 hover:text-black"
                                                     >+</button>
                                                 </div>
                                             </div>
@@ -247,16 +247,16 @@ export default function CartPage() {
 
                         {/* Order Summary Sidebar */}
                         <div className="lg:w-[400px]">
-                            <div className="sticky top-32 luxury-card p-8 rounded-2xl">
-                                <h3 className="text-2xl font-primary uppercase tracking-tight mb-8 text-textPrimary">Order Summary</h3>
+                            <div className="sticky top-32 bg-gray-50 border border-gray-100 p-8 rounded-3xl shadow-sm">
+                                <h3 className="text-2xl font-[Oswald] uppercase tracking-tight mb-8 text-black">Order Summary</h3>
 
                                 <div className="mb-8">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-textSecondary block mb-3">Promo Code</label>
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 block mb-3">Promo Code</label>
                                     {!appliedCoupon ? (
                                         <>
                                             <div className="flex gap-2">
                                                 <input
-                                                    className="luxury-input flex-1"
+                                                    className="flex-1 border border-gray-200 bg-white rounded-xl py-3 px-4 text-sm focus:border-black focus:ring-0 transition-all outline-none"
                                                     placeholder="Enter code"
                                                     type="text"
                                                     value={promoCode}
@@ -265,7 +265,7 @@ export default function CartPage() {
                                                 <button 
                                                     onClick={handleApplyPromo}
                                                     disabled={isApplying}
-                                                    className="luxury-button px-6 text-[10px]"
+                                                    className="px-6 py-3 bg-black text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-[#d4c4b1] hover:text-black transition-all disabled:opacity-50"
                                                 >
                                                     {isApplying ? "..." : "Apply"}
                                                 </button>
@@ -273,7 +273,7 @@ export default function CartPage() {
                                             {error && <p className="text-[9px] text-danger font-bold uppercase mt-2 tracking-widest">{error}</p>}
                                         </>
                                     ) : (
-                                        <div className="flex items-center justify-between bg-primary/40 p-4 rounded-xl border border-[#1f1f1f]">
+                                        <div className="flex items-center justify-between bg-gray-100 p-4 rounded-xl border border-gray-200">
                                             <div>
                                                 <p className="text-[10px] font-black uppercase tracking-widest text-accent flex items-center gap-2">
                                                     <span className="material-symbols-outlined text-sm">local_offer</span>
@@ -291,10 +291,10 @@ export default function CartPage() {
                                     )}
                                 </div>
 
-                                <div className="space-y-4 pt-6 border-t border-[#1f1f1f]">
-                                    <div className="flex justify-between text-[11px] font-black uppercase tracking-widest text-textSecondary">
+                                <div className="space-y-4 pt-6 border-t border-gray-200">
+                                    <div className="flex justify-between text-[11px] font-black uppercase tracking-widest text-gray-500">
                                         <span>Subtotal</span>
-                                        <span className="text-textPrimary">₹{(subtotal || 0).toLocaleString()}</span>
+                                        <span className="text-black">₹{(subtotal || 0).toLocaleString()}</span>
                                     </div>
                                     {autoDiscountAmount > 0 && (
                                         <div className="flex justify-between text-[11px] font-black uppercase tracking-widest text-green-500">
@@ -314,37 +314,37 @@ export default function CartPage() {
                                             <span>-₹{(buyXGetYDiscount || 0).toLocaleString()}</span>
                                         </div>
                                     )}
-                                    <div className="flex justify-between text-[11px] font-black uppercase tracking-widest text-textSecondary">
+                                    <div className="flex justify-between text-[11px] font-black uppercase tracking-widest text-gray-500">
                                         <span>Shipping</span>
                                         <span className={shippingCost === 0 ? "text-green-500" : "text-textPrimary"}>
                                             {shippingCost === 0 ? "FREE" : `₹${shippingCost.toLocaleString()}`}
                                         </span>
                                     </div>
-                                    <div className="flex justify-between text-[11px] font-black uppercase tracking-widest text-textSecondary">
+                                    <div className="flex justify-between text-[11px] font-black uppercase tracking-widest text-gray-500">
                                         <span>Estimated Tax (8%)</span>
-                                        <span className="text-textPrimary">₹{(estimatedTax || 0).toLocaleString()}</span>
+                                        <span className="text-black">₹{(estimatedTax || 0).toLocaleString()}</span>
                                     </div>
 
-                                    <div className="pt-6 border-t border-[#1f1f1f] flex justify-between items-end">
-                                        <span className="text-lg font-primary uppercase tracking-tighter text-textPrimary">Total</span>
-                                        <span className="text-3xl font-primary uppercase tracking-tight text-textPrimary">₹{(total || 0).toLocaleString()}</span>
+                                    <div className="pt-6 border-t border-gray-200 flex justify-between items-end">
+                                        <span className="text-lg font-[Oswald] uppercase tracking-tighter text-black">Total</span>
+                                        <span className="text-3xl font-[Oswald] uppercase tracking-tight text-black">₹{(total || 0).toLocaleString()}</span>
                                     </div>
                                 </div>
 
                                 <Link
                                     to="/checkout"
-                                    className="luxury-button w-full mt-10 flex items-center justify-center no-underline shadow-accent/5"
+                                    className="w-full mt-10 h-16 bg-black text-white text-[12px] font-black uppercase tracking-[0.4em] hover:bg-[#d4c4b1] hover:text-black transition-all rounded-2xl shadow-xl shadow-black/10 flex items-center justify-center no-underline"
                                 >
                                     Proceed to Checkout
                                 </Link>
 
                                 <div className="mt-8 space-y-3">
                                     <div className="flex items-center gap-3 text-gray-400">
-                                        <span className="material-symbols-outlined text-lg">local_shipping</span>
+                                        <span className="material-symbols-outlined text-lg text-[#d4c4b1]">local_shipping</span>
                                         <span className="text-[9px] font-black uppercase tracking-widest">Free Express Shipping on orders over ₹5,000</span>
                                     </div>
                                     <div className="flex items-center gap-3 text-gray-400">
-                                        <span className="material-symbols-outlined text-lg">workspace_premium</span>
+                                        <span className="material-symbols-outlined text-lg text-[#d4c4b1]">workspace_premium</span>
                                         <span className="text-[9px] font-black uppercase tracking-widest">30-Day Premium Returns Guarantee</span>
                                     </div>
                                 </div>
@@ -357,14 +357,14 @@ export default function CartPage() {
             {/* Mobile Bottom Fixed Bar */}
             {cart.length > 0 && (
                 <div className="lg:hidden fixed bottom-0 left-0 w-full z-[60] animate-slideUp">
-                    <div className="bg-secondary border-t border-[#1f1f1f] p-6 flex justify-between items-center shadow-[0_-20px_50px_rgba(0,0,0,0.5)]">
+                    <div className="bg-white border-t border-gray-100 p-6 flex justify-between items-center shadow-[0_-20px_50px_rgba(0,0,0,0.08)]">
                         <div>
-                            <p className="text-[9px] font-black uppercase tracking-widest text-textSecondary">Total Amount</p>
-                            <span className="text-2xl font-primary text-textPrimary tracking-tighter">₹{total.toLocaleString()}</span>
+                            <p className="text-[9px] font-black uppercase tracking-widest text-gray-400">Total Amount</p>
+                            <span className="text-2xl font-[Oswald] text-black tracking-tighter">₹{total.toLocaleString()}</span>
                         </div>
                         <Link
                             to="/checkout"
-                            className="luxury-button h-14 px-8 flex items-center justify-center no-underline text-[10px]"
+                            className="h-14 px-8 bg-black text-white text-[10px] font-black uppercase tracking-widest hover:bg-[#d4c4b1] hover:text-black transition-all rounded-xl flex items-center justify-center no-underline"
                         >
                             Checkout
                         </Link>

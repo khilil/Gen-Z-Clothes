@@ -206,7 +206,7 @@ export default function Checkout() {
           key: "rzp_test_SKiQG78TfTVFU7", // Test Key ID
           amount: razorpayOrder.data.amount,
           currency: razorpayOrder.data.currency,
-          name: "GenZ Cloths",
+          name: "Fenrir Era",
           description: "Payment for Order #" + result.data._id,
           order_id: razorpayOrder.data.id,
           handler: async function (response) {
